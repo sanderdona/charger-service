@@ -75,6 +75,8 @@ public class ChargerServiceConfiguration {
         final String stateTopic = "teslamate/cars/1/state";
         final String latitudeTopic = "teslamate/cars/1/latitude";
         final String longitudeTopic = "teslamate/cars/1/longitude";
+        final String odometerTopic = "teslamate/cars/1/odometer";
+        final String displayNameTopic = "teslamate/cars/1/display_name";
 
         MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
                 mqttHost,
@@ -82,7 +84,9 @@ public class ChargerServiceConfiguration {
                 clientFactory(),
                 stateTopic,
                 latitudeTopic,
-                longitudeTopic);
+                longitudeTopic,
+                odometerTopic,
+                displayNameTopic);
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(0);

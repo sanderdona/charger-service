@@ -19,6 +19,8 @@ public class Car {
     @Enumerated(EnumType.STRING)
     private CarState carState;
 
+    private int odometer;
+
     private double latitude;
 
     private double longitude;

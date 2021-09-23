@@ -83,6 +83,7 @@ public class ChargeSessionService {
         if (activeSession.isPresent() && activeSession.get().getCar() == null) {
             ChargeSession chargeSession = activeSession.get();
             chargeSession.setCar(car);
+            chargeSession.setOdoMeter(car.getOdometer());
             chargeSession.setChargeSessionType(ChargeSessionType.REGISTERED);
 
             chargeSessionRepository.save(chargeSession);

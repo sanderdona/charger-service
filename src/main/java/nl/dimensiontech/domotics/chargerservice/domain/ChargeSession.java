@@ -19,6 +19,8 @@ public class ChargeSession {
     @OneToOne(fetch = FetchType.LAZY)
     private Car car;
 
+    private int odoMeter;
+
     @Column(nullable = false, columnDefinition = "varchar(25) default 'ANONYMOUS'")
     @Enumerated(value = EnumType.STRING)
     private ChargeSessionType chargeSessionType = ChargeSessionType.ANONYMOUS;

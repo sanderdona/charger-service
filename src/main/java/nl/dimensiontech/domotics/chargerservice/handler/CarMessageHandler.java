@@ -12,6 +12,9 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import java.util.Optional;
 
 @Component
@@ -22,6 +25,8 @@ public class CarMessageHandler implements MessageHandler {
     private static final String STATE_TOPIC = "state";
     private static final String LATITUDE_TOPIC = "latitude";
     private static final String LONGITUDE_TOPIC = "longitude";
+    private static final String ODOMETER_TOPIC = "odometer";
+    private static final String DISPLAY_NAME_TOPIC = "display_name";
 
     private final CarService carService;
 
@@ -56,7 +61,31 @@ public class CarMessageHandler implements MessageHandler {
             car.setLongitude(longitude);
         }
 
+        if (ODOMETER_TOPIC.equals(TopicNameUtil.getValueName(message))) {
+            int odometer = getOdometer(message);
+            car.setOdometer(odometer);
+        }
+
+        if (DISPLAY_NAME_TOPIC.equals(TopicNameUtil.getValueName(message))) {
+            String displayName = (String) message.getPayload();
+            car.setName(displayName);
+        }
+
         carService.handleStateChange(car);
+    }
+
+    private int getOdometer(Message<?> message) {
+        String payload = (String) message.getPayload();
+        Number number;
+
+        try {
+            number = NumberFormat.getNumberInstance(Locale.US).parse(payload);
+        } catch (ParseException e) {
+            log.error("Cannot parse value");
+            throw new IllegalArgumentException("Cannot parse odometer value!");
+        }
+
+        return number.intValue();
     }
 
     private Car createCar(Long carId) {
