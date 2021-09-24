@@ -21,7 +21,6 @@ public class ConfigProperties {
 
     @Data
     public static class LocationConfig {
-
         private double homeLatitude;
         private double homeLongitude;
         private int maxDistanceFromHome;

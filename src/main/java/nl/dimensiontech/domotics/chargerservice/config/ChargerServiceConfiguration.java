@@ -23,7 +23,8 @@ public class ChargerServiceConfiguration {
         return new DirectChannel();
     }
 
-    @Bean MessageChannel carStateInputChannel() {
+    @Bean
+    public MessageChannel carStateInputChannel() {
         return new DirectChannel();
     }
 
