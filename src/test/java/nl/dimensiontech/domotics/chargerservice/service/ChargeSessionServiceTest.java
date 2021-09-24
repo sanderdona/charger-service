@@ -1,6 +1,7 @@
 package nl.dimensiontech.domotics.chargerservice.service;
 
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
+import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
 import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +51,7 @@ class ChargeSessionServiceTest {
         ChargeSession capturedSession = chargeSessionCaptor.getValue();
 
         assertThat(capturedSession.getStartkWh()).isEqualTo(currentReading);
+        assertThat(capturedSession.getChargeSessionType()).isEqualTo(ChargeSessionType.ANONYMOUS);
     }
 
 }
