@@ -4,6 +4,8 @@ public enum CarState {
     ASLEEP("asleep"),
     ONLINE("online"),
     CHARGING("charging"),
+    DRIVING("driving"),
+    UPDATING("updating"),
     SUSPENDED("suspended"),
     UNAVAILABLE("unavailable");
 
