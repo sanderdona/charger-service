@@ -1,6 +1,5 @@
 package nl.dimensiontech.domotics.chargerservice;
 
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -15,6 +15,4 @@ public enum CarState {
         this.carstate = state;
     }
 
-
-
 }

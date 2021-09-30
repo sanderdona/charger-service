@@ -2,10 +2,10 @@ package nl.dimensiontech.domotics.chargerservice.util;
 
 import org.springframework.messaging.Message;
 
-public class TopicNameUtil {
+import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.TOPIC_HEADER;
+import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.TOPIC_SEPARATOR;
 
-    private static final String TOPIC_SEPARATOR = "/";
-    private static final String TOPIC_HEADER = "mqtt_receivedTopic";
+public class TopicNameUtil {
 
     public static Long getCarId(Message<?> message) {
         String topic = (String) message.getHeaders().get(TOPIC_HEADER);
