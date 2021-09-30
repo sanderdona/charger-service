@@ -17,16 +17,12 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.Optional;
 
+import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.*;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class CarMessageHandler implements MessageHandler {
-
-    private static final String STATE_TOPIC = "state";
-    private static final String LATITUDE_TOPIC = "latitude";
-    private static final String LONGITUDE_TOPIC = "longitude";
-    private static final String ODOMETER_TOPIC = "odometer";
-    private static final String DISPLAY_NAME_TOPIC = "display_name";
 
     private final CarService carService;
 
@@ -46,7 +42,7 @@ public class CarMessageHandler implements MessageHandler {
         if (STATE_TOPIC.equals(TopicNameUtil.getValueName(message))) {
             String state = (String) message.getPayload();
             log.debug("Received car state message '{}'", state);
-            car.setCarState(CarState.valueOf(state.toUpperCase()));
+            getCarState(state).ifPresent(car::setCarState);
         }
 
         if (LATITUDE_TOPIC.equals(TopicNameUtil.getValueName(message))) {
@@ -92,5 +88,14 @@ public class CarMessageHandler implements MessageHandler {
         Car car = new Car();
         car.setId(carId);
         return carService.saveCar(car);
+    }
+
+    private Optional<CarState> getCarState(String state) {
+        try {
+            return Optional.of(CarState.valueOf(state.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            log.error("I guess this is an unknown state: {}", state.toUpperCase());
+            return Optional.empty();
+        }
     }
 }

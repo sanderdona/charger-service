@@ -4,6 +4,8 @@ public enum CarState {
     ASLEEP("asleep"),
     ONLINE("online"),
     CHARGING("charging"),
+    DRIVING("driving"),
+    UPDATING("updating"),
     SUSPENDED("suspended"),
     UNAVAILABLE("unavailable");
 
@@ -12,7 +14,5 @@ public enum CarState {
     CarState(String state) {
         this.carstate = state;
     }
-
-
 
 }
