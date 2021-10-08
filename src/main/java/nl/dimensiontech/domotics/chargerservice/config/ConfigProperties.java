@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "charger-service")
 public class ConfigProperties {
 
+    private float tariff;
+    private String licensePlate;
     private MqttConfig mqttConfig;
     private LocationConfig locationConfig;
 

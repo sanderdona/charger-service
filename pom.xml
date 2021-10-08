@@ -16,6 +16,8 @@
 	<properties>
 		<java.version>11</java.version>
 		<mqtt.version>5.5.3</mqtt.version>
+		<pdfbox.version>2.0.22</pdfbox.version>
+		<boxable.version>1.6</boxable.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -40,13 +42,25 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- pdf generation -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>${pdfbox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.dhorions</groupId>
+			<artifactId>boxable</artifactId>
+			<version>${boxable.version}</version>
+		</dependency>
+
+		<!-- test dependencies -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
