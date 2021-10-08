@@ -16,6 +16,7 @@ public class ConfigProperties {
 
     @Data
     public static class MqttConfig {
+        private String client;
         private String host;
         private String username;
         private String password;
