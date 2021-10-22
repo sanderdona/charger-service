@@ -15,7 +15,7 @@ public class SchedulingService {
 
     private final ReportService reportService;
 
-    @Scheduled(cron = "0 0 10 1 * ? *")
+    @Scheduled(cron = "0 0 10 1 * *")
     public void generateMonthlyReport() {
         // get the correct month
         YearMonth lastMonth = YearMonth.from(ZonedDateTime.now().minusMonths(1));
