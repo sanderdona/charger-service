@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ReportService {
     public void generateReport(LocalDate startDate, LocalDate endDate) {
         log.info("Generating report...");
 
-        List<ChargeSession> chargeSessions = chargeSessionService.getSessionsInRange(startDate, endDate);
+        List<ChargeSession> chargeSessions = chargeSessionService.getSessionsInRange(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
         List<ChargeSession> registeredChargeSessions = chargeSessions.stream()
                 .filter(chargeSession -> ChargeSessionType.REGISTERED.equals(chargeSession.getChargeSessionType()))
                 .collect(Collectors.toList());
@@ -95,7 +95,6 @@ public class ReportService {
     }
 
     private ReportTable createReportTable(List<ChargeSession> chargeSessions) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         List<TableColumn> tableColumns = new ArrayList<>();
 
         TableColumn gestartColumn = new TableColumn();
@@ -132,14 +131,15 @@ public class ReportService {
         reportTable.getTableColumns().addAll(tableColumns);
 
         for (ChargeSession chargeSession : chargeSessions) {
-            List<TableCell> cellValues = createCellValues(dateFormat, chargeSession);
+            List<TableCell> cellValues = createCellValues(chargeSession);
             reportTable.createRow(cellValues);
         }
 
         return reportTable;
     }
 
-    private List<TableCell> createCellValues(SimpleDateFormat dateFormat, ChargeSession chargeSession) {
+    private List<TableCell> createCellValues(ChargeSession chargeSession) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         List<TableCell> cellValues = new ArrayList<>();
 
         Color fillColor;

@@ -11,9 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.FILE_EXTENSION;
@@ -49,7 +49,7 @@ class ReportServiceTest {
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now().plusMonths(1L);
 
-        when(chargeSessionService.getSessionsInRange(isA(LocalDate.class), isA(LocalDate.class)))
+        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class)))
                 .thenReturn(chargeSessions);
         when(configProperties.getTariff()).thenReturn(0.22f);
         when(configProperties.getLicensePlate()).thenReturn("AB-123-C");
@@ -75,8 +75,8 @@ class ReportServiceTest {
         ChargeSession chargeSession = new ChargeSession();
         chargeSession.setId(id);
         chargeSession.setChargeSessionType(type);
-        chargeSession.setStartedAt(new Date());
-        chargeSession.setEndedAt(new Date());
+        chargeSession.setStartedAt(LocalDateTime.now());
+        chargeSession.setEndedAt(LocalDateTime.now());
         chargeSession.setOdoMeter(odoMeter);
         chargeSession.setStartkWh(startkWh);
         chargeSession.setEndkWh(endkWh);
