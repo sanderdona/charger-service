@@ -1,16 +1,14 @@
 package nl.dimensiontech.domotics.chargerservice.service;
 
-import be.quodlibet.boxable.BaseTable;
-import be.quodlibet.boxable.Cell;
-import be.quodlibet.boxable.Row;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import nl.dimensiontech.domotics.chargerservice.report.domain.ReportTable;
+import nl.dimensiontech.domotics.chargerservice.report.PdfBuilder;
+import nl.dimensiontech.domotics.chargerservice.report.domain.TableCell;
+import nl.dimensiontech.domotics.chargerservice.report.domain.TableColumn;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -21,6 +19,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -53,9 +52,38 @@ public class ReportService {
         }
 
         float totalCharged = calculateTotalCharged(registeredChargeSessions);
-
+        float tariff = configProperties.getTariff();
+        String totalCosts = String.format("%.2f", totalCharged * tariff);
         String fileName = getFileName(startDate);
-        saveAsPdf(fileName, chargeSessions, totalCharged, startDate);
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.forLanguageTag(LANGUAGE_TAG));
+
+        try {
+            new PdfBuilder()
+                    .createPage(PDRectangle.A4, DOCUMENT_MARGIN, TEXT_MARGIN)
+                    .addTextLine(TEXT_TITLE, FONT_PLAIN, H1_FONT_SIZE)
+                    .addTextLine(TEXT_ALGEMEEN, FONT_PLAIN, H2_FONT_SIZE)
+                    .addLine()
+                    .addTextLine(TEXT_KENTEKEN, FONT_PLAIN, P_FONT_SIZE)
+                    .addTextLine(configProperties.getLicensePlate(), FONT_PLAIN, P_FONT_SIZE, 150, true)
+                    .addTextLine(TEXT_PERIODE, FONT_PLAIN, P_FONT_SIZE)
+                    .addTextLine(dateFormat.format(startDate), FONT_PLAIN, P_FONT_SIZE, 150, true)
+                    .addTextLine(TEXT_LAADSESSIES, FONT_PLAIN, H2_FONT_SIZE)
+                    .addLine()
+                    .createTable()
+                    .fromTable(createReportTable(chargeSessions).getTable())
+                    .closeTable()
+                    .addTextLine(TEXT_TOTAAL_KWH, FONT_BOLD, P_FONT_SIZE, MARGIN_LEFT_3_TABLES_SKIPPED, false)
+                    .addTextLine(String.format("%.2f", totalCharged), FONT_PLAIN, P_FONT_SIZE, MARGIN_LEFT_4_TABLES_SKIPPED, true)
+                    .addTextLine(TEXT_TARIEF_KWH, FONT_BOLD, P_FONT_SIZE, MARGIN_LEFT_3_TABLES_SKIPPED, false)
+                    .addTextLine("\u20AC " + tariff, FONT_PLAIN, P_FONT_SIZE, MARGIN_LEFT_4_TABLES_SKIPPED, true)
+                    .addTextLine(TEXT_TOTAAL, FONT_BOLD, P_FONT_SIZE + 1, MARGIN_LEFT_3_TABLES_SKIPPED, false)
+                    .addTextLine("\u20AC " + totalCosts, FONT_BOLD, P_FONT_SIZE + 1, MARGIN_LEFT_4_TABLES_SKIPPED, true)
+                    .closePage()
+                    .save(fileName);
+
+        } catch (IOException e) {
+            log.error("Failed to create the report: {}", e.getMessage());
+        }
 
         log.info("Report successfully generated!");
     }
@@ -66,6 +94,73 @@ public class ReportService {
         return TEXT_DECLARATIE + "-" + period + FILE_EXTENSION;
     }
 
+    private ReportTable createReportTable(List<ChargeSession> chargeSessions) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        List<TableColumn> tableColumns = new ArrayList<>();
+
+        TableColumn gestartColumn = new TableColumn();
+        gestartColumn.setName(TEXT_GESTART);
+        gestartColumn.setWidth(TABLE_ROW_LARGE_WIDTH);
+        tableColumns.add(gestartColumn);
+
+        TableColumn voltooidColumn = new TableColumn();
+        voltooidColumn.setName(TEXT_VOLTOOID);
+        voltooidColumn.setWidth(TABLE_ROW_LARGE_WIDTH);
+        tableColumns.add(voltooidColumn);
+
+        TableColumn kmStandColumn = new TableColumn();
+        kmStandColumn.setName(TEXT_KM_STAND);
+        kmStandColumn.setWidth(TABLE_ROW_SMALL_WIDTH);
+        tableColumns.add(kmStandColumn);
+
+        TableColumn startKwhColumn = new TableColumn();
+        startKwhColumn.setName(TEXT_START_KWH);
+        startKwhColumn.setWidth(TABLE_ROW_MEDIUM_WIDTH);
+        tableColumns.add(startKwhColumn);
+
+        TableColumn eindKwhColumn = new TableColumn();
+        eindKwhColumn.setName(TEXT_EIND_KWH);
+        eindKwhColumn.setWidth(TABLE_ROW_MEDIUM_WIDTH);
+        tableColumns.add(eindKwhColumn);
+
+        TableColumn verbruiktKwhColumn = new TableColumn();
+        verbruiktKwhColumn.setName(TEXT_VERBRUIKT);
+        verbruiktKwhColumn.setWidth(TABLE_ROW_MEDIUM_WIDTH);
+        tableColumns.add(verbruiktKwhColumn);
+
+        ReportTable reportTable = new ReportTable();
+        reportTable.getTableColumns().addAll(tableColumns);
+
+        for (ChargeSession chargeSession : chargeSessions) {
+            List<TableCell> cellValues = createCellValues(dateFormat, chargeSession);
+            reportTable.createRow(cellValues);
+        }
+
+        return reportTable;
+    }
+
+    private List<TableCell> createCellValues(SimpleDateFormat dateFormat, ChargeSession chargeSession) {
+        List<TableCell> cellValues = new ArrayList<>();
+
+        Color fillColor;
+        String totalCharged = "";
+        if (ChargeSessionType.ANONYMOUS.equals(chargeSession.getChargeSessionType())) {
+            fillColor = Color.LIGHT_GRAY;
+        } else {
+            fillColor = Color.WHITE;
+            totalCharged = String.format("%.3f", chargeSession.getTotalkwH());
+        }
+
+        cellValues.add(new TableCell(dateFormat.format(chargeSession.getStartedAt()), fillColor));
+        cellValues.add(new TableCell(dateFormat.format(chargeSession.getEndedAt()), fillColor));
+        cellValues.add(new TableCell(String.valueOf(chargeSession.getOdoMeter()), fillColor));
+        cellValues.add(new TableCell(String.format("%.3f", chargeSession.getStartkWh()), fillColor));
+        cellValues.add(new TableCell(String.format("%.3f", chargeSession.getEndkWh()), fillColor));
+        cellValues.add(new TableCell(totalCharged, fillColor));
+
+        return cellValues;
+    }
+
     private float calculateTotalCharged(List<ChargeSession> chargeSessions) {
         float total = 0f;
 
@@ -74,155 +169,5 @@ public class ReportService {
         }
 
         return total;
-    }
-
-    private void saveAsPdf(String fileName, List<ChargeSession> chargeSessions,
-                           float totalCharged, LocalDate startDate) {
-
-        PDDocument document = new PDDocument();
-        PDPage page = new PDPage(PDRectangle.A4);
-
-        try {
-            PDPageContentStream content = new PDPageContentStream(document, page);
-            float mediaBoxHeight = page.getMediaBox().getHeight();
-            float contentAreaHeight = mediaBoxHeight - DOCUMENT_MARGIN;
-            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.forLanguageTag("nl-NL"));
-            String period = dateFormat.format(startDate);
-
-            newLine(content, H1_FONT_SIZE, contentAreaHeight, TEXT_TITLE);
-
-            newLine(content, H2_FONT_SIZE, contentAreaHeight - 30, TEXT_ALGEMEEN);
-            newLine(content, P_FONT_SIZE, contentAreaHeight - 60, TEXT_KENTEKEN);
-            newLine(content, P_FONT_SIZE, 150, contentAreaHeight - 60, configProperties.getLicensePlate());
-            newLine(content, P_FONT_SIZE, contentAreaHeight - 75, TEXT_PERIODE);
-            newLine(content, P_FONT_SIZE, 150, contentAreaHeight - 75, period);
-
-            newLine(content, H2_FONT_SIZE, contentAreaHeight - 120, TEXT_LAADSESSIES);
-
-            BaseTable chargeTable = new BaseTable(contentAreaHeight - 150, 0,
-                    0, DOCUMENT_CONTENT_WIDTH, DOCUMENT_MARGIN, document, page, true, true);
-            createHeaderRow(chargeTable);
-            for (ChargeSession chargeSession : chargeSessions) {
-                createRow(chargeTable, chargeSession);
-            }
-            chargeTable.draw();
-
-            float yStartAfterTable = contentAreaHeight - chargeTable.getHeaderAndDataHeight() - 180;
-
-            float skippedRowsWidthForTitle = TABLE_ROW_LARGE_WIDTH + TABLE_ROW_LARGE_WIDTH + TABLE_ROW_SMALL_WIDTH +
-                    TABLE_ROW_MEDIUM_WIDTH;
-            float skippedRowsWidthForValue = skippedRowsWidthForTitle + TABLE_ROW_MEDIUM_WIDTH;
-            float marginLeftTitle = (chargeTable.getWidth() * ((skippedRowsWidthForTitle) / 100)) + DOCUMENT_MARGIN;
-            float marginLeftValue = (chargeTable.getWidth() * ((skippedRowsWidthForValue) / 100)) + DOCUMENT_MARGIN;
-
-            newLine(content, FONT_BOLD, P_FONT_SIZE, marginLeftTitle, yStartAfterTable, TEXT_TOTAAL_KWH);
-            newLine(content, P_FONT_SIZE, marginLeftValue, yStartAfterTable, String.format("%.2f", totalCharged));
-
-            float tariff = configProperties.getTariff();
-
-            newLine(content, FONT_BOLD, P_FONT_SIZE, marginLeftTitle, yStartAfterTable - 15, TEXT_TARIEF_KWH);
-            newLine(content, P_FONT_SIZE, marginLeftValue, yStartAfterTable - 15, "\u20AC " + tariff);
-
-            float separatorWidth = DOCUMENT_CONTENT_WIDTH * ((TABLE_ROW_MEDIUM_WIDTH + TABLE_ROW_MEDIUM_WIDTH) / 100);
-            content.addRect(marginLeftTitle, yStartAfterTable - 25, separatorWidth, 0.5f);
-            content.fill();
-
-            String totalCosts = String.format("%.2f", totalCharged * tariff);
-
-            newLine(content, FONT_BOLD, P_FONT_SIZE + 1, marginLeftTitle, yStartAfterTable - 40, TEXT_TOTAAL);
-            newLine(content, FONT_BOLD, P_FONT_SIZE + 1, marginLeftValue, yStartAfterTable - 40, "\u20AC " + totalCosts);
-
-            document.addPage(page);
-            content.close();
-            document.save(fileName);
-            document.close();
-
-        } catch (IOException e) {
-            log.error("Failed to create the report: {}", e.getMessage());
-        }
-    }
-
-    private void newLine(PDPageContentStream content, int fontSize, float yPos, String text) throws IOException {
-        newLine(content, fontSize, DOCUMENT_MARGIN, yPos, text);
-    }
-
-    private void newLine(PDPageContentStream content, int fontSize, float xPos, float yPos, String text) throws IOException {
-        newLine(content, FONT_PLAIN, fontSize, xPos, yPos, text);
-    }
-
-    private void newLine(PDPageContentStream content, PDFont font, int fontSize, float xPos, float yPos, String text) throws IOException {
-        content.beginText();
-        content.setFont(font, fontSize);
-        content.newLineAtOffset(xPos, yPos);
-        content.showText(text);
-        content.endText();
-
-        if (H2_FONT_SIZE == fontSize) {
-            content.addRect(DOCUMENT_MARGIN, yPos - 5, DOCUMENT_CONTENT_WIDTH, 0.5f);
-            content.fill();
-        }
-    }
-
-    private void createHeaderRow(BaseTable table) {
-        Row<PDPage> headerRow = table.createRow(TABLE_ROW_HEIGHT);
-
-        createHeaderCell(headerRow, TABLE_ROW_LARGE_WIDTH, TEXT_GESTART);
-        createHeaderCell(headerRow, TABLE_ROW_LARGE_WIDTH, TEXT_VOLTOOID);
-        createHeaderCell(headerRow, TABLE_ROW_SMALL_WIDTH, TEXT_KM_STAND);
-        createHeaderCell(headerRow, TABLE_ROW_MEDIUM_WIDTH, TEXT_START_KWH);
-        createHeaderCell(headerRow, TABLE_ROW_MEDIUM_WIDTH, TEXT_EIND_KWH);
-        createHeaderCell(headerRow, TABLE_ROW_MEDIUM_WIDTH, TEXT_VERBRUIKT);
-
-        table.addHeaderRow(headerRow);
-    }
-
-    private void createHeaderCell(Row<PDPage> headerRow, float width, String name) {
-        Cell<PDPage> odo_meter = headerRow.createCell(width, name);
-        odo_meter.setFontSize(P_FONT_SIZE);
-        odo_meter.setFont(FONT_BOLD);
-    }
-
-    private void createRow(BaseTable table, ChargeSession chargeSession) {
-        Row<PDPage> row = table.createRow(TABLE_ROW_HEIGHT);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-        Color fillColor;
-        float totalCharged = 0;
-        if (ChargeSessionType.ANONYMOUS.equals(chargeSession.getChargeSessionType())) {
-            fillColor = Color.LIGHT_GRAY;
-        } else {
-            fillColor = Color.WHITE;
-            totalCharged = chargeSession.getTotalkwH();
-        }
-
-        // Started at cell
-        Cell<PDPage> cell = row.createCell(TABLE_ROW_LARGE_WIDTH, format.format(chargeSession.getStartedAt()));
-        cell.setFontSize(P_FONT_SIZE);
-        cell.setFillColor(fillColor);
-
-        // Ended at cell
-        cell = row.createCell(TABLE_ROW_LARGE_WIDTH, format.format(chargeSession.getEndedAt()));
-        cell.setFontSize(P_FONT_SIZE);
-        cell.setFillColor(fillColor);
-
-        // Odo meter cell
-        cell = row.createCell(TABLE_ROW_SMALL_WIDTH, String.valueOf(chargeSession.getOdoMeter()));
-        cell.setFontSize(P_FONT_SIZE);
-        cell.setFillColor(fillColor);
-
-        // Start kWh cell
-        cell = row.createCell(TABLE_ROW_MEDIUM_WIDTH, String.format("%.3f", chargeSession.getStartkWh()));
-        cell.setFontSize(P_FONT_SIZE);
-        cell.setFillColor(fillColor);
-
-        // End kWh cell
-        cell = row.createCell(TABLE_ROW_MEDIUM_WIDTH, String.format("%.3f", chargeSession.getEndkWh()));
-        cell.setFontSize(P_FONT_SIZE);
-        cell.setFillColor(fillColor);
-
-        // total kWh cell
-        cell = row.createCell(TABLE_ROW_MEDIUM_WIDTH, String.format("%.3f", totalCharged));
-        cell.setFontSize(P_FONT_SIZE);
-        cell.setFillColor(fillColor);
     }
 }

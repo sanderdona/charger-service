@@ -5,8 +5,10 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 public class PdfConstants {
 
     public static final String FILE_EXTENSION = ".pdf";
+    public static final String LANGUAGE_TAG = "nl";
 
-    public static final float DOCUMENT_MARGIN = 80;
+    public static final float DOCUMENT_MARGIN = 40;
+    public static final float TEXT_MARGIN = 10;
     public static final float DOCUMENT_CONTENT_WIDTH = PDRectangle.A4.getWidth() - (2 * DOCUMENT_MARGIN);
 
     public static final int H1_FONT_SIZE = 12;
@@ -17,6 +19,9 @@ public class PdfConstants {
     public static final float TABLE_ROW_SMALL_WIDTH = (100 / 6.0f) - 3.0f;
     public static final float TABLE_ROW_MEDIUM_WIDTH = (100 / 6.0f) - 1.0f;
     public static final float TABLE_ROW_LARGE_WIDTH = (100 / 6.0f) + 3.0f;
+
+    public static final float MARGIN_LEFT_3_TABLES_SKIPPED = 393.8226f;
+    public static final float MARGIN_LEFT_4_TABLES_SKIPPED = 474.5491f;
 
     public static final String TEXT_TITLE = "Declaratie laadkosten";
 
