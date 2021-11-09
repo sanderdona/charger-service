@@ -18,6 +18,7 @@
 		<mqtt.version>5.5.3</mqtt.version>
 		<pdfbox.version>2.0.22</pdfbox.version>
 		<boxable.version>1.6</boxable.version>
+		<spring-mail.version>2.5.6</spring-mail.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -64,7 +65,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
-			<version>2.5.6</version>
+			<version>${spring-mail.version}</version>
 		</dependency>
 
 		<!-- test dependencies -->
