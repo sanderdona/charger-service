@@ -13,6 +13,7 @@ public class ConfigProperties {
     private String licensePlate;
     private MqttConfig mqttConfig;
     private LocationConfig locationConfig;
+    private EmailConfig emailConfig;
 
     @Data
     public static class MqttConfig {
@@ -27,6 +28,20 @@ public class ConfigProperties {
         private double homeLatitude;
         private double homeLongitude;
         private int maxDistanceFromHome;
+    }
+
+    @Data
+    public static class EmailConfig {
+        private String host;
+        private int port;
+        private String username;
+        private String password;
+        private String protocol = "tls";
+        private boolean authEnabled = true;
+        private boolean tlsEnabled = true;
+        private boolean debugEnabled = true;
+        private String fromAddress;
+        private String toAddress;
     }
 
 }
