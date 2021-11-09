@@ -13,6 +13,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class PdfBuilder {
     private PDPage page;
     private final PDDocument document = new PDDocument();
     private float lastYPosition;
+    private float lastYPositionJump;
     private float contentMargin;
     private float textMargin;
 
@@ -52,26 +54,31 @@ public class PdfBuilder {
     }
 
     public PdfBuilder addTextLine(String text, PDFont font, int fontSize, float xPosition, boolean sameLine) throws IOException {
-        if (!sameLine) {
-            lastYPosition = lastYPosition + getLineHeigt(fontSize);
+        float pageSizeHeight = page.getMediaBox().getHeight() - contentMargin;
+
+        float yPosition;
+        if (sameLine) {
+            yPosition = pageSizeHeight - lastYPosition + lastYPositionJump;
         } else {
-            lastYPosition = lastYPosition - fontSize;
+            yPosition = pageSizeHeight - lastYPosition;
         }
-        return addTextLine(text, font, fontSize, xPosition, lastYPosition + contentMargin);
+
+        return addTextLine(text, font, fontSize, xPosition, yPosition);
     }
 
     public PdfBuilder addTextLine(String text, PDFont font, int fontSize, float xPosition, float yPosition) throws IOException {
         validatePageIsOpen();
 
-        float pageSizeHeight = page.getMediaBox().getHeight();
+        float margin = getMargin(fontSize);
 
         content.beginText();
         content.setFont(font, fontSize);
-        content.newLineAtOffset(xPosition, pageSizeHeight - yPosition);
+        content.newLineAtOffset(xPosition, yPosition - (textMargin + margin));
         content.showText(text);
         content.endText();
 
-        lastYPosition = lastYPosition + fontSize;
+        lastYPositionJump = fontSize + (margin * 2);
+        lastYPosition = lastYPosition + lastYPositionJump;
 
         return this;
     }
@@ -94,6 +101,33 @@ public class PdfBuilder {
         return new TableBuilder(this);
     }
 
+    public PdfBuilder addImage(byte[] bytes, String name) {
+        return addImage(bytes, name, contentMargin, false);
+    }
+
+    public PdfBuilder addImage(byte[] bytes, String name, float xPosition, boolean sameLine) {
+        float pageSizeHeight = page.getMediaBox().getHeight() - contentMargin;
+
+        float yPosition;
+        if (sameLine) {
+            yPosition = pageSizeHeight - lastYPosition + lastYPositionJump;
+        } else {
+            yPosition = pageSizeHeight - lastYPosition;
+        }
+
+        try {
+            PDImageXObject imageXObject = PDImageXObject.createFromByteArray(document, bytes, name);
+            content.drawImage(imageXObject, xPosition, yPosition - imageXObject.getHeight());
+
+            lastYPositionJump = imageXObject.getHeight() + textMargin;
+            lastYPosition = lastYPosition + lastYPositionJump;
+
+        } catch (IOException e) {
+            log.error("Failed to save the report: {}", e.getMessage());
+        }
+        return this;
+    }
+
     public PdfBuilder closePage() throws IOException {
         addAndClosePage();
         return this;
@@ -112,11 +146,11 @@ public class PdfBuilder {
         }
     }
 
-    private int getLineHeigt(int fontSize) {
+    private float getMargin(int fontSize) {
         if (fontSize >= H2_FONT_SIZE && fontSize < H1_FONT_SIZE) {
-            return fontSize + 20;
+            return 10f;
         } else {
-            return fontSize;
+            return 0f;
         }
     }
 

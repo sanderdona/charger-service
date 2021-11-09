@@ -42,4 +42,6 @@ public class PdfConstants {
     public static final String TEXT_TARIEF_KWH = "Tarief kWh";
     public static final String TEXT_TOTAAL = "Totaal";
 
+    public static final String TEXT_METERSTANDEN = "Meterstanden";
+    public static final String TEXT_STAND = "Stand";
 }

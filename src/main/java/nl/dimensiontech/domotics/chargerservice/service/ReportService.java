@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
+import nl.dimensiontech.domotics.chargerservice.domain.Proof;
+import nl.dimensiontech.domotics.chargerservice.exception.ReportGenerationFailedException;
 import nl.dimensiontech.domotics.chargerservice.report.domain.ReportTable;
 import nl.dimensiontech.domotics.chargerservice.report.PdfBuilder;
 import nl.dimensiontech.domotics.chargerservice.report.domain.TableCell;
@@ -15,6 +17,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.*;
@@ -35,9 +39,10 @@ public class ReportService {
     private final static PDFont FONT_BOLD = PDType1Font.HELVETICA_BOLD;
 
     private final ChargeSessionService chargeSessionService;
+    private final ProofService proofService;
     private final ConfigProperties configProperties;
 
-    public void generateReport(LocalDate startDate, LocalDate endDate) {
+    public Optional<File> generateReport(LocalDate startDate, LocalDate endDate) {
         log.info("Generating report...");
 
         List<ChargeSession> chargeSessions = chargeSessionService.getSessionsInRange(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
@@ -46,16 +51,24 @@ public class ReportService {
                 .collect(Collectors.toList());
 
         if (registeredChargeSessions.isEmpty()) {
-            log.info("No charge sessions found for range {} to {}. Skipping report generation",
-                    startDate, endDate);
-            return;
+            log.warn("No charge sessions found for range {} to {}. Skipping report generation", startDate, endDate);
+            return Optional.empty();
+        }
+
+        Optional<Proof> startOfMonthProof = proofService.getProofByDate(startDate);
+        Optional<Proof> endOfMonthProof = proofService.getProofByDate(startDate.plusMonths(1L));
+
+        if (startOfMonthProof.isEmpty() || endOfMonthProof.isEmpty()) {
+            log.warn("No proofs found for range {} to {}. Skipping report generation", startDate, endDate);
+            return Optional.empty();
         }
 
         float totalCharged = calculateTotalCharged(registeredChargeSessions);
         float tariff = configProperties.getTariff();
         String totalCosts = String.format("%.2f", totalCharged * tariff);
         String fileName = getFileName(startDate);
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.forLanguageTag(LANGUAGE_TAG));
+        DateTimeFormatter monthYearFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.forLanguageTag(LANGUAGE_TAG));
+        DateTimeFormatter dayMonthYearFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.forLanguageTag(LANGUAGE_TAG));
 
         try {
             new PdfBuilder()
@@ -66,7 +79,7 @@ public class ReportService {
                     .addTextLine(TEXT_KENTEKEN, FONT_PLAIN, P_FONT_SIZE)
                     .addTextLine(configProperties.getLicensePlate(), FONT_PLAIN, P_FONT_SIZE, 150, true)
                     .addTextLine(TEXT_PERIODE, FONT_PLAIN, P_FONT_SIZE)
-                    .addTextLine(dateFormat.format(startDate), FONT_PLAIN, P_FONT_SIZE, 150, true)
+                    .addTextLine(monthYearFormat.format(startDate), FONT_PLAIN, P_FONT_SIZE, 150, true)
                     .addTextLine(TEXT_LAADSESSIES, FONT_PLAIN, H2_FONT_SIZE)
                     .addLine()
                     .createTable()
@@ -78,14 +91,22 @@ public class ReportService {
                     .addTextLine("\u20AC " + tariff, FONT_PLAIN, P_FONT_SIZE, MARGIN_LEFT_4_TABLES_SKIPPED, true)
                     .addTextLine(TEXT_TOTAAL, FONT_BOLD, P_FONT_SIZE + 1, MARGIN_LEFT_3_TABLES_SKIPPED, false)
                     .addTextLine("\u20AC " + totalCosts, FONT_BOLD, P_FONT_SIZE + 1, MARGIN_LEFT_4_TABLES_SKIPPED, true)
+                    .addTextLine(TEXT_METERSTANDEN, FONT_PLAIN, H2_FONT_SIZE)
+                    .addLine()
+                    .addTextLine(TEXT_STAND + " " + dayMonthYearFormat.format(startDate), FONT_PLAIN, P_FONT_SIZE)
+                    .addTextLine(TEXT_STAND + " " + dayMonthYearFormat.format(endDate), FONT_PLAIN, P_FONT_SIZE, 300f, true)
+                    .addImage(startOfMonthProof.get().getFile(), "proof")
+                    .addImage(endOfMonthProof.get().getFile(), "proof", 300f, true)
                     .closePage()
                     .save(fileName);
 
         } catch (IOException e) {
-            log.error("Failed to create the report: {}", e.getMessage());
+            throw new ReportGenerationFailedException(e.getMessage());
         }
 
         log.info("Report successfully generated!");
+
+        return Optional.of(new File(fileName));
     }
 
     private String getFileName(LocalDate startDate) {
