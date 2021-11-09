@@ -39,7 +39,7 @@ public class ConfigProperties {
         private String protocol = "tls";
         private boolean authEnabled = true;
         private boolean tlsEnabled = true;
-        private boolean debugEnabled = true;
+        private boolean debugEnabled = false;
         private String fromAddress;
         private String toAddress;
     }
