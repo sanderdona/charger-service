@@ -11,6 +11,6 @@ public class MqttSubscribedListener implements ApplicationListener<MqttSubscribe
 
     @Override
     public void onApplicationEvent(MqttSubscribedEvent event) {
-        log.info("Subscribed success: {}", event.getMessage());
+        log.info("Subscribing success: {}", event.getMessage());
     }
 }
