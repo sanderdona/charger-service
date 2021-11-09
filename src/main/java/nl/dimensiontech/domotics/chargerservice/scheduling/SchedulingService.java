@@ -1,32 +1,37 @@
 package nl.dimensiontech.domotics.chargerservice.scheduling;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import nl.dimensiontech.domotics.chargerservice.service.MailService;
 import nl.dimensiontech.domotics.chargerservice.service.ReportService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZonedDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SchedulingService {
 
     private final ReportService reportService;
+    private final MailService mailService;
 
     @Scheduled(cron = "0 0 10 1 * *")
     public void generateMonthlyReport() {
-        // get the correct month
-        YearMonth lastMonth = YearMonth.from(ZonedDateTime.now().minusMonths(1));
+        log.info("Starting monthly cron job");
 
-        // get the first day of this month
+        YearMonth lastMonth = YearMonth.from(LocalDate.now().minusMonths(1));
         LocalDate startDate = lastMonth.atDay(1);
-
-        // get the last day of this month
         LocalDate endDate = lastMonth.atEndOfMonth();
 
-        reportService.generateReport(startDate, endDate);
+        Optional<File> generatedReport = reportService.generateReport(startDate, endDate);
+        generatedReport.ifPresent(mailService::sendEmail);
+
+        log.info("Monthly cron job finished");
     }
 
 }
