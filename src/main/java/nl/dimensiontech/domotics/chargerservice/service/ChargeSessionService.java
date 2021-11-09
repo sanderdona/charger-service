@@ -9,7 +9,7 @@ import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionReposito
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +70,7 @@ public class ChargeSessionService {
         float chargedKwh = currentReading - startKwh;
         chargeSession.setEndkWh(currentReading);
         chargeSession.setTotalkwH(chargedKwh);
-        chargeSession.setEndedAt(new Date());
+        chargeSession.setEndedAt(LocalDateTime.now());
 
         chargeSessionRepository.save(chargeSession);
 
@@ -107,6 +107,10 @@ public class ChargeSessionService {
 
     private Optional<ChargeSession> getActiveSession() {
         return chargeSessionRepository.findByEndedAtIsNull();
+    }
+
+    public List<ChargeSession> getSessionsInRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return chargeSessionRepository.findAllByEndedAtBetween(startDate, endDate);
     }
 
 }

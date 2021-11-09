@@ -5,7 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -26,12 +26,12 @@ public class ChargeSession {
     private ChargeSessionType chargeSessionType = ChargeSessionType.ANONYMOUS;
 
     @CreationTimestamp
-    private Date startedAt;
+    private LocalDateTime startedAt;
 
     @Column(nullable = false)
     private float startkWh;
 
-    private Date endedAt;
+    private LocalDateTime endedAt;
 
     private float endkWh;
 

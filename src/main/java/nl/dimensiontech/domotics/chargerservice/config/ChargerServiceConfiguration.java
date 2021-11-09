@@ -11,8 +11,12 @@ import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.scheduling.annotation.EnableAsync;
+
+import java.util.UUID;
 
 @Configuration
+@EnableAsync
 @RequiredArgsConstructor
 public class ChargerServiceConfiguration {
 
@@ -49,7 +53,7 @@ public class ChargerServiceConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
 
         final String mqttHost = mqttConfig.getHost();
-        final String clientId = "chargeServiceChargePowerClient";
+        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
         final String powerTopic = "home/charger/sdm1-1/Power";
         final String importTopic = "home/charger/sdm1-1/Import";
 
@@ -72,7 +76,7 @@ public class ChargerServiceConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
 
         final String mqttHost = mqttConfig.getHost();
-        final String clientId = "chargeServiceTeslaStateClient";
+        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
         final String stateTopic = "teslamate/cars/1/state";
         final String latitudeTopic = "teslamate/cars/1/latitude";
         final String longitudeTopic = "teslamate/cars/1/longitude";

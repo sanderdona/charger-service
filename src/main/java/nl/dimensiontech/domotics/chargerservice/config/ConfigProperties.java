@@ -9,11 +9,15 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "charger-service")
 public class ConfigProperties {
 
+    private float tariff;
+    private String licensePlate;
     private MqttConfig mqttConfig;
     private LocationConfig locationConfig;
+    private EmailConfig emailConfig;
 
     @Data
     public static class MqttConfig {
+        private String client;
         private String host;
         private String username;
         private String password;
@@ -24,6 +28,20 @@ public class ConfigProperties {
         private double homeLatitude;
         private double homeLongitude;
         private int maxDistanceFromHome;
+    }
+
+    @Data
+    public static class EmailConfig {
+        private String host;
+        private int port;
+        private String username;
+        private String password;
+        private String protocol = "tls";
+        private boolean authEnabled = true;
+        private boolean tlsEnabled = true;
+        private boolean debugEnabled = false;
+        private String fromAddress;
+        private String toAddress;
     }
 
 }
