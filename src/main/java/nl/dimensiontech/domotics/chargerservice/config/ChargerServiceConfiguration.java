@@ -11,14 +11,14 @@ import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.UUID;
 
 @Configuration
+@EnableAsync
 @RequiredArgsConstructor
 public class ChargerServiceConfiguration {
-
-    private static final String MQTT_CLIENT_UUID = UUID.randomUUID().toString();
 
     private final ConfigProperties configProperties;
 
@@ -53,7 +53,7 @@ public class ChargerServiceConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
 
         final String mqttHost = mqttConfig.getHost();
-        final String clientId = mqttConfig.getClient() + "_" + MQTT_CLIENT_UUID;
+        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
         final String powerTopic = "home/charger/sdm1-1/Power";
         final String importTopic = "home/charger/sdm1-1/Import";
 
@@ -76,7 +76,7 @@ public class ChargerServiceConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
 
         final String mqttHost = mqttConfig.getHost();
-        final String clientId = mqttConfig.getClient() + "_" + MQTT_CLIENT_UUID;
+        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
         final String stateTopic = "teslamate/cars/1/state";
         final String latitudeTopic = "teslamate/cars/1/latitude";
         final String longitudeTopic = "teslamate/cars/1/longitude";
