@@ -11,9 +11,16 @@ public class ConfigProperties {
 
     private float tariff;
     private String licensePlate;
+    private SessionAssignment sessionAssignment;
     private MqttConfig mqttConfig;
     private LocationConfig locationConfig;
     private EmailConfig emailConfig;
+
+    @Data
+    public static class SessionAssignment {
+        private int retryTimeout = 30;
+        private int numberOfRetries = 3;
+    }
 
     @Data
     public static class MqttConfig {

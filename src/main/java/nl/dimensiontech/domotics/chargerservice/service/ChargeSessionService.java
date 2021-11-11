@@ -22,19 +22,16 @@ public class ChargeSessionService {
     private final ChargeSessionRepository chargeSessionRepository;
 
     public void handleChargePowerUpdate(float chargePower) {
-        if (!isChargeSessionActive() && isCharging(chargePower)) {
+        if (isCharging(chargePower) && !isChargeSessionActive()) {
             startNewSession();
         }
 
-        if (isChargeSessionActive() && !isCharging(chargePower)) {
+        if (!isCharging(chargePower) && isChargeSessionActive()) {
             endSession();
         }
     }
 
-    public void startNewSession() {
-
-        checkValidState();
-
+    private void startNewSession() {
         final float currentReading = energyMeterService.getCurrentReading();
 
         log.info("starting new session at {} kWh", currentReading);
@@ -49,12 +46,6 @@ public class ChargeSessionService {
 
     private boolean isCharging(float power) {
         return power > 0;
-    }
-
-    private void checkValidState() {
-        if (chargeSessionRepository.findByEndedAtIsNull().isPresent()) {
-            throw new IllegalStateException("Session cannot be started; there is already a session active!");
-        }
     }
 
     public void endSession() {
