@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<mqtt.version>5.5.3</mqtt.version>
-		<pdfbox.version>2.0.24</pdfbox.version>
+		<pdfbox.version>2.0.22</pdfbox.version>
 		<boxable.version>1.6</boxable.version>
 		<spring-mail.version>2.5.6</spring-mail.version>
 	</properties>
