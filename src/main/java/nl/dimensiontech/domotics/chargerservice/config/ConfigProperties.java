@@ -28,6 +28,15 @@ public class ConfigProperties {
         private String host;
         private String username;
         private String password;
+        private int qos = 0;
+        private long completionTimeout = 5000;
+        private String powerTopic = "home/charger/sdm1-1/Power";
+        private String importedEnergyTopic = "home/charger/sdm1-1/Import";
+        private String carStateTopic = "teslamate/cars/1/state";
+        private String carLatitudeTopic = "teslamate/cars/1/latitude";
+        private String carLongitudeTopic = "teslamate/cars/1/longitude";
+        private String carOdometerTopic = "teslamate/cars/1/odometer";
+        private String carDisplayNameTopic = "teslamate/cars/1/display_name";
     }
 
     @Data

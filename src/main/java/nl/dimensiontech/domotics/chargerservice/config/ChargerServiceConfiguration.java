@@ -54,8 +54,8 @@ public class ChargerServiceConfiguration {
 
         final String mqttHost = mqttConfig.getHost();
         final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
-        final String powerTopic = "home/charger/sdm1-1/Power";
-        final String importTopic = "home/charger/sdm1-1/Import";
+        final String powerTopic = mqttConfig.getPowerTopic();
+        final String importTopic = mqttConfig.getImportedEnergyTopic();
 
         MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
                 mqttHost,
@@ -63,9 +63,9 @@ public class ChargerServiceConfiguration {
                 clientFactory(),
                 powerTopic,
                 importTopic);
-        adapter.setCompletionTimeout(5000);
+        adapter.setCompletionTimeout(mqttConfig.getCompletionTimeout());
         adapter.setConverter(new DefaultPahoMessageConverter());
-        adapter.setQos(0);
+        adapter.setQos(mqttConfig.getQos());
         adapter.setOutputChannel(chargerInputChannel());
         return adapter;
     }
@@ -77,11 +77,11 @@ public class ChargerServiceConfiguration {
 
         final String mqttHost = mqttConfig.getHost();
         final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
-        final String stateTopic = "teslamate/cars/1/state";
-        final String latitudeTopic = "teslamate/cars/1/latitude";
-        final String longitudeTopic = "teslamate/cars/1/longitude";
-        final String odometerTopic = "teslamate/cars/1/odometer";
-        final String displayNameTopic = "teslamate/cars/1/display_name";
+        final String stateTopic = mqttConfig.getCarStateTopic();
+        final String latitudeTopic = mqttConfig.getCarLatitudeTopic();
+        final String longitudeTopic = mqttConfig.getCarLongitudeTopic();
+        final String odometerTopic = mqttConfig.getCarOdometerTopic();
+        final String displayNameTopic = mqttConfig.getCarDisplayNameTopic();
 
         MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
                 mqttHost,
@@ -92,9 +92,9 @@ public class ChargerServiceConfiguration {
                 longitudeTopic,
                 odometerTopic,
                 displayNameTopic);
-        adapter.setCompletionTimeout(5000);
+        adapter.setCompletionTimeout(mqttConfig.getCompletionTimeout());
         adapter.setConverter(new DefaultPahoMessageConverter());
-        adapter.setQos(0);
+        adapter.setQos(mqttConfig.getQos());
         adapter.setOutputChannel(carStateInputChannel());
         return adapter;
     }
