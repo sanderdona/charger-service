@@ -111,6 +111,65 @@ class ReportServiceTest {
         assertThat(file.delete()).isTrue();
     }
 
+    @Test
+    public void testSkipGenerationWhenNoChargeSessionsAvailable() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, Month.OCTOBER, 1);
+        LocalDate endDate = startDate.plusMonths(1L);
+
+        List<ChargeSession> chargeSessions = new ArrayList<>();
+
+        createChargeSession(chargeSessions, 1L, ChargeSessionType.ANONYMOUS,
+                LocalDateTime.of(2021, Month.OCTOBER, 1, 12, 17),
+                LocalDateTime.of(2021, Month.OCTOBER, 1, 17, 7),
+                0, 1147.427f, 1191.307f);
+
+        createChargeSession(chargeSessions, 2L, ChargeSessionType.ANONYMOUS,
+                LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 41),
+                LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 52),
+                0, 1191.307f, 1193.022f);
+
+        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class)))
+                .thenReturn(chargeSessions);
+
+        // when
+        Optional<File> optionalFile = reportService.generateReport(startDate, endDate);
+
+        // then
+        assertThat(optionalFile).isEmpty();
+    }
+
+    @Test
+    public void testSkipGenerationOnMissingProof() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, Month.OCTOBER, 1);
+        LocalDate endDate = startDate.plusMonths(1L);
+
+        List<ChargeSession> chargeSessions = new ArrayList<>();
+
+        createChargeSession(chargeSessions, 1L, ChargeSessionType.REGISTERED,
+                LocalDateTime.of(2021, Month.OCTOBER, 1, 12, 17),
+                LocalDateTime.of(2021, Month.OCTOBER, 1, 17, 7),
+                15954, 1147.427f, 1191.307f);
+
+        createChargeSession(chargeSessions, 2L, ChargeSessionType.REGISTERED,
+                LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 41),
+                LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 52),
+                16248, 1191.307f, 1193.022f);
+
+        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class)))
+                .thenReturn(chargeSessions);
+
+        when(proofService.getProofByDate(startDate)).thenReturn(Optional.of(new Proof()));
+        when(proofService.getProofByDate(startDate.plusMonths(1))).thenReturn(Optional.empty());
+
+        // when
+        Optional<File> optionalFile = reportService.generateReport(startDate, endDate);
+
+        // then
+        assertThat(optionalFile).isEmpty();
+    }
+
     private Proof createProof(String imageName) throws IOException {
         Proof startOfMonthProof = new Proof();
         String fileName = "src/test/resources/images/" + imageName;
