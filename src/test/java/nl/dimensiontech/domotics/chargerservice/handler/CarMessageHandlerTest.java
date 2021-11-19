@@ -29,7 +29,7 @@ class CarMessageHandlerTest {
     private CarService carService;
 
     @InjectMocks
-    private CarMessageHandler carMessageHandler;
+    private ChargeMessageHandler carMessageHandler;
 
     @Captor
     private ArgumentCaptor<Car> carCaptor;
@@ -47,9 +47,7 @@ class CarMessageHandlerTest {
         String topic = "teslamate/cars/1/state";
         String payload = "driving";
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put(TOPIC_HEADER, topic);
-        Message<String> message = new GenericMessage<>(payload, headers);
+        Message<String> message = createMessage(topic, payload);
 
         // when
         carMessageHandler.handleMessage(message);
@@ -62,14 +60,84 @@ class CarMessageHandlerTest {
     }
 
     @Test
+    public void shouldHandleCarLatitudeMessage() {
+        // given
+        String topic = "teslamate/cars/1/latitude";
+        String payload = "51.012345";
+
+        Message<String> message = createMessage(topic, payload);
+
+        // when
+        carMessageHandler.handleMessage(message);
+
+        // then
+        verify(carService, times(1)).handleStateChange(carCaptor.capture());
+
+        Car capturedCar = carCaptor.getValue();
+        assertThat(capturedCar.getLatitude()).isEqualTo(51.012345);
+    }
+
+    @Test
+    public void shouldHandleCarLongitudeMessage() {
+        // given
+        String topic = "teslamate/cars/1/longitude";
+        String payload = "5.000000";
+
+        Message<String> message = createMessage(topic, payload);
+
+        // when
+        carMessageHandler.handleMessage(message);
+
+        // then
+        verify(carService, times(1)).handleStateChange(carCaptor.capture());
+
+        Car capturedCar = carCaptor.getValue();
+        assertThat(capturedCar.getLongitude()).isEqualTo(5.000000);
+    }
+
+    @Test
+    public void shouldHandleCarOdometerMessage() {
+        // given
+        String topic = "teslamate/cars/1/odometer";
+        String payload = "16119.19";
+
+        Message<String> message = createMessage(topic, payload);
+
+        // when
+        carMessageHandler.handleMessage(message);
+
+        // then
+        verify(carService, times(1)).handleStateChange(carCaptor.capture());
+
+        Car capturedCar = carCaptor.getValue();
+        assertThat(capturedCar.getOdometer()).isEqualTo(16119);
+    }
+
+    @Test
+    public void shouldHandleCarDisplayNameMessage() {
+        // given
+        String topic = "teslamate/cars/1/display_name";
+        String payload = "FooCar";
+
+        Message<String> message = createMessage(topic, payload);
+
+        // when
+        carMessageHandler.handleMessage(message);
+
+        // then
+        verify(carService, times(1)).handleStateChange(carCaptor.capture());
+
+        Car capturedCar = carCaptor.getValue();
+        assertThat(capturedCar.getName()).isEqualTo("FooCar");
+    }
+
+    @Test
     public void shouldHandleUnknownCarState() {
         // given
         String topic = "teslamate/cars/1/state";
         String payload = "foo";
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put(TOPIC_HEADER, topic);
-        Message<String> message = new GenericMessage<>(payload, headers);
+        Message<String> message = createMessage(topic, payload);
 
         // when
         carMessageHandler.handleMessage(message);
@@ -79,6 +147,31 @@ class CarMessageHandlerTest {
 
         Car capturedCar = carCaptor.getValue();
         assertThat(capturedCar.getCarState()).isEqualTo(CarState.ONLINE);
+    }
+
+    @Test
+    public void shouldCreateNewCar() {
+        // given
+        when(carService.getCarById(1L)).thenReturn(Optional.empty());
+        Car newCar = new Car();
+        when(carService.saveCar(isA(Car.class))).thenReturn(newCar);
+
+        String topic = "teslamate/cars/1/state";
+        String payload = "driving";
+
+        Message<String> message = createMessage(topic, payload);
+
+        // when
+        carMessageHandler.handleMessage(message);
+
+        // then
+        verify(carService, times(1)).handleStateChange(newCar);
+    }
+
+    private Message<String> createMessage(String topic, String payload) {
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(TOPIC_HEADER, topic);
+        return new GenericMessage<>(payload, headers);
     }
 
 }

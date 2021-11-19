@@ -22,7 +22,7 @@ import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.*
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class CarMessageHandler implements MessageHandler {
+public class ChargeMessageHandler implements MessageHandler {
 
     private final CarService carService;
 
