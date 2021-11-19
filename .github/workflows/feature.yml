@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Unit Test
+    name: Build, test and coverage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
