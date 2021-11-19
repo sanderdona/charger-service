@@ -1,3 +1,4 @@
 ignore:
-  - "**/config/**/*"
-  - "**/constants/**/*"
+  - "**/config/*Configuration.java"
+  - "**/config/*Properties.java"
+  - "**/constants/*"
