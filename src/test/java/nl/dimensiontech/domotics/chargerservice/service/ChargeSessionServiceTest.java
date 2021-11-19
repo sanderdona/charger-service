@@ -1,5 +1,6 @@
 package nl.dimensiontech.domotics.chargerservice.service;
 
+import nl.dimensiontech.domotics.chargerservice.domain.Car;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
 import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionRepository;
@@ -23,35 +24,125 @@ class ChargeSessionServiceTest {
     private EnergyMeterService energyMeterService;
 
     @Mock
-    private ChargeSessionRepository repository;
+    private ChargeSessionRepository chargeSessionRepository;
 
     @Captor
     private ArgumentCaptor<ChargeSession> chargeSessionCaptor;
 
     @InjectMocks
-    private ChargeSessionService service;
+    private ChargeSessionService chargeSessionService;
 
     @Test
-    public void shouldStartChargeSession() {
+    public void testStartChargeSession() {
         // given
         final float chargePower = 9.578f;
         final float currentReading = 120.055f;
-        when(repository.findByEndedAtIsNull()).thenReturn(Optional.empty());
+        when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.empty());
         when(energyMeterService.getCurrentReading()).thenReturn(currentReading);
 
         ChargeSession chargeSession = new ChargeSession();
         chargeSession.setId(1L);
-        when(repository.save(isA(ChargeSession.class))).thenReturn(chargeSession);
+        when(chargeSessionRepository.save(isA(ChargeSession.class))).thenReturn(chargeSession);
 
         // when
-        service.handleChargePowerUpdate(chargePower);
+        chargeSessionService.handleChargePowerUpdate(chargePower);
 
         // then
-        verify(repository, times(1)).save(chargeSessionCaptor.capture());
+        verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
         ChargeSession capturedSession = chargeSessionCaptor.getValue();
 
         assertThat(capturedSession.getStartkWh()).isEqualTo(currentReading);
         assertThat(capturedSession.getChargeSessionType()).isEqualTo(ChargeSessionType.ANONYMOUS);
+    }
+
+    @Test
+    public void testEndActiveSession() {
+        // given
+        final float chargePower = 0f;
+        final float startkWh = 120.055f;
+        final float currentReading = 161.013f;
+        ChargeSession chargeSession = new ChargeSession();
+        chargeSession.setId(1L);
+        chargeSession.setStartkWh(startkWh);
+        when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.of(chargeSession));
+        when(energyMeterService.getCurrentReading()).thenReturn(currentReading);
+
+        // when
+        chargeSessionService.handleChargePowerUpdate(chargePower);
+
+        // then
+        verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
+        ChargeSession capturedSession = chargeSessionCaptor.getValue();
+
+        assertThat(capturedSession.getStartkWh()).isEqualTo(startkWh);
+        assertThat(capturedSession.getEndkWh()).isEqualTo(currentReading);
+        assertThat(capturedSession.getTotalkwH()).isEqualTo(currentReading - startkWh);
+    }
+
+    @Test
+    public void testNoInteractionsOnChargePowerAndActiveSession() {
+        // given
+        final float chargePower = 9.578f;
+        ChargeSession chargeSession = new ChargeSession();
+        when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.of(chargeSession));
+
+        // when
+        chargeSessionService.handleChargePowerUpdate(chargePower);
+
+        // then
+        verify(chargeSessionRepository, never()).save(isA(ChargeSession.class));
+        verifyNoInteractions(energyMeterService);
+    }
+
+    @Test
+    public void testNoInteractionsOnNoChargePowerAndNoActiveSession() {
+        // given
+        final float chargePower = 0f;
+        when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.empty());
+
+        // when
+        chargeSessionService.handleChargePowerUpdate(chargePower);
+
+        // then
+        verify(chargeSessionRepository, never()).save(isA(ChargeSession.class));
+        verifyNoInteractions(energyMeterService);
+    }
+
+    @Test
+    public void testAssignToActiveSession() {
+        // given
+        Car car = new Car();
+        car.setName("foo");
+        car.setOdometer(16504);
+        ChargeSession chargeSession = new ChargeSession();
+        when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.of(chargeSession));
+
+        // when
+        boolean assigned = chargeSessionService.assignToActiveSession(car);
+
+        // then
+        assertThat(assigned).isTrue();
+
+        verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
+        ChargeSession capturedSession = chargeSessionCaptor.getValue();
+
+        assertThat(capturedSession.getCar()).isEqualTo(car);
+        assertThat(capturedSession.getOdoMeter()).isEqualTo(car.getOdometer());
+        assertThat(capturedSession.getChargeSessionType()).isEqualTo(ChargeSessionType.REGISTERED);
+    }
+
+    @Test
+    public void testAssignToActiveSessionNoSessionActive() {
+        // given
+        Car car = new Car();
+        when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.empty());
+
+        // when
+        boolean assigned = chargeSessionService.assignToActiveSession(car);
+
+        // then
+        assertThat(assigned).isFalse();
+        verify(chargeSessionRepository, never()).save(isA(ChargeSession.class));
     }
 
 }

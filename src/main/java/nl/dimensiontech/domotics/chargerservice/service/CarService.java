@@ -21,9 +21,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class CarService {
 
-    private static final int ASSIGNING_RETRY_TIMEOUT = 30;
-    private static final int ASSIGNING_RETRIES = 3;
-
     private final ConfigProperties config;
     private final ChargeSessionService chargeSessionService;
     private final CarRepository carRepository;
@@ -60,18 +57,36 @@ public class CarService {
     private void assignToActiveSession(Car car) {
         log.info("Car {} is at home, assigning to active session.", car.getName());
 
-        boolean assigned = chargeSessionService.assignToActiveSession(car);
+        if (!chargeSessionService.assignToActiveSession(car)) {
+            retryAssignToActiveSession(car);
+        }
+    }
 
+    private void retryAssignToActiveSession(Car car) {
+        ConfigProperties.SessionAssignment sessionAssignment = config.getSessionAssignment();
+        int retryTimeout = sessionAssignment.getRetryTimeout();
+        int numberOfRetries = sessionAssignment.getNumberOfRetries();
+
+        boolean assigned = false;
         int retries = 0;
-        while (!assigned && retries < ASSIGNING_RETRIES) {
-            log.info("Assigning to active session failed. Trying again in {} seconds...", ASSIGNING_RETRY_TIMEOUT);
-            sleep(ASSIGNING_RETRY_TIMEOUT);
+
+        while (!assigned && retries < numberOfRetries) {
+            log.info("Assigning to active session failed. Trying again in {} seconds...", retryTimeout);
+            sleep(retryTimeout);
             assigned = chargeSessionService.assignToActiveSession(car);
             retries++;
         }
 
         if (!assigned) {
-            log.error("Could not assign to session after {} retries!", ASSIGNING_RETRIES);
+            log.error("Could not assign to session after {} retries!", numberOfRetries);
+        }
+    }
+
+    private void sleep(int timeInSeconds) {
+        try {
+            TimeUnit.SECONDS.sleep(timeInSeconds);
+        } catch (InterruptedException e) {
+            log.error("Sleep thread interrupted");
         }
     }
 
@@ -88,13 +103,5 @@ public class CarService {
         log.info("Car distance from home: {} m", String.format("%,.2f", currentDistanceFromHome));
 
         return currentDistanceFromHome <= maxDistanceFromHome;
-    }
-
-    public static void sleep(int timeInSeconds) {
-        try {
-            TimeUnit.SECONDS.sleep(timeInSeconds);
-        } catch (InterruptedException e) {
-            log.error("Sleep thread interrupted");
-        }
     }
 }
