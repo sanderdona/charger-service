@@ -29,9 +29,9 @@ public class EntityCreatedEventListener {
         LocalDate proofDate = proof.getDate();
 
         if (currentDate.isAfter(proofDate)) {
-            YearMonth lastMonth = YearMonth.from(proofDate.minusMonths(1));
-            LocalDate startDate = lastMonth.atDay(1);
-            LocalDate endDate = lastMonth.atEndOfMonth();
+            YearMonth previousMonth = YearMonth.from(proofDate.minusMonths(1));
+            LocalDate startDate = previousMonth.atDay(1);
+            LocalDate endDate = previousMonth.atEndOfMonth();
 
             log.info("Submitted a proof before the current date: generating report for range {} to {}", startDate, endDate);
 
