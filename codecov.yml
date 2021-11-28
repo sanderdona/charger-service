@@ -1,0 +1,5 @@
+ignore:
+  - "**/config/*Configuration.java"
+  - "**/config/*Properties.java"
+  - "**/constants/*"
+  - "**/domain/*"
