@@ -25,10 +25,10 @@ public class EntityCreatedEventListener {
     void handleProofCreatedEvent(EntityCreatedEvent<Proof> event) {
         Proof proof = event.getEntity();
 
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.now(); // TODO should use a date-time service to mock localDate
         LocalDate proofDate = proof.getDate();
 
-        if (currentDate.isAfter(proofDate)) {
+        if (currentDate.isEqual(proofDate) || currentDate.isAfter(proofDate)) {
             YearMonth previousMonth = YearMonth.from(proofDate.minusMonths(1));
             LocalDate startDate = previousMonth.atDay(1);
             LocalDate endDate = previousMonth.atEndOfMonth();
