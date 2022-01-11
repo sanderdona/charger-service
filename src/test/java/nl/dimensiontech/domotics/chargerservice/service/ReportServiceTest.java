@@ -24,7 +24,8 @@ import java.util.Optional;
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.FILE_EXTENSION;
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.TEXT_DECLARATIE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
