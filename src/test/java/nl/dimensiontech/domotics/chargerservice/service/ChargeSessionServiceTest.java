@@ -157,7 +157,7 @@ class ChargeSessionServiceTest {
         LocalDate endDate = LocalDate.of(2021, Month.OCTOBER, 31);
         List<ChargeSession> chargeSessions = createChargeSessionList();
 
-        when(chargeSessionRepository.findAllByEndedAtBetween(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)))
+        when(chargeSessionRepository.findAllByEndedAtBetweenOrderByIdAsc(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)))
                 .thenReturn(chargeSessions);
 
         // when
@@ -176,7 +176,7 @@ class ChargeSessionServiceTest {
         LocalDate endDate = LocalDate.of(2021, Month.OCTOBER, 31);
         List<ChargeSession> chargeSessions = createChargeSessionList();
 
-        when(chargeSessionRepository.findAllByEndedAtBetween(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)))
+        when(chargeSessionRepository.findAllByEndedAtBetweenOrderByIdAsc(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)))
                 .thenReturn(chargeSessions);
 
         // when
