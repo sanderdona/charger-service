@@ -6,7 +6,6 @@ import nl.dimensiontech.domotics.chargerservice.domain.Car;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
 import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionRepository;
-import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -106,7 +105,7 @@ public class ChargeSessionService {
     }
 
     public List<ChargeSession> getSessionsInRange(LocalDateTime startDate, LocalDateTime endDate, boolean filterZeroUsage) {
-        List<ChargeSession> sessions = chargeSessionRepository.findAllByEndedAtBetween(startDate, endDate);
+        List<ChargeSession> sessions = chargeSessionRepository.findAllByEndedAtBetweenOrderByIdAsc(startDate, endDate);
 
         if (filterZeroUsage) {
             return sessions.stream()

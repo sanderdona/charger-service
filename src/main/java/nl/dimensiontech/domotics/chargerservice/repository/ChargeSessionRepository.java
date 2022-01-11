@@ -13,5 +13,5 @@ public interface ChargeSessionRepository extends CrudRepository<ChargeSession, L
 
     Optional<ChargeSession> findByEndedAtIsNull();
 
-    List<ChargeSession> findAllByEndedAtBetween(LocalDateTime from, LocalDateTime to);
+    List<ChargeSession> findAllByEndedAtBetweenOrderByIdAsc(LocalDateTime from, LocalDateTime to);
 }
