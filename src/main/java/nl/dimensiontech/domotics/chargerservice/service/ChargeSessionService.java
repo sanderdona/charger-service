@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -89,7 +90,7 @@ public class ChargeSessionService {
     }
 
     public List<ChargeSession> getSessions() {
-        return Streamable.of(chargeSessionRepository.findAll()).toList();
+        return chargeSessionRepository.findAllByOrderByIdAsc();
     }
 
     public boolean isChargeSessionActive() {
@@ -101,7 +102,18 @@ public class ChargeSessionService {
     }
 
     public List<ChargeSession> getSessionsInRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return chargeSessionRepository.findAllByEndedAtBetween(startDate, endDate);
+        return getSessionsInRange(startDate, endDate, false);
+    }
+
+    public List<ChargeSession> getSessionsInRange(LocalDateTime startDate, LocalDateTime endDate, boolean filterZeroUsage) {
+        List<ChargeSession> sessions = chargeSessionRepository.findAllByEndedAtBetween(startDate, endDate);
+
+        if (filterZeroUsage) {
+            return sessions.stream()
+                    .filter(chargeSession -> chargeSession.getStartkWh() != chargeSession.getEndkWh())
+                    .collect(Collectors.toList());
+        }
+        return sessions;
     }
 
 }
