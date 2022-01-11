@@ -45,7 +45,8 @@ public class ReportService {
     public Optional<File> generateReport(LocalDate startDate, LocalDate endDate) {
         log.info("Generating report...");
 
-        List<ChargeSession> chargeSessions = chargeSessionService.getSessionsInRange(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
+        List<ChargeSession> chargeSessions = chargeSessionService.getSessionsInRange(startDate.atStartOfDay(),
+                endDate.atTime(LocalTime.MAX), true);
         List<ChargeSession> registeredChargeSessions = chargeSessions.stream()
                 .filter(chargeSession -> ChargeSessionType.REGISTERED.equals(chargeSession.getChargeSessionType()))
                 .collect(Collectors.toList());

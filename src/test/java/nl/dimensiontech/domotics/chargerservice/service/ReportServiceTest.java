@@ -24,7 +24,7 @@ import java.util.Optional;
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.FILE_EXTENSION;
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.TEXT_DECLARATIE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -85,7 +85,7 @@ class ReportServiceTest {
         LocalDate startDate = LocalDate.of(2021, Month.OCTOBER, 1);
         LocalDate endDate = startDate.plusMonths(1L);
 
-        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class)))
+        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class), eq(true)))
                 .thenReturn(chargeSessions);
 
         Proof startOfMonthProof = createProof("startOfMonth.jpeg");
@@ -129,7 +129,7 @@ class ReportServiceTest {
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 52),
                 0, 1191.307f, 1193.022f);
 
-        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class)))
+        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class), eq(true)))
                 .thenReturn(chargeSessions);
 
         // when
@@ -157,7 +157,7 @@ class ReportServiceTest {
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 52),
                 16248, 1191.307f, 1193.022f);
 
-        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class)))
+        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class), eq(true)))
                 .thenReturn(chargeSessions);
 
         when(proofService.getProofByDate(startDate)).thenReturn(Optional.of(new Proof()));

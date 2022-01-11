@@ -12,7 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -143,6 +146,61 @@ class ChargeSessionServiceTest {
         // then
         assertThat(assigned).isFalse();
         verify(chargeSessionRepository, never()).save(isA(ChargeSession.class));
+    }
+
+    @Test
+    public void testGetSessionsInRange() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, Month.OCTOBER, 1);
+        LocalDate endDate = LocalDate.of(2021, Month.OCTOBER, 31);
+        List<ChargeSession> chargeSessions = createChargeSessionList();
+
+        when(chargeSessionRepository.findAllByEndedAtBetween(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)))
+                .thenReturn(chargeSessions);
+
+        // when
+        List<ChargeSession> sessionsInRange = chargeSessionService.getSessionsInRange(
+                startDate.atStartOfDay(),
+                endDate.atTime(LocalTime.MAX));
+
+        // then
+        assertThat(sessionsInRange).hasSize(4);
+    }
+
+    @Test
+    public void testGetSessionsInRangeWithoutZeroUsage() {
+        // given
+        LocalDate startDate = LocalDate.of(2021, Month.OCTOBER, 1);
+        LocalDate endDate = LocalDate.of(2021, Month.OCTOBER, 31);
+        List<ChargeSession> chargeSessions = createChargeSessionList();
+
+        when(chargeSessionRepository.findAllByEndedAtBetween(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)))
+                .thenReturn(chargeSessions);
+
+        // when
+        List<ChargeSession> sessionsInRange = chargeSessionService.getSessionsInRange(
+                startDate.atStartOfDay(),
+                endDate.atTime(LocalTime.MAX),
+                true);
+
+        // then
+        assertThat(sessionsInRange).hasSize(3);
+    }
+
+    private List<ChargeSession> createChargeSessionList() {
+        return Arrays.asList(
+                createChargeSession(45.556f, 46.732f),
+                createChargeSession(46.732f, 46.732f),
+                createChargeSession(46.732f, 51.184f),
+                createChargeSession(51.184f, 67.284f)
+        );
+    }
+
+    private ChargeSession createChargeSession(float startkWh, float endkWh) {
+        ChargeSession chargeSession = new ChargeSession();
+        chargeSession.setStartkWh(startkWh);
+        chargeSession.setEndkWh(endkWh);
+        return chargeSession;
     }
 
 }

@@ -25,8 +25,9 @@ public class ProofService {
 
     public Proof save(Proof proof) {
         resizeImage(proof);
+        proofRepository.save(proof);
         publishCreatedEvent(proof);
-        return proofRepository.save(proof);
+        return proof;
     }
 
     private void publishCreatedEvent(Proof proof) {

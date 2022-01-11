@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface ChargeSessionRepository extends CrudRepository<ChargeSession, Long> {
 
+    List<ChargeSession> findAllByOrderByIdAsc();
+
     Optional<ChargeSession> findByEndedAtIsNull();
 
     List<ChargeSession> findAllByEndedAtBetween(LocalDateTime from, LocalDateTime to);
