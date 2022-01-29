@@ -1,6 +1,5 @@
 package nl.dimensiontech.domotics.chargerservice.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,7 +14,6 @@ public class ChargeSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     private Car car;
 
