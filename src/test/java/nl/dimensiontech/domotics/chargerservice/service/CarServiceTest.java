@@ -109,6 +109,33 @@ class CarServiceTest {
     }
 
     @Test
+    public void testHandleCarStateChangeToPreconditioning() {
+        // given
+        Car car = new Car();
+        car.setName("foo");
+        car.setLatitude(51.000022);
+        car.setLongitude(5.000016);
+        car.setCarState(CarState.SUSPENDED); // TODO check this!
+        car.setPluggedIn(true);
+        car.setPreconditioning(true);
+
+        ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
+        locationConfig.setMaxDistanceFromHome(30);
+        locationConfig.setHomeLatitude(51.000000);
+        locationConfig.setHomeLongitude(5.000000);
+        when(configProperties.getLocationConfig()).thenReturn(locationConfig);
+
+        when(chargeSessionService.assignToActiveSession(car)).thenReturn(true);
+
+        // when
+        carService.handleStateChange(car);
+
+        // then
+        verify(carRepository, times(1)).save(car);
+        verify(chargeSessionService, times(1)).assignToActiveSession(car);
+    }
+
+    @Test
     public void testHandleCarStateChangeToChargingNotAtHome() {
         // given
         Car car = new Car();
@@ -116,6 +143,31 @@ class CarServiceTest {
         car.setLatitude(51.006922);
         car.setLongitude(5.004116);
         car.setCarState(CarState.CHARGING);
+
+        ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
+        locationConfig.setMaxDistanceFromHome(30);
+        locationConfig.setHomeLatitude(51.000000);
+        locationConfig.setHomeLongitude(5.000000);
+        when(configProperties.getLocationConfig()).thenReturn(locationConfig);
+
+        // when
+        carService.handleStateChange(car);
+
+        // then
+        verify(carRepository, times(1)).save(car);
+        verifyNoInteractions(chargeSessionService);
+    }
+
+    @Test
+    public void testHandleCarStateChangeToPreconditioningNotAtHome() {
+        // given
+        Car car = new Car();
+        car.setName("foo");
+        car.setLatitude(51.006922);
+        car.setLongitude(5.004116);
+        car.setCarState(CarState.SUSPENDED); // TODO check this!
+        car.setPluggedIn(true);
+        car.setPreconditioning(true);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);
