@@ -115,7 +115,7 @@ class CarServiceTest {
         car.setName("foo");
         car.setLatitude(51.000022);
         car.setLongitude(5.000016);
-        car.setCarState(CarState.SUSPENDED); // TODO check this!
+        car.setCarState(CarState.SUSPENDED);
         car.setPluggedIn(true);
         car.setPreconditioning(true);
 
@@ -165,7 +165,7 @@ class CarServiceTest {
         car.setName("foo");
         car.setLatitude(51.006922);
         car.setLongitude(5.004116);
-        car.setCarState(CarState.SUSPENDED); // TODO check this!
+        car.setCarState(CarState.SUSPENDED);
         car.setPluggedIn(true);
         car.setPreconditioning(true);
 
