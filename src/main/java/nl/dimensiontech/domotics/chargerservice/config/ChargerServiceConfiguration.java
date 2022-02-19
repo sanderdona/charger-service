@@ -78,6 +78,8 @@ public class ChargerServiceConfiguration {
         final String mqttHost = mqttConfig.getHost();
         final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
         final String stateTopic = mqttConfig.getCarStateTopic();
+        final String pluggedInTopic = mqttConfig.getCarPluggedInTopic();
+        final String isPreconditioningTopic = mqttConfig.getCarIsPreconditioningTopic();
         final String latitudeTopic = mqttConfig.getCarLatitudeTopic();
         final String longitudeTopic = mqttConfig.getCarLongitudeTopic();
         final String odometerTopic = mqttConfig.getCarOdometerTopic();
@@ -88,6 +90,8 @@ public class ChargerServiceConfiguration {
                 clientId,
                 clientFactory(),
                 stateTopic,
+                pluggedInTopic,
+                isPreconditioningTopic,
                 latitudeTopic,
                 longitudeTopic,
                 odometerTopic,
