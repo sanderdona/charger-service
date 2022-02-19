@@ -45,6 +45,18 @@ public class ChargeMessageHandler implements MessageHandler {
             getCarState(state).ifPresent(car::setCarState);
         }
 
+        if (PLUGGED_IN.equals(TopicNameUtil.getValueName(message))) {
+            boolean pluggedIn = Boolean.parseBoolean((String) message.getPayload());
+            log.debug("Received plugged_in message '{}'", pluggedIn);
+            car.setPluggedIn(pluggedIn);
+        }
+
+        if (IS_PRECONDITIONING.equals(TopicNameUtil.getValueName(message))) {
+            boolean isPreconditioning = Boolean.parseBoolean((String) message.getPayload());
+            log.debug("Received is_preconditioning message '{}'", isPreconditioning);
+            car.setPreconditioning(isPreconditioning);
+        }
+
         if (LATITUDE_TOPIC.equals(TopicNameUtil.getValueName(message))) {
             double latitude = Double.parseDouble((String) message.getPayload());
             log.debug("Received car latitude message '{}'", latitude);

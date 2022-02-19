@@ -36,7 +36,7 @@ public class CarService {
     public void handleStateChange(Car car) {
         carRepository.save(car);
 
-        if (CarState.CHARGING.equals(car.getCarState())) {
+        if (CarState.CHARGING.equals(car.getCarState()) || isPreconditioning(car)) {
             handleStateToCharging(car);
         }
     }
@@ -88,6 +88,10 @@ public class CarService {
         } catch (InterruptedException e) {
             log.error("Sleep thread interrupted");
         }
+    }
+
+    private boolean isPreconditioning(Car car) {
+        return car.isPreconditioning() && car.isPluggedIn();
     }
 
     public boolean isAtHome(Car car) {

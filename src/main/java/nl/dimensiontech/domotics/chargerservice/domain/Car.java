@@ -19,6 +19,10 @@ public class Car {
     @Enumerated(EnumType.STRING)
     private CarState carState;
 
+    private boolean pluggedIn;
+
+    private boolean isPreconditioning;
+
     private int odometer;
 
     private double latitude;
