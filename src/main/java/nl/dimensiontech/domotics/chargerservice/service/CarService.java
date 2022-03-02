@@ -36,6 +36,12 @@ public class CarService {
     public void handleStateChange(Car car) {
         carRepository.save(car);
 
+        if (car.isPreconditioning() || car.isPluggedIn()) {
+            log.info("state: {}", car.getCarState());
+            log.info("is plugged in: {}", car.isPluggedIn());
+            log.info("is preconditioning: {}", car.isPreconditioning());
+        }
+
         if (CarState.CHARGING.equals(car.getCarState()) || isPreconditioning(car)) {
             handleStateToCharging(car);
         }
