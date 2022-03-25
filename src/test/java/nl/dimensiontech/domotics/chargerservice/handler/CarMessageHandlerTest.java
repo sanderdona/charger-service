@@ -60,10 +60,10 @@ class CarMessageHandlerTest {
     }
 
     @Test
-    public void shouldHandleCarPluggedInMessage() {
+    public void shouldHandleCarChargerPowerMessage() {
         // given
-        String topic = "teslamate/cars/1/plugged_in";
-        String payload = "true";
+        String topic = "teslamate/cars/1/charger_power";
+        String payload = "2";
 
         Message<String> message = createMessage(topic, payload);
 
@@ -74,25 +74,7 @@ class CarMessageHandlerTest {
         verify(carService, times(1)).handleStateChange(carCaptor.capture());
 
         Car capturedCar = carCaptor.getValue();
-        assertThat(capturedCar.isPluggedIn()).isEqualTo(true);
-    }
-
-    @Test
-    public void shouldHandleCarIsPreconditioningMessage() {
-        // given
-        String topic = "teslamate/cars/1/is_preconditioning";
-        String payload = "true";
-
-        Message<String> message = createMessage(topic, payload);
-
-        // when
-        carMessageHandler.handleMessage(message);
-
-        // then
-        verify(carService, times(1)).handleStateChange(carCaptor.capture());
-
-        Car capturedCar = carCaptor.getValue();
-        assertThat(capturedCar.isPreconditioning()).isEqualTo(true);
+        assertThat(capturedCar.getChargerPower()).isEqualTo(2);
     }
 
     @Test

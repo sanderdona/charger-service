@@ -5,8 +5,7 @@ public class MqttConstants {
     public static final String TOPIC_SEPARATOR = "/";
     public static final String TOPIC_HEADER = "mqtt_receivedTopic";
     public static final String STATE_TOPIC = "state";
-    public static final String IS_PRECONDITIONING = "is_preconditioning";
-    public static final String PLUGGED_IN = "plugged_in";
+    public static final String CHARGER_POWER_TOPIC = "charger_power";
     public static final String LATITUDE_TOPIC = "latitude";
     public static final String LONGITUDE_TOPIC = "longitude";
     public static final String ODOMETER_TOPIC = "odometer";

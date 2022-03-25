@@ -39,44 +39,31 @@ public class ChargeMessageHandler implements MessageHandler {
             car = optionalCar.get();
         }
 
-        if (STATE_TOPIC.equals(TopicNameUtil.getValueName(message))) {
-            String state = (String) message.getPayload();
-            log.debug("Received car state message '{}'", state);
-            getCarState(state).ifPresent(car::setCarState);
-        }
-
-        if (PLUGGED_IN.equals(TopicNameUtil.getValueName(message))) {
-            boolean pluggedIn = Boolean.parseBoolean((String) message.getPayload());
-            log.debug("Received plugged_in message '{}'", pluggedIn);
-            car.setPluggedIn(pluggedIn);
-        }
-
-        if (IS_PRECONDITIONING.equals(TopicNameUtil.getValueName(message))) {
-            boolean isPreconditioning = Boolean.parseBoolean((String) message.getPayload());
-            log.debug("Received is_preconditioning message '{}'", isPreconditioning);
-            car.setPreconditioning(isPreconditioning);
-        }
-
-        if (LATITUDE_TOPIC.equals(TopicNameUtil.getValueName(message))) {
-            double latitude = Double.parseDouble((String) message.getPayload());
-            log.debug("Received car latitude message '{}'", latitude);
-            car.setLatitude(latitude);
-        }
-
-        if (LONGITUDE_TOPIC.equals(TopicNameUtil.getValueName(message))) {
-            double longitude = Double.parseDouble((String) message.getPayload());
-            log.debug("Received car longitude message '{}'", longitude);
-            car.setLongitude(longitude);
-        }
-
-        if (ODOMETER_TOPIC.equals(TopicNameUtil.getValueName(message))) {
-            int odometer = getOdometer(message);
-            car.setOdometer(odometer);
-        }
-
-        if (DISPLAY_NAME_TOPIC.equals(TopicNameUtil.getValueName(message))) {
-            String displayName = (String) message.getPayload();
-            car.setName(displayName);
+        switch (TopicNameUtil.getValueName(message)) {
+            case STATE_TOPIC:
+                String state = (String) message.getPayload();
+                getCarState(state).ifPresent(car::setCarState);
+                break;
+            case CHARGER_POWER_TOPIC:
+                int chargerPower = Integer.parseInt((String) message.getPayload());
+                car.setChargerPower(chargerPower);
+                break;
+            case LATITUDE_TOPIC:
+                double latitude = Double.parseDouble((String) message.getPayload());
+                car.setLatitude(latitude);
+                break;
+            case LONGITUDE_TOPIC:
+                double longitude = Double.parseDouble((String) message.getPayload());
+                car.setLongitude(longitude);
+                break;
+            case ODOMETER_TOPIC:
+                int odometer = getOdometer(message);
+                car.setOdometer(odometer);
+                break;
+            case DISPLAY_NAME_TOPIC:
+                String displayName = (String) message.getPayload();
+                car.setName(displayName);
+                break;
         }
 
         carService.handleStateChange(car);
