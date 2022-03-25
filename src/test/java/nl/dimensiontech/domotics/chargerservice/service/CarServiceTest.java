@@ -116,8 +116,7 @@ class CarServiceTest {
         car.setLatitude(51.000022);
         car.setLongitude(5.000016);
         car.setCarState(CarState.SUSPENDED);
-        car.setPluggedIn(true);
-        car.setPreconditioning(true);
+        car.setChargerPower(3);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);
@@ -166,8 +165,7 @@ class CarServiceTest {
         car.setLatitude(51.006922);
         car.setLongitude(5.004116);
         car.setCarState(CarState.SUSPENDED);
-        car.setPluggedIn(true);
-        car.setPreconditioning(true);
+        car.setChargerPower(3);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);

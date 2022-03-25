@@ -33,8 +33,7 @@ public class ConfigProperties {
         private String powerTopic = "home/charger/sdm1-1/Power";
         private String importedEnergyTopic = "home/charger/sdm1-1/Import";
         private String carStateTopic = "teslamate/cars/1/state";
-        private String carPluggedInTopic = "teslamate/cars/1/plugged_in";
-        private String carIsPreconditioningTopic = "teslamate/cars/1/is_preconditioning";
+        private String carChargerPower = "teslamate/cars/1/charger_power";
         private String carLatitudeTopic = "teslamate/cars/1/latitude";
         private String carLongitudeTopic = "teslamate/cars/1/longitude";
         private String carOdometerTopic = "teslamate/cars/1/odometer";

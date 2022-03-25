@@ -36,13 +36,7 @@ public class CarService {
     public void handleStateChange(Car car) {
         carRepository.save(car);
 
-        if (car.isPreconditioning() || car.isPluggedIn()) {
-            log.info("state: {}", car.getCarState());
-            log.info("is plugged in: {}", car.isPluggedIn());
-            log.info("is preconditioning: {}", car.isPreconditioning());
-        }
-
-        if (CarState.CHARGING.equals(car.getCarState()) || isPreconditioning(car)) {
+        if (isDrawingPower(car)) {
             handleStateToCharging(car);
         }
     }
@@ -56,7 +50,7 @@ public class CarService {
         if (isAtHome(car)) {
             assignToActiveSession(car);
         } else {
-            log.info("Car {} is charging elsewhere.", car.getName());
+            log.info("Car {} is not charging at home. Skip assigning to session.", car.getName());
         }
     }
 
@@ -96,8 +90,9 @@ public class CarService {
         }
     }
 
-    private boolean isPreconditioning(Car car) {
-        return car.isPreconditioning() && car.isPluggedIn();
+    private boolean isDrawingPower(Car car) {
+        // To be sure the car is drawing power we both listen to the car state and charger power.
+        return CarState.CHARGING.equals(car.getCarState()) || car.getChargerPower() > 0;
     }
 
     public boolean isAtHome(Car car) {
