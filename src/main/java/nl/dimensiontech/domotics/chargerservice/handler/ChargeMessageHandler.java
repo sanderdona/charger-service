@@ -64,6 +64,8 @@ public class ChargeMessageHandler implements MessageHandler {
                 String displayName = (String) message.getPayload();
                 car.setName(displayName);
                 break;
+            default:
+                log.debug("No interesting message to handle");
         }
 
         carService.handleStateChange(car);
