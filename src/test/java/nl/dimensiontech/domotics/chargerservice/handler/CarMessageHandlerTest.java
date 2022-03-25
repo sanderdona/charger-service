@@ -168,6 +168,21 @@ class CarMessageHandlerTest {
     }
 
     @Test
+    public void shouldIgnoreUnknownTopic() {
+        // given
+        String topic = "teslamate/cars/1/foo";
+        String payload = "bar";
+
+        Message<String> message = createMessage(topic, payload);
+
+        // when
+        carMessageHandler.handleMessage(message);
+
+        // then
+        verify(carService, times(1)).handleStateChange(carCaptor.capture());
+    }
+
+    @Test
     public void shouldCreateNewCar() {
         // given
         when(carService.getCarById(1L)).thenReturn(Optional.empty());
