@@ -11,6 +11,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -30,49 +31,47 @@ public class ChargeMessageHandler implements MessageHandler {
     public void handleMessage(Message<?> message) throws MessagingException {
 
         Long carId = TopicNameUtil.getCarId(message);
-        Optional<Car> optionalCar = carService.getCarById(carId);
+        String topicName = TopicNameUtil.getLastTopicName(message);
+        String payload = String.valueOf(message.getPayload());
 
-        Car car;
-        if (optionalCar.isEmpty()) {
-            car = createCar(carId);
-        } else {
-            car = optionalCar.get();
+        if (!StringUtils.hasText(payload)) {
+            log.debug("Message on topic '{}' does not contain a payload!", topicName);
+            return;
         }
 
-        switch (TopicNameUtil.getValueName(message)) {
+        Car car = carService.getCarById(carId).orElse(createCar(carId));
+
+        switch (topicName) {
             case STATE_TOPIC:
-                String state = (String) message.getPayload();
-                getCarState(state).ifPresent(car::setCarState);
+                getCarState(payload).ifPresent(car::setCarState);
                 break;
             case CHARGER_POWER_TOPIC:
-                int chargerPower = Integer.parseInt((String) message.getPayload());
+                int chargerPower = Integer.parseInt(payload);
                 car.setChargerPower(chargerPower);
                 break;
             case LATITUDE_TOPIC:
-                double latitude = Double.parseDouble((String) message.getPayload());
+                double latitude = Double.parseDouble(payload);
                 car.setLatitude(latitude);
                 break;
             case LONGITUDE_TOPIC:
-                double longitude = Double.parseDouble((String) message.getPayload());
+                double longitude = Double.parseDouble(payload);
                 car.setLongitude(longitude);
                 break;
             case ODOMETER_TOPIC:
-                int odometer = getOdometer(message);
+                int odometer = getOdometer(payload);
                 car.setOdometer(odometer);
                 break;
             case DISPLAY_NAME_TOPIC:
-                String displayName = (String) message.getPayload();
-                car.setName(displayName);
+                car.setName(payload);
                 break;
             default:
-                log.debug("No interesting message to handle");
+                log.debug("Not interested in messages from topic '{}'", topicName);
         }
 
         carService.handleStateChange(car);
     }
 
-    private int getOdometer(Message<?> message) {
-        String payload = (String) message.getPayload();
+    private int getOdometer(String payload) {
         Number number;
 
         try {

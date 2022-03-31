@@ -15,7 +15,7 @@ public class TopicNameUtil {
         return Long.valueOf(split[2]);
     }
 
-    public static String getValueName(Message<?> message) {
+    public static String getLastTopicName(Message<?> message) {
         String topic = (String) message.getHeaders().get(TOPIC_HEADER);
         assert topic != null;
 

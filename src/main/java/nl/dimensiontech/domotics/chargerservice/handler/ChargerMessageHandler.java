@@ -25,15 +25,16 @@ public class ChargerMessageHandler implements MessageHandler {
     @ServiceActivator(inputChannel = "chargerInputChannel")
     public void handleMessage(Message<?> message) throws MessagingException {
 
-        String payload = (String) message.getPayload();
+        String topicName = TopicNameUtil.getLastTopicName(message);
+        String payload = String.valueOf(message.getPayload());
 
-        if (POWER_TOPIC.equals(TopicNameUtil.getValueName(message))) {
+        if (POWER_TOPIC.equals(topicName)) {
             float chargePower = Float.parseFloat(payload);
             log.debug("Received power message {} kW", chargePower);
             chargeSessionService.handleChargePowerUpdate(chargePower);
         }
 
-        if (IMPORT_TOPIC.equals(TopicNameUtil.getValueName(message))) {
+        if (IMPORT_TOPIC.equals(topicName)) {
             float importedEnergy = Float.parseFloat(payload);
             log.debug("Received imported energy message {} kWh", importedEnergy);
             energyMeterService.setCurrentReading(importedEnergy);
