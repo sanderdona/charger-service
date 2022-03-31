@@ -1,6 +1,5 @@
 package nl.dimensiontech.domotics.chargerservice.handler;
 
-import nl.dimensiontech.domotics.chargerservice.service.CarService;
 import nl.dimensiontech.domotics.chargerservice.service.ChargeSessionService;
 import nl.dimensiontech.domotics.chargerservice.service.EnergyMeterService;
 import org.junit.jupiter.api.Test;

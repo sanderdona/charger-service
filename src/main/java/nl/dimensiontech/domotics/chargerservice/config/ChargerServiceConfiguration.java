@@ -1,6 +1,7 @@
 package nl.dimensiontech.domotics.chargerservice.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +13,13 @@ import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannel
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
 @Configuration
 @EnableAsync
+@Slf4j
 @RequiredArgsConstructor
 public class ChargerServiceConfiguration {
 
@@ -37,12 +40,17 @@ public class ChargerServiceConfiguration {
         DefaultMqttPahoClientFactory clientFactory = new DefaultMqttPahoClientFactory();
 
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
+        String username = mqttConfig.getUsername();
+        String password = mqttConfig.getPassword();
 
-        MqttConnectOptions connectOptions = new MqttConnectOptions();
-        connectOptions.setUserName(mqttConfig.getUsername());
-        connectOptions.setPassword(mqttConfig.getPassword().toCharArray());
-
-        clientFactory.setConnectionOptions(connectOptions);
+        if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
+            MqttConnectOptions connectOptions = new MqttConnectOptions();
+            connectOptions.setUserName(username);
+            connectOptions.setPassword(password.toCharArray());
+            clientFactory.setConnectionOptions(connectOptions);
+        } else {
+            log.warn("Connecting to MQTT broker without username and password");
+        }
 
         return clientFactory;
     }

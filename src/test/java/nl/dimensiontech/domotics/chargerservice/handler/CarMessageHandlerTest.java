@@ -34,13 +34,6 @@ class CarMessageHandlerTest {
     @Captor
     private ArgumentCaptor<Car> carCaptor;
 
-    @BeforeEach
-    public void init() {
-        Car car = new Car();
-        car.setCarState(CarState.ONLINE);
-        when(carService.getCarById(1L)).thenReturn(Optional.of(car));
-    }
-
     @Test
     public void shouldHandleCarStateMessage() {
         // given
@@ -48,6 +41,8 @@ class CarMessageHandlerTest {
         String payload = "driving";
 
         Message<String> message = createMessage(topic, payload);
+
+        when(carService.getCarById(1L)).thenReturn(Optional.of(new Car()));
 
         // when
         carMessageHandler.handleMessage(message);
@@ -60,12 +55,29 @@ class CarMessageHandlerTest {
     }
 
     @Test
+    public void shouldIgnoreEmptyPayload() {
+        // given
+        String topic = "teslamate/cars/1/charger_power";
+        String payload = "";
+
+        Message<String> message = createMessage(topic, payload);
+
+        // when
+        carMessageHandler.handleMessage(message);
+
+        // then
+        verifyNoInteractions(carService);
+    }
+
+    @Test
     public void shouldHandleCarChargerPowerMessage() {
         // given
         String topic = "teslamate/cars/1/charger_power";
         String payload = "2";
 
         Message<String> message = createMessage(topic, payload);
+
+        when(carService.getCarById(1L)).thenReturn(Optional.of(new Car()));
 
         // when
         carMessageHandler.handleMessage(message);
@@ -85,6 +97,8 @@ class CarMessageHandlerTest {
 
         Message<String> message = createMessage(topic, payload);
 
+        when(carService.getCarById(1L)).thenReturn(Optional.of(new Car()));
+
         // when
         carMessageHandler.handleMessage(message);
 
@@ -102,6 +116,8 @@ class CarMessageHandlerTest {
         String payload = "5.000000";
 
         Message<String> message = createMessage(topic, payload);
+
+        when(carService.getCarById(1L)).thenReturn(Optional.of(new Car()));
 
         // when
         carMessageHandler.handleMessage(message);
@@ -121,6 +137,8 @@ class CarMessageHandlerTest {
 
         Message<String> message = createMessage(topic, payload);
 
+        when(carService.getCarById(1L)).thenReturn(Optional.of(new Car()));
+
         // when
         carMessageHandler.handleMessage(message);
 
@@ -138,6 +156,8 @@ class CarMessageHandlerTest {
         String payload = "FooCar";
 
         Message<String> message = createMessage(topic, payload);
+
+        when(carService.getCarById(1L)).thenReturn(Optional.of(new Car()));
 
         // when
         carMessageHandler.handleMessage(message);
@@ -157,6 +177,10 @@ class CarMessageHandlerTest {
 
         Message<String> message = createMessage(topic, payload);
 
+        Car car = new Car();
+        car.setCarState(CarState.ONLINE);
+        when(carService.getCarById(1L)).thenReturn(Optional.of(car));
+
         // when
         carMessageHandler.handleMessage(message);
 
@@ -174,6 +198,8 @@ class CarMessageHandlerTest {
         String payload = "bar";
 
         Message<String> message = createMessage(topic, payload);
+
+        when(carService.getCarById(1L)).thenReturn(Optional.of(new Car()));
 
         // when
         carMessageHandler.handleMessage(message);
