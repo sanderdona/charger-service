@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.domain.Car;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
+import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
+import nl.dimensiontech.domotics.chargerservice.mapper.ChargeSessionMapper;
 import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +24,7 @@ public class ChargeSessionService {
 
     private final EnergyMeterService energyMeterService;
     private final ChargeSessionRepository chargeSessionRepository;
+    private final ChargeSessionMapper mapper;
 
     public void handleChargePowerUpdate(float chargePower) {
         if (isCharging(chargePower) && !isChargeSessionActive()) {
@@ -88,8 +93,8 @@ public class ChargeSessionService {
         }
     }
 
-    public List<ChargeSession> getSessions() {
-        return chargeSessionRepository.findAllByOrderByIdAsc();
+    public Page<ChargeSession> getSessions(Pageable pageable) {
+        return chargeSessionRepository.findAll(pageable);
     }
 
     public boolean isChargeSessionActive() {
