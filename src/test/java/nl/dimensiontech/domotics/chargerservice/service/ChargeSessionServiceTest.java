@@ -11,11 +11,15 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -187,6 +191,20 @@ class ChargeSessionServiceTest {
 
         // then
         assertThat(sessionsInRange).hasSize(3);
+    }
+
+    @Test
+    public void testGetPageOfSessions() {
+        // given
+        Pageable pageable = Pageable.ofSize(1);
+        PageImpl<ChargeSession> chargeSessionPage = new PageImpl<>(Collections.singletonList(new ChargeSession()));
+        when(chargeSessionRepository.findAll(pageable)).thenReturn(chargeSessionPage);
+
+        // when
+        Page<ChargeSession> chargeSessionPageResult = chargeSessionService.getSessions(pageable);
+
+        // then
+        assertThat(chargeSessionPageResult).isEqualTo(chargeSessionPage);
     }
 
     private List<ChargeSession> createChargeSessionList() {

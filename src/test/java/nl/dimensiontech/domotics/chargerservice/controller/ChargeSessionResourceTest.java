@@ -9,10 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,15 +34,16 @@ class ChargeSessionResourceTest {
     @Test
     public void testGetChargeSessions() {
         // given
-        List<ChargeSession> sessions = List.of(new ChargeSession());
-        when(chargeSessionService.getSessions()).thenReturn(sessions);
-        when(mapper.toDto(sessions)).thenReturn(List.of(new ChargeSessionDto()));
+        ChargeSession chargeSession = new ChargeSession();
+        when(chargeSessionService.getSessions(isA(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(chargeSession)));
+        when(mapper.toDto(chargeSession)).thenReturn(new ChargeSessionDto());
 
         // when
-        List<ChargeSessionDto> chargeSessions = chargeSessionResource.getCharges();
+        Page<ChargeSessionDto> chargeSessionPage = chargeSessionResource.getCharges(Pageable.ofSize(1));
 
         // then
-        assertThat(chargeSessions.size()).isEqualTo(1);
+        assertThat(chargeSessionPage.getTotalPages()).isEqualTo(1);
     }
 
 }
