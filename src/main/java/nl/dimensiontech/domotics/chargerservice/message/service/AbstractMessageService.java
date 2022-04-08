@@ -18,7 +18,7 @@ public abstract class AbstractMessageService<T> implements MessageService<T> {
         try {
             return objectMapper.writeValueAsString(t);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to map to JSON string");
+            throw new RuntimeException("Failed to map to JSON string:\n" + e.getMessage());
         }
     }
 }
