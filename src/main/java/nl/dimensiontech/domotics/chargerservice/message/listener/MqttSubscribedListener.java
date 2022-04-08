@@ -1,4 +1,4 @@
-package nl.dimensiontech.domotics.chargerservice.listener;
+package nl.dimensiontech.domotics.chargerservice.message.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;

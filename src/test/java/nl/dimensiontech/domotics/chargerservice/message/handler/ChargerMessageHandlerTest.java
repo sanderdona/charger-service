@@ -1,4 +1,4 @@
-package nl.dimensiontech.domotics.chargerservice.handler;
+package nl.dimensiontech.domotics.chargerservice.message.handler;
 
 import nl.dimensiontech.domotics.chargerservice.service.ChargeSessionService;
 import nl.dimensiontech.domotics.chargerservice.service.EnergyMeterService;
