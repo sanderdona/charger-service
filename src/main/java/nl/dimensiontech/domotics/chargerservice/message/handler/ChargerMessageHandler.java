@@ -1,4 +1,4 @@
-package nl.dimensiontech.domotics.chargerservice.handler;
+package nl.dimensiontech.domotics.chargerservice.message.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

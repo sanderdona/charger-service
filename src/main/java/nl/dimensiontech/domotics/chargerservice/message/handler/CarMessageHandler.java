@@ -1,4 +1,4 @@
-package nl.dimensiontech.domotics.chargerservice.handler;
+package nl.dimensiontech.domotics.chargerservice.message.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.*
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ChargeMessageHandler implements MessageHandler {
+public class CarMessageHandler implements MessageHandler {
 
     private final CarService carService;
 

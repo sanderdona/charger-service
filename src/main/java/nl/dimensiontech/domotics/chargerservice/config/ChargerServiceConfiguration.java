@@ -5,13 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessageProducer;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
+import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHandler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.util.StringUtils;
 
@@ -32,6 +35,11 @@ public class ChargerServiceConfiguration {
 
     @Bean
     public MessageChannel carStateInputChannel() {
+        return new DirectChannel();
+    }
+
+    @Bean
+    public MessageChannel chargerMessageOutboundChannel() {
         return new DirectChannel();
     }
 
@@ -108,6 +116,22 @@ public class ChargerServiceConfiguration {
         adapter.setQos(mqttConfig.getQos());
         adapter.setOutputChannel(carStateInputChannel());
         return adapter;
+    }
+
+    @Bean
+    @ServiceActivator(inputChannel = "chargerMessageOutboundChannel")
+    public MessageHandler chargerServiceOutbound() {
+
+        ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
+
+        final String mqttHost = mqttConfig.getHost();
+        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
+        final String messageTopic = mqttConfig.getMessageTopic();
+
+        MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(mqttHost, clientId, clientFactory());
+        messageHandler.setAsync(true);
+        messageHandler.setDefaultTopic(messageTopic);
+        return messageHandler;
     }
 
 }

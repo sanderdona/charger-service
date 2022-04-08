@@ -1,9 +1,8 @@
-package nl.dimensiontech.domotics.chargerservice.handler;
+package nl.dimensiontech.domotics.chargerservice.message.handler;
 
 import nl.dimensiontech.domotics.chargerservice.domain.Car;
 import nl.dimensiontech.domotics.chargerservice.domain.CarState;
 import nl.dimensiontech.domotics.chargerservice.service.CarService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -29,7 +28,7 @@ class CarMessageHandlerTest {
     private CarService carService;
 
     @InjectMocks
-    private ChargeMessageHandler carMessageHandler;
+    private CarMessageHandler carMessageHandler;
 
     @Captor
     private ArgumentCaptor<Car> carCaptor;
