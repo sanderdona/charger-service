@@ -86,11 +86,10 @@ class CarServiceTest {
     @Test
     public void testHandleCarStateChangeToCharging() {
         // given
-        Car car = new Car();
-        car.setName("foo");
-        car.setLatitude(51.000022);
-        car.setLongitude(5.000016);
-        car.setCarState(CarState.CHARGING);
+        Car currentState = createCar("foo", CarState.SUSPENDED, 51.000022, 5.000016, 0);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(currentState));
+
+        Car updatedState = createCar("foo", CarState.CHARGING, 51.000022, 5.000016, 3);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);
@@ -98,25 +97,23 @@ class CarServiceTest {
         locationConfig.setHomeLongitude(5.000000);
         when(configProperties.getLocationConfig()).thenReturn(locationConfig);
 
-        when(chargeSessionService.assignToActiveSession(car)).thenReturn(true);
+        when(chargeSessionService.assignToActiveSession(updatedState)).thenReturn(true);
 
         // when
-        carService.handleStateChange(car);
+        carService.handleStateChange(updatedState);
 
         // then
-        verify(carRepository, times(1)).save(car);
-        verify(chargeSessionService, times(1)).assignToActiveSession(car);
+        verify(carRepository, times(1)).save(updatedState);
+        verify(chargeSessionService, times(1)).assignToActiveSession(updatedState);
     }
 
     @Test
     public void testHandleCarStateChangeToPreconditioning() {
         // given
-        Car car = new Car();
-        car.setName("foo");
-        car.setLatitude(51.000022);
-        car.setLongitude(5.000016);
-        car.setCarState(CarState.SUSPENDED);
-        car.setChargerPower(3);
+        Car currentState = createCar("foo", CarState.SUSPENDED, 51.000022, 5.000016, 0);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(currentState));
+
+        Car updatedState = createCar("foo", CarState.SUSPENDED, 51.000022, 5.000016, 3);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);
@@ -124,24 +121,23 @@ class CarServiceTest {
         locationConfig.setHomeLongitude(5.000000);
         when(configProperties.getLocationConfig()).thenReturn(locationConfig);
 
-        when(chargeSessionService.assignToActiveSession(car)).thenReturn(true);
+        when(chargeSessionService.assignToActiveSession(updatedState)).thenReturn(true);
 
         // when
-        carService.handleStateChange(car);
+        carService.handleStateChange(updatedState);
 
         // then
-        verify(carRepository, times(1)).save(car);
-        verify(chargeSessionService, times(1)).assignToActiveSession(car);
+        verify(carRepository, times(1)).save(updatedState);
+        verify(chargeSessionService, times(1)).assignToActiveSession(updatedState);
     }
 
     @Test
     public void testHandleCarStateChangeToChargingNotAtHome() {
         // given
-        Car car = new Car();
-        car.setName("foo");
-        car.setLatitude(51.006922);
-        car.setLongitude(5.004116);
-        car.setCarState(CarState.CHARGING);
+        Car currentState = createCar("foo", CarState.SUSPENDED, 51.006922, 5.004116, 0);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(currentState));
+
+        Car updatedState = createCar("foo", CarState.CHARGING, 51.006922, 5.004116, 3);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);
@@ -150,22 +146,20 @@ class CarServiceTest {
         when(configProperties.getLocationConfig()).thenReturn(locationConfig);
 
         // when
-        carService.handleStateChange(car);
+        carService.handleStateChange(updatedState);
 
         // then
-        verify(carRepository, times(1)).save(car);
+        verify(carRepository, times(1)).save(updatedState);
         verifyNoInteractions(chargeSessionService);
     }
 
     @Test
     public void testHandleCarStateChangeToPreconditioningNotAtHome() {
         // given
-        Car car = new Car();
-        car.setName("foo");
-        car.setLatitude(51.006922);
-        car.setLongitude(5.004116);
-        car.setCarState(CarState.SUSPENDED);
-        car.setChargerPower(3);
+        Car currentState = createCar("foo", CarState.SUSPENDED, 51.006922, 5.004116, 0);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(currentState));
+
+        Car updatedState = createCar("foo", CarState.SUSPENDED, 51.006922, 5.004116, 3);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);
@@ -174,21 +168,20 @@ class CarServiceTest {
         when(configProperties.getLocationConfig()).thenReturn(locationConfig);
 
         // when
-        carService.handleStateChange(car);
+        carService.handleStateChange(updatedState);
 
         // then
-        verify(carRepository, times(1)).save(car);
+        verify(carRepository, times(1)).save(updatedState);
         verifyNoInteractions(chargeSessionService);
     }
 
     @Test
     public void testHandleCarStateChangeToChargingRetryAssigning() {
         // given
-        Car car = new Car();
-        car.setName("foo");
-        car.setLatitude(51.000022);
-        car.setLongitude(5.000016);
-        car.setCarState(CarState.CHARGING);
+        Car currentState = createCar("foo", CarState.SUSPENDED, 51.000022, 5.000016, 0);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(currentState));
+
+        Car updatedState = createCar("foo", CarState.CHARGING, 51.000022, 5.000016, 3);
 
         ConfigProperties.LocationConfig locationConfig = new ConfigProperties.LocationConfig();
         locationConfig.setMaxDistanceFromHome(30);
@@ -201,13 +194,55 @@ class CarServiceTest {
         sessionAssignment.setNumberOfRetries(3);
         when(configProperties.getSessionAssignment()).thenReturn(sessionAssignment);
 
-        when(chargeSessionService.assignToActiveSession(car)).thenReturn(false).thenReturn(true);
+        when(chargeSessionService.assignToActiveSession(updatedState)).thenReturn(false).thenReturn(true);
 
         // when
-        carService.handleStateChange(car);
+        carService.handleStateChange(updatedState);
 
         // then
-        verify(carRepository, times(1)).save(car);
-        verify(chargeSessionService, times(2)).assignToActiveSession(car);
+        verify(carRepository, times(1)).save(updatedState);
+        verify(chargeSessionService, times(2)).assignToActiveSession(updatedState);
+    }
+
+    @Test
+    public void testHandleCarStateChangeToOnline() {
+        // given
+        Car currentState = createCar("foo", CarState.CHARGING, 51.000022, 5.000016, 4);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(currentState));
+
+        Car updatedState = createCar("foo", CarState.ONLINE, 51.000022, 5.000016, 0);
+
+        // when
+        carService.handleStateChange(updatedState);
+
+        // then
+        verify(carRepository, times(1)).save(updatedState);
+        verifyNoInteractions(chargeSessionService);
+    }
+
+    private Car createCar(String name,
+                          CarState carState,
+                          double latitude,
+                          double longitude,
+                          int chargerPower) {
+        return createCar(1L, name, carState, latitude, longitude, 0, chargerPower);
+    }
+
+    private Car createCar(Long id,
+                          String name,
+                          CarState carState,
+                          double latitude,
+                          double longitude,
+                          int odoMeter,
+                          int chargerPower) {
+        Car car = new Car();
+        car.setId(id);
+        car.setName(name);
+        car.setChargerPower(chargerPower);
+        car.setCarState(carState);
+        car.setLatitude(latitude);
+        car.setLongitude(longitude);
+        car.setOdometer(odoMeter);
+        return car;
     }
 }

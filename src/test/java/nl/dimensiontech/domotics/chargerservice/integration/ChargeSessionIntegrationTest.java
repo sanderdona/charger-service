@@ -10,11 +10,13 @@ import nl.dimensiontech.domotics.chargerservice.message.handler.ChargerMessageHa
 import nl.dimensiontech.domotics.chargerservice.message.handler.OutboundMessageHandler;
 import nl.dimensiontech.domotics.chargerservice.repository.CarRepository;
 import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionRepository;
+import nl.dimensiontech.domotics.chargerservice.service.ChargeSessionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -49,6 +51,9 @@ public class ChargeSessionIntegrationTest {
 
     @Autowired
     private CarMessageHandler carMessageHandler;
+
+    @SpyBean
+    private ChargeSessionService chargeSessionService;
 
     @BeforeEach
     public void test() {
@@ -98,9 +103,8 @@ public class ChargeSessionIntegrationTest {
 
     @Test
     public void shouldCreateNewRegisteredChargeSession() {
-
         // given
-        createCar("TestCar", CarState.ASLEEP, "51.1", "5.2", 1234);
+        createCar(1L, "TestCar", CarState.ASLEEP, 51.1, 5.2, 1234, 0);
 
         // when
         chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "123456"));
@@ -124,7 +128,7 @@ public class ChargeSessionIntegrationTest {
     @Test
     public void shouldCreateNewRegisteredChargeSessionBasedOnChargerPower() {
         // given
-        createCar("TestCar", CarState.SUSPENDED, "51.1", "5.2", 1234);
+        createCar(1L, "TestCar", CarState.SUSPENDED, 51.1, 5.2, 1234, 0);
 
         // when
         chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "123456"));
@@ -141,12 +145,34 @@ public class ChargeSessionIntegrationTest {
         verify(outboundMessageHandler, times(2)).sendMessage(anyString());
     }
 
-    private void createCar(String name, CarState carState, String latitude, String longitude, int odoMeter) {
-        carMessageHandler.handleMessage(createMessage("foo/car/1/display_name", name));
-        carMessageHandler.handleMessage(createMessage("foo/car/1/state", carState.carstate));
-        carMessageHandler.handleMessage(createMessage("foo/car/1/latitude", latitude));
-        carMessageHandler.handleMessage(createMessage("foo/car/1/longitude", longitude));
-        carMessageHandler.handleMessage(createMessage("foo/car/1/odometer", Integer.toString(odoMeter)));
+    @Test
+    public void shouldIgnoreNonStartChargerPower() {
+        // given
+        createCar(1L, "TestCar", CarState.SUSPENDED, 51.1, 5.2, 1234, 3);
+
+        // when
+        carMessageHandler.handleMessage(createMessage("foo/car/1/charger_power", "4"));
+
+        // then
+        verifyNoInteractions(chargeSessionService);
+    }
+
+    private void createCar(Long id,
+                           String name,
+                           CarState carState,
+                           double latitude,
+                           double longitude,
+                           int odoMeter,
+                           int chargerPower) {
+        Car car = new Car();
+        car.setId(id);
+        car.setName(name);
+        car.setChargerPower(chargerPower);
+        car.setCarState(carState);
+        car.setLatitude(latitude);
+        car.setLongitude(longitude);
+        car.setOdometer(odoMeter);
+        carRepository.save(car);
     }
 
     private List<ChargeSession> toList(Iterable<ChargeSession> chargeSessions) {
