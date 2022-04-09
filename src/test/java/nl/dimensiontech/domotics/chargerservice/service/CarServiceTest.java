@@ -204,6 +204,22 @@ class CarServiceTest {
         verify(chargeSessionService, times(2)).assignToActiveSession(updatedState);
     }
 
+    @Test
+    public void testHandleCarStateChangeToOnline() {
+        // given
+        Car currentState = createCar("foo", CarState.CHARGING, 51.000022, 5.000016, 4);
+        when(carRepository.findById(1L)).thenReturn(Optional.of(currentState));
+
+        Car updatedState = createCar("foo", CarState.ONLINE, 51.000022, 5.000016, 0);
+
+        // when
+        carService.handleStateChange(updatedState);
+
+        // then
+        verify(carRepository, times(1)).save(updatedState);
+        verifyNoInteractions(chargeSessionService);
+    }
+
     private Car createCar(String name,
                           CarState carState,
                           double latitude,
