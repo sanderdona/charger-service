@@ -39,7 +39,7 @@ public class CarMessageHandler implements MessageHandler {
             return;
         }
 
-        Car car = carService.getCarById(carId).orElse(createCar(carId));
+        Car car = carService.getCarById(carId).orElseGet(() -> createCar(carId));
 
         switch (topicName) {
             case STATE_TOPIC:

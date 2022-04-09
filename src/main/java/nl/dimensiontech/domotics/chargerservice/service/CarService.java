@@ -33,11 +33,12 @@ public class CarService {
         return carRepository.save(car);
     }
 
-    public void handleStateChange(Car car) {
-        carRepository.save(car);
+    public void handleStateChange(Car newCarState) {
+        Car oldCarState = carRepository.findById(newCarState.getId()).orElse(newCarState);
+        carRepository.save(newCarState);
 
-        if (isDrawingPower(car)) {
-            handleStateToCharging(car);
+        if (isStateChangeToCharging(newCarState, oldCarState)) {
+            handleStateToCharging(newCarState);
         }
     }
 
@@ -90,9 +91,20 @@ public class CarService {
         }
     }
 
-    private boolean isDrawingPower(Car car) {
+    private boolean isStateChangeToCharging(Car newCarState, Car oldCarState) {
         // To be sure the car is drawing power we both listen to the car state and charger power.
-        return CarState.CHARGING.equals(car.getCarState()) || car.getChargerPower() > 0;
+        return isCarStateChangeToCharging(newCarState, oldCarState) ||
+                isChargerPowerChangeToStarted(newCarState, oldCarState);
+    }
+
+    private boolean isCarStateChangeToCharging(Car newCarState, Car oldCarState) {
+        return newCarState.getCarState() != null &&
+                !newCarState.getCarState().equals(oldCarState.getCarState()) &&
+                CarState.CHARGING.equals(newCarState.getCarState());
+    }
+
+    private boolean isChargerPowerChangeToStarted(Car newCarState, Car oldCarState) {
+        return 0 == oldCarState.getChargerPower() && newCarState.getChargerPower() > 0;
     }
 
     public boolean isAtHome(Car car) {
