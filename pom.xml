@@ -14,7 +14,7 @@
 	<name>charger-service</name>
 	<description>Automatically register charge sessions</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<mqtt.version>5.5.10</mqtt.version>
 		<pdfbox.version>2.0.25</pdfbox.version>
 		<boxable.version>1.6</boxable.version>
