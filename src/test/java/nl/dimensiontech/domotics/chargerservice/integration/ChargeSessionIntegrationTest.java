@@ -78,7 +78,27 @@ public class ChargeSessionIntegrationTest {
     }
 
     @Test
-    public void shouldEndAnonymousChargeSession() throws Exception {
+    public void shouldCreateNewRegisteredChargeSession() {
+        // given
+        createCar(1L, "TestCar", CarState.ONLINE, 51.1, 5.2, 1234, 0);
+
+        // when
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "123456"));
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "4.467"));
+        carMessageHandler.handleMessage(createMessage("foo/car/1/charger_power", "3"));
+
+        // then
+        List<ChargeSession> chargeSessions = toList(sessionRepository.findAll());
+        assertThat(chargeSessions).hasSize(1);
+        ChargeSession chargeSession = chargeSessions.get(0);
+        assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.REGISTERED);
+        assertThat(chargeSession.getStartkWh()).isEqualTo(123456f);
+
+        verify(outboundMessageHandler, times(2)).sendMessage(anyString());
+    }
+
+    @Test
+    public void shouldEndChargeSession() throws Exception {
         // given & when
         chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5000"));
         chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "4.467"));
@@ -102,51 +122,7 @@ public class ChargeSessionIntegrationTest {
     }
 
     @Test
-    public void shouldCreateNewRegisteredChargeSession() {
-        // given
-        createCar(1L, "TestCar", CarState.ASLEEP, 51.1, 5.2, 1234, 0);
-
-        // when
-        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "123456"));
-        chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "4.467"));
-        carMessageHandler.handleMessage(createMessage("foo/car/1/state", CarState.CHARGING.carstate));
-
-        // then
-        List<ChargeSession> chargeSessions = toList(sessionRepository.findAll());
-        assertThat(chargeSessions).hasSize(1);
-        ChargeSession chargeSession = chargeSessions.get(0);
-        assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.REGISTERED);
-        assertThat(chargeSession.getStartkWh()).isEqualTo(123456f);
-        assertThat(chargeSession.getCar()).isNotNull();
-
-        Car car = chargeSession.getCar();
-        assertThat(car.getId()).isEqualTo(1L);
-
-        verify(outboundMessageHandler, times(2)).sendMessage(anyString());
-    }
-
-    @Test
-    public void shouldCreateNewRegisteredChargeSessionBasedOnChargerPower() {
-        // given
-        createCar(1L, "TestCar", CarState.SUSPENDED, 51.1, 5.2, 1234, 0);
-
-        // when
-        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "123456"));
-        chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "4.467"));
-        carMessageHandler.handleMessage(createMessage("foo/car/1/charger_power", "3"));
-
-        // then
-        List<ChargeSession> chargeSessions = toList(sessionRepository.findAll());
-        assertThat(chargeSessions).hasSize(1);
-        ChargeSession chargeSession = chargeSessions.get(0);
-        assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.REGISTERED);
-        assertThat(chargeSession.getStartkWh()).isEqualTo(123456f);
-
-        verify(outboundMessageHandler, times(2)).sendMessage(anyString());
-    }
-
-    @Test
-    public void shouldIgnoreNonStartChargerPower() {
+    public void shouldIgnoreVariationInChargePower() {
         // given
         createCar(1L, "TestCar", CarState.SUSPENDED, 51.1, 5.2, 1234, 3);
 
