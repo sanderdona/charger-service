@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -127,11 +128,9 @@ class ChargeSessionServiceTest {
         when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.of(chargeSession));
 
         // when
-        boolean assigned = chargeSessionService.assignToActiveSession(car);
+        chargeSessionService.assignToActiveSession(car);
 
         // then
-        assertThat(assigned).isTrue();
-
         verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
         ChargeSession capturedSession = chargeSessionCaptor.getValue();
 
@@ -146,11 +145,9 @@ class ChargeSessionServiceTest {
         Car car = new Car();
         when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.empty());
 
-        // when
-        boolean assigned = chargeSessionService.assignToActiveSession(car);
-
-        // then
-        assertThat(assigned).isFalse();
+        // when and then
+        assertThatExceptionOfType(CannotAssignException.class).isThrownBy(() ->
+                chargeSessionService.assignToActiveSession(car));
         verify(chargeSessionRepository, never()).save(isA(ChargeSession.class));
     }
 

@@ -58,7 +58,9 @@ public class CarService {
     private void assignToActiveSession(Car car) {
         log.info("Car {} is at home, assigning to active session.", car.getName());
 
-        if (!chargeSessionService.assignToActiveSession(car)) {
+        try {
+            chargeSessionService.assignToActiveSession(car);
+        } catch (CannotAssignException e) {
             retryAssignToActiveSession(car);
         }
     }
@@ -74,8 +76,12 @@ public class CarService {
         while (!assigned && retries < numberOfRetries) {
             log.info("Assigning to active session failed. Trying again in {} seconds...", retryTimeout);
             sleep(retryTimeout);
-            assigned = chargeSessionService.assignToActiveSession(car);
-            retries++;
+            try {
+                chargeSessionService.assignToActiveSession(car);
+                assigned = true;
+            } catch (CannotAssignException e) {
+                retries++;
+            }
         }
 
         if (!assigned) {
@@ -92,19 +98,7 @@ public class CarService {
     }
 
     private boolean isStateChangeToCharging(Car newCarState, Car oldCarState) {
-        // To be sure the car is drawing power we both listen to the car state and charger power.
-        return isCarStateChangeToCharging(newCarState, oldCarState) ||
-                isChargerPowerChangeToStarted(newCarState, oldCarState);
-    }
-
-    private boolean isCarStateChangeToCharging(Car newCarState, Car oldCarState) {
-        return newCarState.getCarState() != null &&
-                !newCarState.getCarState().equals(oldCarState.getCarState()) &&
-                CarState.CHARGING.equals(newCarState.getCarState());
-    }
-
-    private boolean isChargerPowerChangeToStarted(Car newCarState, Car oldCarState) {
-        return 0 == oldCarState.getChargerPower() && newCarState.getChargerPower() > 0;
+        return oldCarState.getChargerPower() == 0 && newCarState.getChargerPower() > 0;
     }
 
     public boolean isAtHome(Car car) {

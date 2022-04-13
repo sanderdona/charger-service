@@ -70,23 +70,21 @@ public class ChargeSessionService {
         log.info("Session with id {} ended - added {} kWh", chargeSession.getId(), chargedKwh);
     }
 
-    public boolean assignToActiveSession(Car car) {
-        Optional<ChargeSession> activeSession = getActiveSession();
+    public void assignToActiveSession(Car car) {
+        ChargeSession activeSession = getActiveSession().orElseThrow(() -> {
+            throw new CannotAssignException("Cannot find a charge session to assign car to");
+        });
 
-        if (activeSession.isPresent() && activeSession.get().getCar() == null) {
-            ChargeSession chargeSession = activeSession.get();
-            chargeSession.setCar(car);
-            chargeSession.setOdoMeter(car.getOdometer());
-            chargeSession.setChargeSessionType(ChargeSessionType.REGISTERED);
+        if (activeSession.getCar() == null) {
+            activeSession.setCar(car);
+            activeSession.setOdoMeter(car.getOdometer());
+            activeSession.setChargeSessionType(ChargeSessionType.REGISTERED);
 
-            chargeSessionRepository.save(chargeSession);
+            chargeSessionRepository.save(activeSession);
 
             log.info("Assigned car {} to active session", car.getName());
-            return true;
-
         } else {
-            log.warn("Cannot assign car '{}' to session", car.getName());
-            return false;
+            log.warn("Active session is already assigned to car '{}'", car.getName());
         }
     }
 

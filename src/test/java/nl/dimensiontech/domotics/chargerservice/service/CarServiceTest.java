@@ -97,8 +97,6 @@ class CarServiceTest {
         locationConfig.setHomeLongitude(5.000000);
         when(configProperties.getLocationConfig()).thenReturn(locationConfig);
 
-        when(chargeSessionService.assignToActiveSession(updatedState)).thenReturn(true);
-
         // when
         carService.handleStateChange(updatedState);
 
@@ -120,8 +118,6 @@ class CarServiceTest {
         locationConfig.setHomeLatitude(51.000000);
         locationConfig.setHomeLongitude(5.000000);
         when(configProperties.getLocationConfig()).thenReturn(locationConfig);
-
-        when(chargeSessionService.assignToActiveSession(updatedState)).thenReturn(true);
 
         // when
         carService.handleStateChange(updatedState);
@@ -194,14 +190,16 @@ class CarServiceTest {
         sessionAssignment.setNumberOfRetries(3);
         when(configProperties.getSessionAssignment()).thenReturn(sessionAssignment);
 
-        when(chargeSessionService.assignToActiveSession(updatedState)).thenReturn(false).thenReturn(true);
+        doThrow(new CannotAssignException("Cannot assign!"))
+                .doThrow(new CannotAssignException("Cannot assign for the second time!"))
+                .doNothing().when(chargeSessionService).assignToActiveSession(updatedState);
 
         // when
         carService.handleStateChange(updatedState);
 
         // then
         verify(carRepository, times(1)).save(updatedState);
-        verify(chargeSessionService, times(2)).assignToActiveSession(updatedState);
+        verify(chargeSessionService, times(3)).assignToActiveSession(updatedState);
     }
 
     @Test
