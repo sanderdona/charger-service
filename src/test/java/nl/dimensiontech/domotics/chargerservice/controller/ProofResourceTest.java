@@ -11,6 +11,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +55,7 @@ class ProofResourceTest {
         ResponseEntity<Resource> responseEntity = proofResource.downloadProof("1");
 
         // then
-        assertThat(responseEntity.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).containsOnly("attachment; filename=\"1\"");
+        assertThat(responseEntity.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).containsOnly("attachment; filename=\"proof_1\"");
         assertThat(responseEntity.getHeaders().get(HttpHeaders.CONTENT_TYPE)).containsOnly("image/jpeg");
         assertThat(responseEntity.getBody()).isInstanceOf(ByteArrayResource.class);
 
@@ -72,6 +76,21 @@ class ProofResourceTest {
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void testGetProofsPage() {
+        // given
+        Pageable pageable = Pageable.ofSize(1);
+        Proof proof = new Proof();
+        when(proofService.getProofs(pageable)).thenReturn(new PageImpl<>(List.of(proof)));
+
+        // when
+        Page<Proof> proofsPage = proofResource.getAllProofs(pageable);
+
+        // then
+        assertThat(proofsPage.getTotalPages()).isEqualTo(1);
+        assertThat(proofsPage.getContent().get(0)).isEqualTo(proof);
     }
 
     @Test
