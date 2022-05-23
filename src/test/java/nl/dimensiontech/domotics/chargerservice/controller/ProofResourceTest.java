@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -112,6 +114,20 @@ class ProofResourceTest {
         Proof capturedProof = proofArgumentCaptor.getValue();
         assertThat(capturedProof.getDate()).isEqualTo(LocalDate.of(2021, 11, 19));
         assertThat(capturedProof.getFile()).isEqualTo("dummy".getBytes());
+    }
+
+    @Test
+    public void testHandleProofUploadWithDateNoMatingPattern() {
+        // given
+        MockMultipartFile file = new MockMultipartFile("dummy", "dummy".getBytes());
+
+        // when
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                () -> proofResource.handleProofUpload("1/11/2021", file));
+
+        // then
+        assertThat(exception.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(exception.getReason()).isEqualTo("1/11/2021 is not a valid date");
     }
 
     @Test

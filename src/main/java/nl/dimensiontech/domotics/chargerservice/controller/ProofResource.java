@@ -80,7 +80,7 @@ public class ProofResource {
         try {
             return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } catch (DateTimeParseException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, date + " is not a valid date!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, date + " is not a valid date");
         }
     }
 
