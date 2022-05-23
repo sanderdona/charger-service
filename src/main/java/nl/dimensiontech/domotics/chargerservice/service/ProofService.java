@@ -7,6 +7,8 @@ import nl.dimensiontech.domotics.chargerservice.event.EntityCreatedEvent;
 import nl.dimensiontech.domotics.chargerservice.repository.ProofRepository;
 import nl.dimensiontech.domotics.chargerservice.util.ImageUtil;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,10 @@ public class ProofService {
 
     public Optional<Proof> getProof(Long id) {
         return proofRepository.findById(id);
+    }
+
+    public Page<Proof> getProofs(Pageable pageable) {
+        return proofRepository.findAll(pageable);
     }
 
     private void resizeImage(Proof proof) {

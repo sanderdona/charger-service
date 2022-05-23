@@ -12,10 +12,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -86,6 +91,20 @@ class ProofServiceTest {
         // then
         assertThat(optionalProof).isPresent();
         assertThat(optionalProof.get()).isEqualTo(proof);
+    }
+
+    @Test
+    public void testGetProofs() {
+        // given
+        Pageable pageable = Pageable.ofSize(1);
+        PageImpl<Proof> proofPage = new PageImpl<>(Collections.singletonList(new Proof()));
+        when(proofRepository.findAll(pageable)).thenReturn(proofPage);
+
+        // when
+        Page<Proof> proofPageResult = proofService.getProofs(pageable);
+
+        // then
+        assertThat(proofPageResult).isEqualTo(proofPage);
     }
 
 }

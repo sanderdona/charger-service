@@ -2,7 +2,7 @@ package nl.dimensiontech.domotics.chargerservice.message.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
+import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
 import nl.dimensiontech.domotics.chargerservice.message.handler.OutboundMessageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,18 +35,23 @@ class ChargeSessionMessageServiceTest {
     @Test
     public void shouldSendChargeSessionMessage() {
         // given
-        ChargeSession chargeSession = new ChargeSession();
-        chargeSession.setId(1L);
+        ChargeSessionDto chargeSessionDto = new ChargeSessionDto();
+        chargeSessionDto.setId(1L);
+        chargeSessionDto.setOdoMeter(0);
+        chargeSessionDto.setStartkWh(0.0f);
+        chargeSessionDto.setEndkWh(0.0f);
+        chargeSessionDto.setTotalkwH(0.0f);
+        chargeSessionDto.setType("anonymous");
 
         // when
-        chargeSessionMessageService.sendMessage(chargeSession);
+        chargeSessionMessageService.sendMessage(chargeSessionDto);
 
         // then
         verify(outboundMessageHandler, times(1)).sendMessage(
                 "{" +
                         "\"id\":1," +
                         "\"odoMeter\":0," +
-                        "\"chargeSessionType\":\"ANONYMOUS\"," +
+                        "\"type\":\"anonymous\"," +
                         "\"startkWh\":0.0," +
                         "\"endkWh\":0.0," +
                         "\"totalkwH\":0.0" +
