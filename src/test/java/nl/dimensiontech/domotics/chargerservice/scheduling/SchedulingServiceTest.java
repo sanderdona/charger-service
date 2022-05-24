@@ -37,11 +37,12 @@ class SchedulingServiceTest {
         schedulingService.generateMonthlyReport();
 
         // then
-        verify(mailService, times(1)).sendEmail(file);
+        verify(mailService, times(1)).sendGeneratedDeclaration(file);
+        verifyNoMoreInteractions(mailService);
     }
 
     @Test
-    public void shouldNotMailOnAbsentReport() {
+    public void shouldSendReminderOnAbsentReport() {
         // given
         when(reportService.generateReport(isA(LocalDate.class), isA(LocalDate.class))).thenReturn(Optional.empty());
 
@@ -49,7 +50,8 @@ class SchedulingServiceTest {
         schedulingService.generateMonthlyReport();
 
         // then
-        verifyNoInteractions(mailService);
+        verify(mailService, times(1)).sendReminder();
+        verifyNoMoreInteractions(mailService);
     }
 
 }

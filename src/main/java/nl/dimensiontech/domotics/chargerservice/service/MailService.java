@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -12,6 +13,10 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 @Service
 @Slf4j
@@ -22,7 +27,7 @@ public class MailService {
     private final JavaMailSender mailSender;
 
     @Async
-    public void sendEmail(File file) {
+    public void sendGeneratedDeclaration(File file) {
 
         ConfigProperties.EmailConfig config = configProperties.getEmailConfig();
 
@@ -46,6 +51,22 @@ public class MailService {
         } catch (MessagingException e) {
             log.error("Failed to send e-mail: {}", e.getMessage());
         }
+    }
+
+    @Async
+    public void sendReminder() {
+
+        ConfigProperties.EmailConfig config = configProperties.getEmailConfig();
+        Month previousMonth = Month.from(LocalDate.now().minusMonths(1));
+        String monthDisplayName = previousMonth.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("NL"));
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(config.getFromAddress());
+        mailMessage.setTo(config.getToAddress());
+        mailMessage.setSubject("Upload bewijs");
+        mailMessage.setText("Upload een bewijs voor de maand " + monthDisplayName + ".");
+
+        mailSender.send(mailMessage);
     }
 
 }

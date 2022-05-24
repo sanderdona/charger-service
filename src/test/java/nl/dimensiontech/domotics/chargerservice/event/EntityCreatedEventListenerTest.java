@@ -54,6 +54,6 @@ class EntityCreatedEventListenerTest {
         eventListener.handleProofCreatedEvent(event);
 
         // then
-        verify(mailService, times(1)).sendEmail(tempFile);
+        verify(mailService, times(1)).sendGeneratedDeclaration(tempFile);
     }
 }

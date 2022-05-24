@@ -29,7 +29,7 @@ public class SchedulingService {
         LocalDate endDate = lastMonth.atEndOfMonth();
 
         Optional<File> generatedReport = reportService.generateReport(startDate, endDate);
-        generatedReport.ifPresent(mailService::sendEmail);
+        generatedReport.ifPresentOrElse(mailService::sendGeneratedDeclaration, mailService::sendReminder);
 
         log.info("Monthly cron job finished");
     }
