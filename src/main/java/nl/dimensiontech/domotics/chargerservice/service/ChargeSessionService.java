@@ -50,7 +50,7 @@ public class ChargeSessionService {
         return power > 0;
     }
 
-    public void endSession() {
+    private void endSession() {
         ChargeSession chargeSession = chargeSessionRepository
                 .findByEndedAtIsNull()
                 .orElseThrow(() -> new IllegalStateException("Cannot find active session!"));
@@ -61,13 +61,19 @@ public class ChargeSessionService {
 
         float startKwh = chargeSession.getStartkWh();
         float chargedKwh = currentReading - startKwh;
-        chargeSession.setEndkWh(currentReading);
-        chargeSession.setTotalkwH(chargedKwh);
-        chargeSession.setEndedAt(LocalDateTime.now());
 
-        chargeSessionRepository.save(chargeSession);
+        if (startKwh == currentReading) {
+            log.info("Session will be deleted as it started at {} kWh which equals current reading of {} kWh",
+                    startKwh, currentReading);
+            chargeSessionRepository.delete(chargeSession);
+        } else {
+            chargeSession.setEndkWh(currentReading);
+            chargeSession.setTotalkwH(chargedKwh);
+            chargeSession.setEndedAt(LocalDateTime.now());
+            chargeSessionRepository.save(chargeSession);
 
-        log.info("Session with id {} ended - added {} kWh", chargeSession.getId(), chargedKwh);
+            log.info("Session with id {} ended - added {} kWh", chargeSession.getId(), chargedKwh);
+        }
     }
 
     public void assignToActiveSession(Car car) {
