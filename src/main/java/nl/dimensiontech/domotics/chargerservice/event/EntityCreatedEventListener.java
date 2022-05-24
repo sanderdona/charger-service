@@ -36,7 +36,7 @@ public class EntityCreatedEventListener {
             log.info("Submitted a proof before the current date: generating report for range {} to {}", startDate, endDate);
 
             Optional<File> generatedReport = reportService.generateReport(startDate, endDate);
-            generatedReport.ifPresent(mailService::sendEmail);
+            generatedReport.ifPresent(mailService::sendGeneratedDeclaration);
         }
     }
 }
