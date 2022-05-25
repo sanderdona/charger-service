@@ -63,7 +63,7 @@ public class ChargeSessionService {
         float chargedKwh = currentReading - startKwh;
 
         if (startKwh == currentReading) {
-            log.info("Session will be deleted as it started at {} kWh which equals current reading of {} kWh",
+            log.warn("Session will be deleted as it started at {} kWh which equals current reading of {} kWh",
                     startKwh, currentReading);
             chargeSessionRepository.delete(chargeSession);
         } else {
