@@ -135,7 +135,6 @@ public class ChargeSessionIntegrationTest {
         // then
         assertThat(toList(sessionRepository.findAll())).isEmpty();
 
-        verify(sessionRepository).delete(isA(ChargeSession.class));
         verify(outboundMessageHandler).sendMessage(anyString());
     }
 
