@@ -74,7 +74,7 @@ public class ChargeSessionIntegrationTest {
         assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.ANONYMOUS);
         assertThat(chargeSession.getStartkWh()).isEqualTo(123456f);
 
-        verify(outboundMessageHandler, times(1)).sendMessage(anyString());
+        verify(outboundMessageHandler).sendMessage(anyString());
     }
 
     @Test
@@ -119,6 +119,23 @@ public class ChargeSessionIntegrationTest {
         assertThat(Duration.between(chargeSession.getStartedAt(), chargeSession.getEndedAt()).toSeconds()).isEqualTo(5);
 
         verify(outboundMessageHandler, times(2)).sendMessage(anyString());
+    }
+
+    @Test
+    public void shouldDeleteZeroUsageSession() throws Exception {
+        // given & when
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5044"));
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "4.467"));
+
+        TimeUnit.SECONDS.sleep(1);
+
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5044"));
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "0.000"));
+
+        // then
+        assertThat(toList(sessionRepository.findAll())).isEmpty();
+
+        verify(outboundMessageHandler).sendMessage(anyString());
     }
 
     @Test

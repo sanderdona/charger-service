@@ -90,6 +90,26 @@ class ChargeSessionServiceTest {
     }
 
     @Test
+    public void testEndActiveSessionNoEnergyUsed() {
+        // given
+        final float chargePower = 0f;
+        final float startkWh = 120.055f;
+        final float currentReading = 120.055f;
+        ChargeSession chargeSession = new ChargeSession();
+        chargeSession.setId(1L);
+        chargeSession.setStartkWh(startkWh);
+        when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.of(chargeSession));
+        when(energyMeterService.getCurrentReading()).thenReturn(currentReading);
+
+        // when
+        chargeSessionService.handleChargePowerUpdate(chargePower);
+
+        // then
+        verify(chargeSessionRepository, times(1)).delete(chargeSession);
+        verifyNoMoreInteractions(chargeSessionRepository);
+    }
+
+    @Test
     public void testNoInteractionsOnChargePowerAndActiveSession() {
         // given
         final float chargePower = 9.578f;
