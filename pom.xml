@@ -15,7 +15,7 @@
 	<description>Automatically register charge sessions</description>
 	<properties>
 		<java.version>17</java.version>
-		<mqtt.version>5.5.13</mqtt.version>
+		<mqtt.version>5.5.14</mqtt.version>
 		<pdfbox.version>2.0.26</pdfbox.version>
 		<boxable.version>1.6</boxable.version>
 		<spring-mail.version>2.7.1</spring-mail.version>
