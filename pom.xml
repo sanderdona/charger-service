@@ -17,7 +17,7 @@
 		<java.version>17</java.version>
 		<mqtt.version>5.5.15</mqtt.version>
 		<pdfbox.version>2.0.27</pdfbox.version>
-		<boxable.version>1.6</boxable.version>
+		<boxable.version>1.7.0</boxable.version>
 		<spring-mail.version>2.7.5</spring-mail.version>
 		<org.projectlombok.version>1.18.24</org.projectlombok.version>
 		<mapstruct.version>1.5.3.Final</mapstruct.version>
