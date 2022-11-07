@@ -171,14 +171,14 @@ public class ReportService {
             fillColor = Color.LIGHT_GRAY;
         } else {
             fillColor = Color.WHITE;
-            totalCharged = String.format("%.3f", chargeSession.getTotalkwH());
+            totalCharged = String.format("%.2f", chargeSession.getTotalkwH());
         }
 
         cellValues.add(new TableCell(dateFormat.format(chargeSession.getStartedAt()), fillColor));
         cellValues.add(new TableCell(dateFormat.format(chargeSession.getEndedAt()), fillColor));
         cellValues.add(new TableCell(String.valueOf(chargeSession.getOdoMeter()), fillColor));
-        cellValues.add(new TableCell(String.format("%.3f", chargeSession.getStartkWh()), fillColor));
-        cellValues.add(new TableCell(String.format("%.3f", chargeSession.getEndkWh()), fillColor));
+        cellValues.add(new TableCell(String.format("%.2f", chargeSession.getStartkWh()), fillColor));
+        cellValues.add(new TableCell(String.format("%.2f", chargeSession.getEndkWh()), fillColor));
         cellValues.add(new TableCell(totalCharged, fillColor));
 
         return cellValues;
