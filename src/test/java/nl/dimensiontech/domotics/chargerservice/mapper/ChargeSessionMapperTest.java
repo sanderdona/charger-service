@@ -6,6 +6,7 @@ import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
 import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 
@@ -24,9 +25,9 @@ class ChargeSessionMapperTest {
         chargeSession.setChargeSessionType(ChargeSessionType.REGISTERED);
         chargeSession.setStartedAt(LocalDateTime.of(2022, Month.APRIL, 23, 12, 10));
         chargeSession.setEndedAt(LocalDateTime.of(2022, Month.APRIL, 23, 19, 35));
-        chargeSession.setStartkWh(1234.0f);
-        chargeSession.setEndkWh(1255.6f);
-        chargeSession.setTotalkwH(21.6f);
+        chargeSession.setStartkWh(1230.754);
+        chargeSession.setEndkWh(1255.605);
+        chargeSession.setTotalkwH(21.645);
 
         ChargeSessionMapper chargeSessionMapper = new ChargeSessionMapperImpl();
         ChargeSessionDto chargeSessionDto = chargeSessionMapper.toDto(chargeSession);
@@ -37,9 +38,9 @@ class ChargeSessionMapperTest {
         assertThat(chargeSessionDto.getType()).isEqualTo("registered");
         assertThat(chargeSessionDto.getStartedAt()).isEqualTo(LocalDateTime.of(2022, Month.APRIL, 23, 12, 10));
         assertThat(chargeSessionDto.getEndedAt()).isEqualTo(LocalDateTime.of(2022, Month.APRIL, 23, 19, 35));
-        assertThat(chargeSessionDto.getStartkWh()).isEqualTo(1234.0f);
-        assertThat(chargeSessionDto.getEndkWh()).isEqualTo(1255.6f);
-        assertThat(chargeSessionDto.getTotalkwH()).isEqualTo(21.6f);
+        assertThat(chargeSessionDto.getStartkWh()).isEqualTo(1230.754);
+        assertThat(chargeSessionDto.getEndkWh()).isEqualTo(1255.605);
+        assertThat(chargeSessionDto.getTotalkwH()).isEqualTo(21.645);
     }
 
     @Test

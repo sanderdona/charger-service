@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -64,9 +65,9 @@ public class ReportService {
             return Optional.empty();
         }
 
-        float totalCharged = calculateTotalCharged(registeredChargeSessions);
-        float tariff = configProperties.getTariff();
-        String totalCosts = String.format("%.2f", totalCharged * tariff);
+        BigDecimal totalCharged = BigDecimal.valueOf(calculateTotalCharged(registeredChargeSessions));
+        BigDecimal tariff = configProperties.getTariff();
+        String totalCosts = String.format("%.2f", totalCharged.multiply(tariff));
         String fileName = getFileName(startDate);
         DateTimeFormatter monthYearFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.forLanguageTag(LANGUAGE_TAG));
         DateTimeFormatter dayMonthYearFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.forLanguageTag(LANGUAGE_TAG));
@@ -183,8 +184,8 @@ public class ReportService {
         return cellValues;
     }
 
-    private float calculateTotalCharged(List<ChargeSession> chargeSessions) {
-        float total = 0f;
+    private double calculateTotalCharged(List<ChargeSession> chargeSessions) {
+        double total = 0d;
 
         for (ChargeSession chargeSession : chargeSessions) {
             total += chargeSession.getTotalkwH();

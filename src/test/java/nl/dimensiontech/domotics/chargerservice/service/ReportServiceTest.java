@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -51,37 +52,37 @@ class ReportServiceTest {
         createChargeSession(chargeSessions, 1L, ChargeSessionType.REGISTERED,
                 LocalDateTime.of(2021, Month.OCTOBER, 1, 12, 17),
                 LocalDateTime.of(2021, Month.OCTOBER, 1, 17, 7),
-                15954, 1147.427f, 1191.307f);
+                15954, 1147.427d, 1191.307d);
 
         createChargeSession(chargeSessions, 2L, ChargeSessionType.ANONYMOUS,
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 41),
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 52),
-                0, 1191.307f, 1193.022f);
+                0, 1191.307d, 1193.022d);
 
         createChargeSession(chargeSessions, 3L, ChargeSessionType.ANONYMOUS,
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 9, 6),
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 10, 28),
-                0, 1193.022f, 1204.621f);
+                0, 1193.022d, 1204.621d);
 
         createChargeSession(chargeSessions, 4L, ChargeSessionType.REGISTERED,
                 LocalDateTime.of(2021, Month.OCTOBER, 7, 21, 38),
                 LocalDateTime.of(2021, Month.OCTOBER, 8, 1, 14),
-                16100, 1204.621f, 1236.785f);
+                16100, 1204.621d, 1236.785d);
 
         createChargeSession(chargeSessions, 5L, ChargeSessionType.ANONYMOUS,
                 LocalDateTime.of(2021, Month.OCTOBER, 8, 7, 40),
                 LocalDateTime.of(2021, Month.OCTOBER, 8, 7, 59),
-                0, 1236.785f, 1238.878f);
+                0, 1236.785d, 1238.878d);
 
         createChargeSession(chargeSessions, 6L, ChargeSessionType.REGISTERED,
                 LocalDateTime.of(2021, Month.OCTOBER, 18, 17, 6),
                 LocalDateTime.of(2021, Month.OCTOBER, 18, 17, 6),
-                16269, 1238.878f, 1238.889f);
+                16269, 1238.878d, 1238.889d);
 
         createChargeSession(chargeSessions, 7L, ChargeSessionType.REGISTERED,
                 LocalDateTime.of(2021, Month.OCTOBER, 18, 17, 26),
                 LocalDateTime.of(2021, Month.OCTOBER, 18, 21, 30),
-                16269, 1238.889f, 1275.174f);
+                16269, 1238.889d, 1275.174d);
 
         LocalDate startDate = LocalDate.of(2021, Month.OCTOBER, 1);
         LocalDate endDate = startDate.plusMonths(1L);
@@ -94,7 +95,7 @@ class ReportServiceTest {
         when(proofService.getProofByDate(startDate)).thenReturn(Optional.of(startOfMonthProof));
         when(proofService.getProofByDate(endDate)).thenReturn(Optional.of(endOfMonthProof));
 
-        when(configProperties.getTariff()).thenReturn(0.22f);
+        when(configProperties.getTariff()).thenReturn(new BigDecimal("0.22"));
         when(configProperties.getLicensePlate()).thenReturn("AB-123-C");
 
         // when
@@ -151,12 +152,12 @@ class ReportServiceTest {
         createChargeSession(chargeSessions, 1L, ChargeSessionType.REGISTERED,
                 LocalDateTime.of(2021, Month.OCTOBER, 1, 12, 17),
                 LocalDateTime.of(2021, Month.OCTOBER, 1, 17, 7),
-                15954, 1147.427f, 1191.307f);
+                15954, 1147.427d, 1191.307d);
 
         createChargeSession(chargeSessions, 2L, ChargeSessionType.REGISTERED,
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 41),
                 LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 52),
-                16248, 1191.307f, 1193.022f);
+                16248, 1191.307d, 1193.022d);
 
         when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class), eq(true)))
                 .thenReturn(chargeSessions);
@@ -185,8 +186,8 @@ class ReportServiceTest {
                                      LocalDateTime startedAt,
                                      LocalDateTime endedAt,
                                      int odoMeter,
-                                     float startkWh,
-                                     float endkWh) {
+                                     double startkWh,
+                                     double endkWh) {
 
         ChargeSession chargeSession = new ChargeSession();
         chargeSession.setId(id);

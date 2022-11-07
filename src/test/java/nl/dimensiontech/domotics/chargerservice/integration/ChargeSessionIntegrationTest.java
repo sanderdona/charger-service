@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class ChargeSessionIntegrationTest {
         assertThat(chargeSessions).hasSize(1);
         ChargeSession chargeSession = chargeSessions.get(0);
         assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.ANONYMOUS);
-        assertThat(chargeSession.getStartkWh()).isEqualTo(123456f);
+        assertThat(chargeSession.getStartkWh()).isEqualTo(123456d);
 
         verify(outboundMessageHandler).sendMessage(anyString());
     }
@@ -83,7 +84,7 @@ public class ChargeSessionIntegrationTest {
         createCar(1L, "TestCar", CarState.ONLINE, 51.1, 5.2, 1234, 0);
 
         // when
-        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "123456"));
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5400.729"));
         chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "4.467"));
         carMessageHandler.handleMessage(createMessage("foo/car/1/charger_power", "3"));
 
@@ -92,7 +93,7 @@ public class ChargeSessionIntegrationTest {
         assertThat(chargeSessions).hasSize(1);
         ChargeSession chargeSession = chargeSessions.get(0);
         assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.REGISTERED);
-        assertThat(chargeSession.getStartkWh()).isEqualTo(123456f);
+        assertThat(chargeSession.getStartkWh()).isEqualTo(5400.729d);
 
         verify(outboundMessageHandler, times(2)).sendMessage(anyString());
     }
@@ -100,12 +101,12 @@ public class ChargeSessionIntegrationTest {
     @Test
     public void shouldEndChargeSession() throws Exception {
         // given & when
-        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5000"));
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5400.729"));
         chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "4.467"));
 
         TimeUnit.SECONDS.sleep(5);
 
-        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5044"));
+        chargerMessageHandler.handleMessage(createMessage("foo/bar/Import", "5401.077"));
         chargerMessageHandler.handleMessage(createMessage("foo/bar/Power", "0.000"));
 
         // then
@@ -114,8 +115,8 @@ public class ChargeSessionIntegrationTest {
 
         ChargeSession chargeSession = chargeSessions.get(0);
         assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.ANONYMOUS);
-        assertThat(chargeSession.getStartkWh()).isEqualTo(5000f);
-        assertThat(chargeSession.getEndkWh()).isEqualTo(5044f);
+        assertThat(chargeSession.getStartkWh()).isEqualTo(5400.729d);
+        assertThat(chargeSession.getEndkWh()).isEqualTo(5401.077d);
         assertThat(Duration.between(chargeSession.getStartedAt(), chargeSession.getEndedAt()).toSeconds()).isEqualTo(5);
 
         verify(outboundMessageHandler, times(2)).sendMessage(anyString());

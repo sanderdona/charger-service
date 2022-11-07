@@ -38,11 +38,11 @@ public class ChargeSession {
     private LocalDateTime startedAt;
 
     @Column(nullable = false)
-    private float startkWh;
+    private double startkWh;
 
     private LocalDateTime endedAt;
 
-    private float endkWh;
+    private double endkWh;
 
-    private float totalkwH;
+    private double totalkwH;
 }

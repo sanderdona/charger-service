@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ class ChargerMessageHandlerTest {
         chargerMessageHandler.handleMessage(message);
 
         // then
-        verify(energyMeterService, times(1)).setCurrentReading(1105.469f);
+        verify(energyMeterService, times(1)).setCurrentReading(1105.469d);
     }
 
     @Test

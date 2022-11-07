@@ -10,9 +10,9 @@ class EnergyMeterServiceTest {
 
     @Test
     public void testSetCurrentReading() {
-        energyMeterService.setCurrentReading(120.455f);
+        energyMeterService.setCurrentReading(120.455d);
 
-        assertThat(energyMeterService.getCurrentReading()).isEqualTo(120.455f);
+        assertThat(energyMeterService.getCurrentReading()).isEqualTo(120.455d);
     }
 
 }

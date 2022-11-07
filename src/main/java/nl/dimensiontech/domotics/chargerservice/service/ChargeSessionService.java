@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class ChargeSessionService {
     }
 
     private void startNewSession() {
-        final float currentReading = energyMeterService.getCurrentReading();
+        double currentReading = energyMeterService.getCurrentReading();
 
         log.info("starting new session at {} kWh", currentReading);
 
@@ -55,20 +56,20 @@ public class ChargeSessionService {
                 .findByEndedAtIsNull()
                 .orElseThrow(() -> new IllegalStateException("Cannot find active session!"));
 
-        float currentReading = energyMeterService.getCurrentReading();
+        BigDecimal currentReading = BigDecimal.valueOf(energyMeterService.getCurrentReading());
 
         log.info("Ending session with id {} at {} kWh", chargeSession.getId(), currentReading);
 
-        float startKwh = chargeSession.getStartkWh();
-        float chargedKwh = currentReading - startKwh;
+        BigDecimal startKwh = BigDecimal.valueOf(chargeSession.getStartkWh());
+        BigDecimal chargedKwh = currentReading.subtract(startKwh);
 
-        if (startKwh == currentReading) {
+        if (startKwh.equals(currentReading)) {
             log.warn("Session will be deleted as it started at {} kWh which equals current reading of {} kWh",
                     startKwh, currentReading);
             chargeSessionRepository.delete(chargeSession);
         } else {
-            chargeSession.setEndkWh(currentReading);
-            chargeSession.setTotalkwH(chargedKwh);
+            chargeSession.setEndkWh(currentReading.doubleValue());
+            chargeSession.setTotalkwH(chargedKwh.doubleValue());
             chargeSession.setEndedAt(LocalDateTime.now());
             chargeSessionRepository.save(chargeSession);
 

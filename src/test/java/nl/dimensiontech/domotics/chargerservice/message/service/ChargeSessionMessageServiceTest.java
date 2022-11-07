@@ -38,9 +38,9 @@ class ChargeSessionMessageServiceTest {
         ChargeSessionDto chargeSessionDto = new ChargeSessionDto();
         chargeSessionDto.setId(1L);
         chargeSessionDto.setOdoMeter(0);
-        chargeSessionDto.setStartkWh(0.0f);
-        chargeSessionDto.setEndkWh(0.0f);
-        chargeSessionDto.setTotalkwH(0.0f);
+        chargeSessionDto.setStartkWh(0.000);
+        chargeSessionDto.setEndkWh(0.000);
+        chargeSessionDto.setTotalkwH(0.000);
         chargeSessionDto.setType("anonymous");
 
         // when

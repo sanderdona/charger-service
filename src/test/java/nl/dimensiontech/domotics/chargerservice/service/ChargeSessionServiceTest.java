@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
@@ -46,7 +47,7 @@ class ChargeSessionServiceTest {
     public void testStartChargeSession() {
         // given
         final float chargePower = 9.578f;
-        final float currentReading = 120.055f;
+        final double currentReading = 120.055d;
         when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.empty());
         when(energyMeterService.getCurrentReading()).thenReturn(currentReading);
 
@@ -69,8 +70,8 @@ class ChargeSessionServiceTest {
     public void testEndActiveSession() {
         // given
         final float chargePower = 0f;
-        final float startkWh = 120.055f;
-        final float currentReading = 161.013f;
+        final double startkWh = 120.055d;
+        final double currentReading = 161.013d;
         ChargeSession chargeSession = new ChargeSession();
         chargeSession.setId(1L);
         chargeSession.setStartkWh(startkWh);
@@ -93,8 +94,8 @@ class ChargeSessionServiceTest {
     public void testEndActiveSessionNoEnergyUsed() {
         // given
         final float chargePower = 0f;
-        final float startkWh = 120.055f;
-        final float currentReading = 120.055f;
+        final double startkWh = 120.055d;
+        final double currentReading = 120.055d;
         ChargeSession chargeSession = new ChargeSession();
         chargeSession.setId(1L);
         chargeSession.setStartkWh(startkWh);
@@ -226,14 +227,14 @@ class ChargeSessionServiceTest {
 
     private List<ChargeSession> createChargeSessionList() {
         return Arrays.asList(
-                createChargeSession(45.556f, 46.732f),
-                createChargeSession(46.732f, 46.732f),
-                createChargeSession(46.732f, 51.184f),
-                createChargeSession(51.184f, 67.284f)
+                createChargeSession(45.556d, 46.732d),
+                createChargeSession(46.732d, 46.732d),
+                createChargeSession(46.732d, 51.184d),
+                createChargeSession(51.184d, 67.284d)
         );
     }
 
-    private ChargeSession createChargeSession(float startkWh, float endkWh) {
+    private ChargeSession createChargeSession(double startkWh, double endkWh) {
         ChargeSession chargeSession = new ChargeSession();
         chargeSession.setStartkWh(startkWh);
         chargeSession.setEndkWh(endkWh);

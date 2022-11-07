@@ -15,8 +15,8 @@ public class ChargeSessionDto {
     private Integer odoMeter;
     private String type;
     private LocalDateTime startedAt;
-    private Float startkWh;
+    private Double startkWh;
     private LocalDateTime endedAt;
-    private Float endkWh;
-    private Float totalkwH;
+    private Double endkWh;
+    private Double totalkwH;
 }
