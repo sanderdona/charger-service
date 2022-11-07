@@ -25,7 +25,7 @@ public class EntityCreatedEventListener {
     void handleProofCreatedEvent(EntityCreatedEvent<Proof> event) {
         Proof proof = event.getEntity();
 
-        LocalDate currentDate = LocalDate.now(); // TODO should use a date-time service to mock localDate
+        LocalDate currentDate = LocalDate.now();
         LocalDate proofDate = proof.getDate();
 
         if (currentDate.isEqual(proofDate) || currentDate.isAfter(proofDate)) {
@@ -33,10 +33,12 @@ public class EntityCreatedEventListener {
             LocalDate startDate = previousMonth.atDay(1);
             LocalDate endDate = previousMonth.atEndOfMonth();
 
-            log.info("Submitted a proof before the current date: generating report for range {} to {}", startDate, endDate);
+            log.info("Submitted a proof: generating report for range {} to {}", startDate, endDate);
 
             Optional<File> generatedReport = reportService.generateReport(startDate, endDate);
             generatedReport.ifPresent(mailService::sendGeneratedDeclaration);
+        } else {
+            log.info("Submitted proof is in the future. Proof is saved but report generation will be skipped.");
         }
     }
 }

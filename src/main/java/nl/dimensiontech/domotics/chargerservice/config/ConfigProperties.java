@@ -4,12 +4,14 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
+
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "charger-service")
 public class ConfigProperties {
 
-    private float tariff;
+    private BigDecimal tariff;
     private String licensePlate;
     private SessionAssignment sessionAssignment;
     private MqttConfig mqttConfig;

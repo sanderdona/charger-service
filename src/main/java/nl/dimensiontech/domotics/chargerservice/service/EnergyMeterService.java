@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class EnergyMeterService {
 
-    private volatile static float reading;
+    private volatile static double reading;
 
-    public void setCurrentReading(float reading) {
+    public void setCurrentReading(double reading) {
         EnergyMeterService.reading = reading;
     }
 
-    public float getCurrentReading() {
+    public double getCurrentReading() {
         return reading;
     }
 

@@ -131,6 +131,7 @@ public class ChargerServiceConfiguration {
         MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(mqttHost, clientId, clientFactory());
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic(messageTopic);
+        messageHandler.setDefaultRetained(true);
         return messageHandler;
     }
 

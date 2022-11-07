@@ -35,7 +35,7 @@ public class ChargerMessageHandler implements MessageHandler {
         }
 
         if (IMPORT_TOPIC.equals(topicName)) {
-            float importedEnergy = Float.parseFloat(payload);
+            double importedEnergy = Double.parseDouble(payload);
             log.debug("Received imported energy message {} kWh", importedEnergy);
             energyMeterService.setCurrentReading(importedEnergy);
         }
