@@ -3,6 +3,7 @@ package nl.dimensiontech.domotics.chargerservice.domain;
 public enum CarState {
     ASLEEP("asleep"),
     ONLINE("online"),
+    OFFLINE("offline"),
     CHARGING("charging"),
     DRIVING("driving"),
     UPDATING("updating"),
