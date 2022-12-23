@@ -1,4 +1,4 @@
-# charge-service
+# charger-service
 [![build](https://github.com/sanderdona/charger-service/actions/workflows/master.yml/badge.svg)](https://github.com/sanderdona/charger-service/actions/workflows/master.yml)
 [![coverage](https://codecov.io/gh/sanderdona/charger-service/branch/main/graph/badge.svg?token=FQ9YFVGCFE)](https://codecov.io/gh/sanderdona/charger-service)
 
