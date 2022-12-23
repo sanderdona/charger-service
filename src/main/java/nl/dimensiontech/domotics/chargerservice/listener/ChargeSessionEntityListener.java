@@ -6,8 +6,8 @@ import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
 import nl.dimensiontech.domotics.chargerservice.mapper.ChargeSessionMapper;
 import nl.dimensiontech.domotics.chargerservice.message.service.ChargeSessionMessageService;
 
-import javax.persistence.PostPersist;
-import javax.persistence.PostUpdate;
+import jakarta.persistence.PostPersist;
+import jakarta.persistence.PostUpdate;
 
 @RequiredArgsConstructor
 public class ChargeSessionEntityListener {

@@ -126,7 +126,7 @@ class ProofResourceTest {
                 () -> proofResource.handleProofUpload("1/11/2021", file));
 
         // then
-        assertThat(exception.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(exception.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(exception.getReason()).isEqualTo("1/11/2021 is not a valid date");
     }
 
