@@ -1,5 +1,8 @@
 package nl.dimensiontech.domotics.chargerservice.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -7,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ImageUtil {
 
     public static byte[] toByteArray(BufferedImage image, String format) throws IOException {

@@ -5,6 +5,7 @@ import nl.dimensiontech.domotics.chargerservice.domain.Car;
 import nl.dimensiontech.domotics.chargerservice.domain.CarState;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
+import nl.dimensiontech.domotics.chargerservice.event.ApplicationEventListener;
 import nl.dimensiontech.domotics.chargerservice.message.handler.CarMessageHandler;
 import nl.dimensiontech.domotics.chargerservice.message.handler.ChargerMessageHandler;
 import nl.dimensiontech.domotics.chargerservice.message.handler.OutboundMessageHandler;
@@ -18,9 +19,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.messaging.Message;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,14 @@ import java.util.concurrent.TimeUnit;
 
 import static nl.dimensiontech.domotics.chargerservice.util.MessageUtil.createMessage;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ContextConfiguration(classes = ChargerServiceTestConfiguration.class)
 public class ChargeSessionIntegrationTest {
+
+    @MockBean
+    protected ApplicationEventListener applicationEventListener;
 
     @MockBean
     protected JavaMailSender javaMailSender;
@@ -75,7 +78,7 @@ public class ChargeSessionIntegrationTest {
         assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.ANONYMOUS);
         assertThat(chargeSession.getStartkWh()).isEqualTo(123456d);
 
-        verify(outboundMessageHandler).sendMessage(anyString());
+        verify(outboundMessageHandler).handleMessage(isA(Message.class));
     }
 
     @Test
@@ -95,7 +98,7 @@ public class ChargeSessionIntegrationTest {
         assertThat(chargeSession.getChargeSessionType()).isEqualTo(ChargeSessionType.REGISTERED);
         assertThat(chargeSession.getStartkWh()).isEqualTo(5400.729d);
 
-        verify(outboundMessageHandler, times(2)).sendMessage(anyString());
+        verify(outboundMessageHandler, times(2)).handleMessage(isA(Message.class));
     }
 
     @Test
@@ -119,7 +122,7 @@ public class ChargeSessionIntegrationTest {
         assertThat(chargeSession.getEndkWh()).isEqualTo(5401.077d);
         assertThat(Duration.between(chargeSession.getStartedAt(), chargeSession.getEndedAt()).toSeconds()).isEqualTo(5);
 
-        verify(outboundMessageHandler, times(2)).sendMessage(anyString());
+        verify(outboundMessageHandler, times(2)).handleMessage(isA(Message.class));
     }
 
     @Test
@@ -136,7 +139,7 @@ public class ChargeSessionIntegrationTest {
         // then
         assertThat(toList(sessionRepository.findAll())).isEmpty();
 
-        verify(outboundMessageHandler).sendMessage(anyString());
+        verify(outboundMessageHandler).handleMessage(isA(Message.class));
     }
 
     @Test

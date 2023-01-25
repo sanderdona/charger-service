@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.TOPIC_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+import static org.springframework.integration.mqtt.support.MqttHeaders.RECEIVED_TOPIC;
 
 @ExtendWith(MockitoExtension.class)
 class CarMessageHandlerTest {
@@ -228,7 +228,7 @@ class CarMessageHandlerTest {
 
     private Message<String> createMessage(String topic, String payload) {
         Map<String, Object> headers = new HashMap<>();
-        headers.put(TOPIC_HEADER, topic);
+        headers.put(RECEIVED_TOPIC, topic);
         return new GenericMessage<>(payload, headers);
     }
 

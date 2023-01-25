@@ -1,7 +1,7 @@
 package nl.dimensiontech.domotics.chargerservice.domain;
 
 import lombok.Data;
-import nl.dimensiontech.domotics.chargerservice.listener.ChargeSessionEntityListener;
+import nl.dimensiontech.domotics.chargerservice.repository.listener.ChargeSessionEntityListener;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Entity;
