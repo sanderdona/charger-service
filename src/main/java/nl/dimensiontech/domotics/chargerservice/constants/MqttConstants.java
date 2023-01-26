@@ -1,9 +1,9 @@
 package nl.dimensiontech.domotics.chargerservice.constants;
 
 public class MqttConstants {
-
-    public static final String TOPIC_SEPARATOR = "/";
-    public static final String TOPIC_HEADER = "mqtt_receivedTopic";
+    public static final String STATUS_TOPIC = "status";
+    public static final String STATUS_ONLINE = "online";
+    public static final String STATUS_OFFLINE = "offline";
     public static final String STATE_TOPIC = "state";
     public static final String CHARGER_POWER_TOPIC = "charger_power";
     public static final String LATITUDE_TOPIC = "latitude";

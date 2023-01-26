@@ -10,12 +10,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.TOPIC_HEADER;
 import static org.mockito.Mockito.*;
+import static org.springframework.integration.mqtt.support.MqttHeaders.RECEIVED_TOPIC;
 
 @ExtendWith(MockitoExtension.class)
 class ChargerMessageHandlerTest {
@@ -77,7 +76,7 @@ class ChargerMessageHandlerTest {
 
     private Message<String> createMessage(String topic, String payload) {
         Map<String, Object> headers = new HashMap<>();
-        headers.put(TOPIC_HEADER, topic);
+        headers.put(RECEIVED_TOPIC, topic);
         return new GenericMessage<>(payload, headers);
     }
 

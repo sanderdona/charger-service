@@ -1,12 +1,12 @@
 package nl.dimensiontech.domotics.chargerservice.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DistanceUtil {
 
     private static final double EARTH_RADIUS_IN_METERS = 6371007.177356707;
-
-    private DistanceUtil() {
-        // This class cannot be instantiated
-    }
 
     public static double distanceBetween(double lat1, double lng1, double lat2, double lng2) {
 

@@ -1,15 +1,18 @@
 package nl.dimensiontech.domotics.chargerservice.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.messaging.Message;
 
-import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.TOPIC_HEADER;
-import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.TOPIC_SEPARATOR;
+import static org.eclipse.paho.client.mqttv3.MqttTopic.TOPIC_LEVEL_SEPARATOR;
+import static org.springframework.integration.mqtt.support.MqttHeaders.RECEIVED_TOPIC;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TopicNameUtil {
 
     public static Long getCarId(Message<?> message) {
         String topic = getTopic(message);
-        String[] split = topic.split(TOPIC_SEPARATOR);
+        String[] split = topic.split(TOPIC_LEVEL_SEPARATOR);
         return Long.valueOf(split[2]);
     }
 
@@ -19,7 +22,7 @@ public class TopicNameUtil {
     }
 
     private static String getTopic(Message<?> message) {
-        String topic = (String) message.getHeaders().get(TOPIC_HEADER);
+        String topic = (String) message.getHeaders().get(RECEIVED_TOPIC);
         assert topic != null;
         return topic;
     }

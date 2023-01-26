@@ -2,18 +2,19 @@ package nl.dimensiontech.domotics.chargerservice.message.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
 import nl.dimensiontech.domotics.chargerservice.message.handler.OutboundMessageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.integration.mqtt.support.MqttHeaders;
+import org.springframework.messaging.Message;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChargeSessionMessageServiceTest {
@@ -21,21 +22,32 @@ class ChargeSessionMessageServiceTest {
     @Mock
     private OutboundMessageHandler outboundMessageHandler;
 
+    @Mock
+    private ConfigProperties configProperties;
+
     @Spy
     private ObjectMapper objectMapper;
 
     @InjectMocks
     private ChargeSessionMessageService chargeSessionMessageService;
 
+    @Captor
+    private ArgumentCaptor<Message> messageCaptor;
+
     @BeforeEach
     public void beforeAll() {
         this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        var mqttConfig = new ConfigProperties.MqttConfig();
+        mqttConfig.setRootTopic("root");
+
+        when(configProperties.getMqttConfig()).thenReturn(mqttConfig);
     }
 
     @Test
     public void shouldSendChargeSessionMessage() {
         // given
-        ChargeSessionDto chargeSessionDto = new ChargeSessionDto();
+        var chargeSessionDto = new ChargeSessionDto();
         chargeSessionDto.setId(1L);
         chargeSessionDto.setOdoMeter(0);
         chargeSessionDto.setStartkWh(0.000);
@@ -47,7 +59,11 @@ class ChargeSessionMessageServiceTest {
         chargeSessionMessageService.sendMessage(chargeSessionDto);
 
         // then
-        verify(outboundMessageHandler, times(1)).sendMessage(
+        verify(outboundMessageHandler).handleMessage(messageCaptor.capture());
+
+        assertThat(messageCaptor.getValue()).isNotNull();
+        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("root");
+        assertThat(messageCaptor.getValue().getPayload()).isEqualTo(
                 "{" +
                         "\"id\":1," +
                         "\"odoMeter\":0," +
@@ -57,6 +73,21 @@ class ChargeSessionMessageServiceTest {
                         "\"totalkwH\":0.0" +
                         "}"
         );
+    }
+
+    @Test
+    public void shouldSendChargeSessionMessageToProvidedTopic() {
+        // given
+        var chargeSessionDto = new ChargeSessionDto();
+
+        // when
+        chargeSessionMessageService.sendMessage(chargeSessionDto, "bla");
+
+        // then
+        verify(outboundMessageHandler).handleMessage(messageCaptor.capture());
+
+        assertThat(messageCaptor.getValue()).isNotNull();
+        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("root/bla");
     }
 
 }

@@ -20,6 +20,10 @@ import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
+import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.STATUS_OFFLINE;
+import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.STATUS_TOPIC;
+import static org.eclipse.paho.client.mqttv3.MqttTopic.TOPIC_LEVEL_SEPARATOR;
+
 @Configuration
 @EnableAsync
 @Slf4j
@@ -50,15 +54,19 @@ public class ChargerServiceConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
         String username = mqttConfig.getUsername();
         String password = mqttConfig.getPassword();
+        String statusTopic = String.join(TOPIC_LEVEL_SEPARATOR, mqttConfig.getRootTopic(), STATUS_TOPIC);
+
+        MqttConnectOptions connectOptions = new MqttConnectOptions();
+        connectOptions.setWill(statusTopic, STATUS_OFFLINE.getBytes(), 0, true);
 
         if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
-            MqttConnectOptions connectOptions = new MqttConnectOptions();
             connectOptions.setUserName(username);
             connectOptions.setPassword(password.toCharArray());
-            clientFactory.setConnectionOptions(connectOptions);
         } else {
             log.warn("Connecting to MQTT broker without username and password");
         }
+
+        clientFactory.setConnectionOptions(connectOptions);
 
         return clientFactory;
     }
@@ -126,11 +134,11 @@ public class ChargerServiceConfiguration {
 
         final String mqttHost = mqttConfig.getHost();
         final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
-        final String messageTopic = mqttConfig.getMessageTopic();
+        final String rootTopic = mqttConfig.getRootTopic();
 
         MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(mqttHost, clientId, clientFactory());
         messageHandler.setAsync(true);
-        messageHandler.setDefaultTopic(messageTopic);
+        messageHandler.setDefaultTopic(rootTopic);
         messageHandler.setDefaultRetained(true);
         return messageHandler;
     }
