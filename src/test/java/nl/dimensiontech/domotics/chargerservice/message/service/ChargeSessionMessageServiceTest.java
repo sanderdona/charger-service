@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +47,7 @@ class ChargeSessionMessageServiceTest {
     @Test
     public void shouldSendChargeSessionMessage() {
         // given
-        ChargeSessionDto chargeSessionDto = new ChargeSessionDto();
+        var chargeSessionDto = new ChargeSessionDto();
         chargeSessionDto.setId(1L);
         chargeSessionDto.setOdoMeter(0);
         chargeSessionDto.setStartkWh(0.000);
@@ -58,9 +59,10 @@ class ChargeSessionMessageServiceTest {
         chargeSessionMessageService.sendMessage(chargeSessionDto);
 
         // then
-        verify(outboundMessageHandler, times(1)).handleMessage(messageCaptor.capture());
+        verify(outboundMessageHandler).handleMessage(messageCaptor.capture());
 
         assertThat(messageCaptor.getValue()).isNotNull();
+        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("root");
         assertThat(messageCaptor.getValue().getPayload()).isEqualTo(
                 "{" +
                         "\"id\":1," +
@@ -71,6 +73,21 @@ class ChargeSessionMessageServiceTest {
                         "\"totalkwH\":0.0" +
                         "}"
         );
+    }
+
+    @Test
+    public void shouldSendChargeSessionMessageToProvidedTopic() {
+        // given
+        var chargeSessionDto = new ChargeSessionDto();
+
+        // when
+        chargeSessionMessageService.sendMessage(chargeSessionDto, "bla");
+
+        // then
+        verify(outboundMessageHandler).handleMessage(messageCaptor.capture());
+
+        assertThat(messageCaptor.getValue()).isNotNull();
+        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("root/bla");
     }
 
 }

@@ -21,13 +21,17 @@ public abstract class AbstractMessageService<T> implements MessageService<T> {
 
     @Override
     public void sendMessage(T payload) {
-        var rootTopic = configProperties.getMqttConfig().getRootTopic();
-        sendMessage(payload, rootTopic);
+        sendMessage(payload, null);
     }
 
     public void sendMessage(T payload, String topic) {
         var rootTopic = configProperties.getMqttConfig().getRootTopic();
-        sendMessage(payload, String.join(TOPIC_LEVEL_SEPARATOR, rootTopic, topic), false);
+
+        if (topic == null) {
+            sendMessage(payload, rootTopic, false);
+        } else {
+            sendMessage(payload, String.join(TOPIC_LEVEL_SEPARATOR, rootTopic, topic), false);
+        }
     }
 
     protected String toJson(T t) {
