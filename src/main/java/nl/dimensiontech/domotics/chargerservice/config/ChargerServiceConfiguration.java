@@ -22,7 +22,7 @@ import java.util.UUID;
 
 import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.STATUS_OFFLINE;
 import static nl.dimensiontech.domotics.chargerservice.constants.MqttConstants.STATUS_TOPIC;
-import static org.eclipse.paho.client.mqttv3.MqttTopic.TOPIC_LEVEL_SEPARATOR;
+import static nl.dimensiontech.domotics.chargerservice.util.TopicNameUtil.transformToTopic;
 
 @Configuration
 @EnableAsync
@@ -54,7 +54,7 @@ public class ChargerServiceConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
         String username = mqttConfig.getUsername();
         String password = mqttConfig.getPassword();
-        String statusTopic = String.join(TOPIC_LEVEL_SEPARATOR, mqttConfig.getRootTopic(), STATUS_TOPIC);
+        String statusTopic = transformToTopic(mqttConfig.getRootTopic(), STATUS_TOPIC);
 
         MqttConnectOptions connectOptions = new MqttConnectOptions();
         connectOptions.setWill(statusTopic, STATUS_OFFLINE.getBytes(), 0, true);

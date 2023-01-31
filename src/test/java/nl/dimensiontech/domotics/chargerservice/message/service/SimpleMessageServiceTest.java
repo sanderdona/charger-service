@@ -68,7 +68,7 @@ class SimpleMessageServiceTest {
         verify(outboundMessageHandler).handleMessage(messageCaptor.capture());
 
         assertThat(messageCaptor.getValue()).isNotNull();
-        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("root/bla");
+        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("bla");
         assertThat(messageCaptor.getValue().getPayload()).isEqualTo("foo");
     }
 

@@ -37,11 +37,6 @@ class ChargeSessionMessageServiceTest {
     @BeforeEach
     public void beforeAll() {
         this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        var mqttConfig = new ConfigProperties.MqttConfig();
-        mqttConfig.setRootTopic("root");
-
-        when(configProperties.getMqttConfig()).thenReturn(mqttConfig);
     }
 
     @Test
@@ -54,6 +49,11 @@ class ChargeSessionMessageServiceTest {
         chargeSessionDto.setEndkWh(0.000);
         chargeSessionDto.setTotalkwH(0.000);
         chargeSessionDto.setType("anonymous");
+
+        var mqttConfig = new ConfigProperties.MqttConfig();
+        mqttConfig.setRootTopic("root");
+
+        when(configProperties.getMqttConfig()).thenReturn(mqttConfig);
 
         // when
         chargeSessionMessageService.sendMessage(chargeSessionDto);
@@ -87,7 +87,7 @@ class ChargeSessionMessageServiceTest {
         verify(outboundMessageHandler).handleMessage(messageCaptor.capture());
 
         assertThat(messageCaptor.getValue()).isNotNull();
-        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("root/bla");
+        assertThat(messageCaptor.getValue().getHeaders().get(MqttHeaders.TOPIC)).isEqualTo("bla");
     }
 
 }

@@ -10,6 +10,10 @@ import static org.springframework.integration.mqtt.support.MqttHeaders.RECEIVED_
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TopicNameUtil {
 
+    public static String transformToTopic(String... topic) {
+        return String.join(TOPIC_LEVEL_SEPARATOR, topic);
+    }
+
     public static Long getCarId(Message<?> message) {
         String topic = getTopic(message);
         String[] split = topic.split(TOPIC_LEVEL_SEPARATOR);

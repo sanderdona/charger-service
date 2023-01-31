@@ -1,7 +1,6 @@
 package nl.dimensiontech.domotics.chargerservice.repository.listener;
 
 import lombok.RequiredArgsConstructor;
-import nl.dimensiontech.domotics.chargerservice.constants.MqttConstants;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
 import nl.dimensiontech.domotics.chargerservice.mapper.ChargeSessionMapper;
@@ -20,7 +19,7 @@ public class ChargeSessionEntityListener {
     @PostUpdate
     private void afterPersistAndUpdate(ChargeSession chargeSession) {
         ChargeSessionDto chargeSessionDto = chargeSessionMapper.toDto(chargeSession);
-        messageService.sendMessage(chargeSessionDto, MqttConstants.STATE_TOPIC);
+        messageService.sendMessage(chargeSessionDto, true);
     }
 
 }
