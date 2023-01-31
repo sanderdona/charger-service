@@ -1,6 +1,7 @@
 package nl.dimensiontech.domotics.chargerservice.message.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
 import nl.dimensiontech.domotics.chargerservice.message.handler.OutboundMessageHandler;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 public class ChargeSessionMessageService extends AbstractMessageService<ChargeSessionDto> {
 
@@ -25,6 +27,7 @@ public class ChargeSessionMessageService extends AbstractMessageService<ChargeSe
 
     @Override
     public void sendMessage(ChargeSessionDto chargeSessionDto, String topic, boolean retain) {
+        log.info("Publish session event to {}", topic);
         String payload = toJson(chargeSessionDto);
 
         Map<String, Object> headers = Map.of(
