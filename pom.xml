@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<mqtt.version>6.0.4</mqtt.version>
-		<pdfbox.version>2.0.27</pdfbox.version>
+		<pdfbox.version>2.0.28</pdfbox.version>
 		<boxable.version>1.7.0</boxable.version>
 		<spring-mail.version>3.0.5</spring-mail.version>
 		<org.projectlombok.version>1.18.26</org.projectlombok.version>
