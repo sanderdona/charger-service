@@ -95,10 +95,6 @@ public class ReportService {
                     .addTextLine("\u20AC " + totalCosts, FONT_BOLD, P_FONT_SIZE + 1, MARGIN_LEFT_4_TABLES_SKIPPED, true)
                     .addTextLine(TEXT_METERSTANDEN, FONT_PLAIN, H2_FONT_SIZE)
                     .addLine()
-                    .addTextLine(TEXT_STAND + " " + dayMonthYearFormat.format(startDate), FONT_PLAIN, P_FONT_SIZE)
-                    .addTextLine(TEXT_STAND + " " + dayMonthYearFormat.format(endDate), FONT_PLAIN, P_FONT_SIZE, 300f, true)
-                    .addImage(startOfMonthProof.get().getFile(), "proof")
-                    .addImage(endOfMonthProof.get().getFile(), "proof", 300f, true)
                     .closePage()
                     .save(fileName);
 
