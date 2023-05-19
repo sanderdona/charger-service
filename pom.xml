@@ -18,7 +18,7 @@
 		<mqtt.version>6.1.0</mqtt.version>
 		<pdfbox.version>2.0.28</pdfbox.version>
 		<boxable.version>1.7.0</boxable.version>
-		<spring-mail.version>3.0.6</spring-mail.version>
+		<spring-mail.version>3.0.7</spring-mail.version>
 		<org.projectlombok.version>1.18.26</org.projectlombok.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<google.guava.version>31.1-jre</google.guava.version>
