@@ -34,11 +34,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
     - name: Setup semantic-release
       run: |
-        npm install -g semantic-release 
-        @semantic-release/changelog 
-        @semantic-release/commit-analyzer 
-        @semantic-release/exec 
-        semantic-release/git 
+        npm install -g semantic-release \
+        @semantic-release/changelog \
+        @semantic-release/commit-analyzer \
+        @semantic-release/exec \
+        semantic-release/git \
         semantic-release/release-notes-generator
 
     - name: Release
