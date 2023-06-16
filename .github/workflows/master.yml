@@ -3,7 +3,7 @@ name: Build and Publish
 on:
   push:
     branches:
-      - 'main'
+      - 'master'
 
 jobs:
   docker:
@@ -20,9 +20,6 @@ jobs:
         distribution: 'adopt'
         cache: maven
 
-#    - name: Build with Maven
-#      run: mvn -B package --file pom.xml
-
     - name: Coverage test
       uses: codecov/codecov-action@v2
 
@@ -31,7 +28,7 @@ jobs:
       with:
         node-version: 'lts/*'
       env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
     - name: Setup semantic-release
       run: |
         npm install -g semantic-release \
@@ -43,7 +40,7 @@ jobs:
 
     - name: Release
       env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       run: chmod +x ./prepare-release.sh && npx semantic-release
 
 #    - uses: mr-smithers-excellent/docker-build-push@v5
