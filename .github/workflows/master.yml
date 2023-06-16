@@ -6,9 +6,14 @@ on:
       - 'master'
 
 jobs:
-  docker:
-    name: Build, test and Publish
+  release:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -20,15 +25,12 @@ jobs:
         distribution: 'adopt'
         cache: maven
 
-    - name: Coverage test
-      uses: codecov/codecov-action@v2
-
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 'lts/*'
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Setup semantic-release
       run: |
         npm install -g semantic-release \
@@ -40,7 +42,7 @@ jobs:
 
     - name: Release
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: chmod +x ./prepare-release.sh && npx semantic-release
 
 #    - uses: mr-smithers-excellent/docker-build-push@v5
