@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.2](https://github.com/sanderdona/charger-service/compare/v1.0.1...v1.0.2) (2023-06-19)
+
+
+### Bug Fixes
+
+* Give rights to create package and added semVer to metadata action. ([b8c6a01](https://github.com/sanderdona/charger-service/commit/b8c6a012fd06b793294d7bec6cd3766c0b411d72))
+
 ## [1.0.1](https://github.com/sanderdona/charger-service/compare/v1.0.0...v1.0.1) (2023-06-19)
 
 
