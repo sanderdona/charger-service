@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.4](https://github.com/sanderdona/charger-service/compare/v1.0.3...v1.0.4) (2023-06-19)
+
+
+### Bug Fixes
+
+* Added fetch-depth to get all tags. ([ff17a72](https://github.com/sanderdona/charger-service/commit/ff17a72505a416a94dad3f26db57b823e66fd91b))
+
 ## [1.0.3](https://github.com/sanderdona/charger-service/compare/v1.0.2...v1.0.3) (2023-06-19)
 
 
