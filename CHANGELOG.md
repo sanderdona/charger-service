@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.3](https://github.com/sanderdona/charger-service/compare/v1.0.2...v1.0.3) (2023-06-19)
+
+
+### Bug Fixes
+
+* push images to ghcr.io. ([44e2c59](https://github.com/sanderdona/charger-service/commit/44e2c592dd535cee973119c8407378f18884161f))
+
 ## [1.0.2](https://github.com/sanderdona/charger-service/compare/v1.0.1...v1.0.2) (2023-06-19)
 
 
