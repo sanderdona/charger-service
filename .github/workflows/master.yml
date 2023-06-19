@@ -25,12 +25,16 @@ jobs:
         distribution: 'adopt'
         cache: maven
 
+    - name: Build
+      run: mvn -B package --file pom.xml
+
     - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 'lts/*'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Setup semantic-release
       run: |
         npm install -g semantic-release \
