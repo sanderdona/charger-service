@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.8](https://github.com/sanderdona/charger-service/compare/v1.0.7...v1.0.8) (2023-06-20)
+
+
+### Bug Fixes
+
+* use a PAT to create tags, otherwise the seconds workflow is not triggered. ([cac89b7](https://github.com/sanderdona/charger-service/commit/cac89b78717f1421590346ed18618eb0315df484))
+
 ## [1.0.7](https://github.com/sanderdona/charger-service/compare/v1.0.6...v1.0.7) (2023-06-20)
 
 
