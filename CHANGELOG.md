@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.12](https://github.com/sanderdona/charger-service/compare/v1.0.11...v1.0.12) (2023-06-20)
+
+
+### Bug Fixes
+
+* trigger on all creations and continue if github ref starts with tags/v. ([a84495f](https://github.com/sanderdona/charger-service/commit/a84495f4d1852eaf26ae2cb59aee2626e8e38473))
+
 ## [1.0.11](https://github.com/sanderdona/charger-service/compare/v1.0.10...v1.0.11) (2023-06-20)
 
 
