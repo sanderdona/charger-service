@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.11](https://github.com/sanderdona/charger-service/compare/v1.0.10...v1.0.11) (2023-06-20)
+
+
+### Bug Fixes
+
+* use PAT on Node setup. ([cc23e72](https://github.com/sanderdona/charger-service/commit/cc23e72304cf1cb2ee85fd93fd91fb9f4ba7ed3f))
+
 ## [1.0.10](https://github.com/sanderdona/charger-service/compare/v1.0.9...v1.0.10) (2023-06-20)
 
 
