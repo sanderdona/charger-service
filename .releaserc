@@ -24,7 +24,7 @@
                     "CHANGELOG.md",
                     "pom.xml"
                 ],
-                "message": "chore(release): ${nextRelease.version} [skip tag]\n\n${nextRelease.notes}"
+                "message": "chore(release): ${nextRelease.version} [tag]\n\n${nextRelease.notes}"
             }
         ],
         [
