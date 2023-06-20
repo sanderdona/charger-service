@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.15](https://github.com/sanderdona/charger-service/compare/v1.0.14...v1.0.15) (2023-06-20)
+
+
+### Bug Fixes
+
+* use another commit message to trigger other action. ([d23b366](https://github.com/sanderdona/charger-service/commit/d23b36641a9ef36d192dc8314bffb2fe4956f981))
+
 ## [1.0.14](https://github.com/sanderdona/charger-service/compare/v1.0.13...v1.0.14) (2023-06-20)
 
 
