@@ -31,7 +31,7 @@ jobs:
       with:
         node-version: 'lts/*'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TAG_TOKEN }}
 
     - name: Setup semantic-release
       run: |
