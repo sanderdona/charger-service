@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.6](https://github.com/sanderdona/charger-service/compare/v1.0.5...v1.0.6) (2023-06-20)
+
+
+### Bug Fixes
+
+* splitted tagging and pushing to ghcr.io workflows. ([7c545d8](https://github.com/sanderdona/charger-service/commit/7c545d80035b3052d1c1dfa089af7e8a42298af4))
+
 ## [1.0.5](https://github.com/sanderdona/charger-service/compare/v1.0.4...v1.0.5) (2023-06-20)
 
 
