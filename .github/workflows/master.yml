@@ -31,7 +31,7 @@ jobs:
       with:
         node-version: 'lts/*'
       env:
-        GITHUB_TOKEN: ${{ secrets.TAG_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup semantic-release
       run: |
@@ -44,5 +44,5 @@ jobs:
 
     - name: Tag a new release
       env:
-        GITHUB_TOKEN: ${{ secrets.TAG_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: chmod +x ./prepare-release.sh && npx semantic-release
