@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.19](https://github.com/sanderdona/charger-service/compare/v1.0.18...v1.0.19) (2023-06-22)
+
+
+### Bug Fixes
+
+* trigger on tag creation again. ([0bc81e3](https://github.com/sanderdona/charger-service/commit/0bc81e3f815c7ae37ecd7513ceb4307225dd6cf0))
+
 ## [1.0.18](https://github.com/sanderdona/charger-service/compare/v1.0.17...v1.0.18) (2023-06-22)
 
 
