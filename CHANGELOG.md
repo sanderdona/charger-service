@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.16](https://github.com/sanderdona/charger-service/compare/v1.0.15...v1.0.16) (2023-06-22)
+
+
+### Bug Fixes
+
+* checking out repo with PAT. ([673149f](https://github.com/sanderdona/charger-service/commit/673149f6e8194265fca8d21da83280479a308463))
+
 ## [1.0.15](https://github.com/sanderdona/charger-service/compare/v1.0.14...v1.0.15) (2023-06-20)
 
 
