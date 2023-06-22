@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.21](https://github.com/sanderdona/charger-service/compare/v1.0.20...v1.0.21) (2023-06-22)
+
+
+### Bug Fixes
+
+* getting the tag with separate action. ([09091eb](https://github.com/sanderdona/charger-service/commit/09091ebf361474102c9055a85fc1b491ed85779c))
+
 ## [1.0.20](https://github.com/sanderdona/charger-service/compare/v1.0.19...v1.0.20) (2023-06-22)
 
 
