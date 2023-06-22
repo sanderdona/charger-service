@@ -23,7 +23,8 @@
                 "assets": [
                     "CHANGELOG.md",
                     "pom.xml"
-                ]
+                ],
+                "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
             }
         ],
         [
