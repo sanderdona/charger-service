@@ -1,9 +1,11 @@
-name: Push Docker image
+name: ci-publish-image
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_run:
+    workflows:
+      - ci-master
+    types:
+      - completed
 
 jobs:
   release:
@@ -30,15 +32,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+
       - name: Extract metadata for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ghcr.io/sanderdona/charger-service
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},value=${{ steps.get-latest-tag.outputs.tag }}
             type=sha
 
       - name: Push Docker image
