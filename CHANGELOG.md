@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.20](https://github.com/sanderdona/charger-service/compare/v1.0.19...v1.0.20) (2023-06-22)
+
+
+### Bug Fixes
+
+* ignore tag creation for master build. ([638c675](https://github.com/sanderdona/charger-service/commit/638c6750242281d49c347e0d3e0a4137c6374408))
+
 ## [1.0.19](https://github.com/sanderdona/charger-service/compare/v1.0.18...v1.0.19) (2023-06-22)
 
 
