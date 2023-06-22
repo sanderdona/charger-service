@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>nl.dimensiontech.domotics</groupId>
 	<artifactId>charger-service</artifactId>
-	<version>1.0.16</version>
+	<version>1.0.17</version>
 	<name>charger-service</name>
 	<description>Automatically register charge sessions</description>
 	<properties>
