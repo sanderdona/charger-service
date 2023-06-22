@@ -1,13 +1,16 @@
 name: Push Docker image
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_run:
+    workflows:
+      - Build, test and tag
+    types:
+      - completed
 
 jobs:
   release:
     name: Release
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
