@@ -1,5 +1,15 @@
 {
-     "branches": "master",
+     "branches": [
+        "master",
+        {
+            "name": "develop",
+            "prerelease": "alpha"
+        },
+        {
+            "name": "feature*",
+            "prerelease": true
+        },
+     ],
      "repositoryUrl": "https://github.com/sanderdona/charger-service",
      "plugins": [
         "@semantic-release/commit-analyzer",

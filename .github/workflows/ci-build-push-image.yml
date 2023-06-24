@@ -3,7 +3,7 @@ name: ci-publish-image
 on:
   workflow_run:
     workflows:
-      - ci-master
+      - ci-build-and-tag
     types:
       - completed
 
