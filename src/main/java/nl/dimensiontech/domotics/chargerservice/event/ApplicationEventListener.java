@@ -24,14 +24,14 @@ public class ApplicationEventListener {
     private final SimpleMessageService messageService;
 
     @EventListener(ApplicationStartedEvent.class)
-    void handleApplicationStartedEvent() {
+    public void handleApplicationStartedEvent() {
         var statusTopic = getStatusTopic();
         log.info("Application started, reporting status on topic {}.", statusTopic);
         messageService.sendMessage(STATUS_ONLINE, statusTopic, true);
     }
 
     @EventListener(ContextClosedEvent.class)
-    void handlePreDestroy() {
+    public void handlePreDestroy() {
         log.info("Application shutting down, reporting status to broker.");
         messageService.sendMessage(STATUS_OFFLINE, getStatusTopic(), true);
     }

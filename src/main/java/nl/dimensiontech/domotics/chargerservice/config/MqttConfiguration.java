@@ -28,7 +28,7 @@ import static nl.dimensiontech.domotics.chargerservice.util.TopicNameUtil.transf
 @EnableAsync
 @Slf4j
 @RequiredArgsConstructor
-public class ChargerServiceConfiguration {
+public class MqttConfiguration {
 
     private final ConfigProperties configProperties;
 

@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,11 +36,13 @@ public class ProofResource {
     private final ProofService proofService;
 
     @GetMapping
+    @PreAuthorize("hasRole('client_read')")
     public Page<Proof> getAllProofs(@PageableDefault Pageable pageable) {
         return proofService.getProofs(pageable);
     }
 
     @GetMapping(path = "/{id}")
+    @PreAuthorize("hasRole('client_read')")
     public ResponseEntity<Resource> downloadProof(@PathVariable String id) {
         Optional<Proof> optionalProof = proofService.getProof(Long.valueOf(id));
 
@@ -57,6 +60,7 @@ public class ProofResource {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('client_write')")
     public ResponseEntity<Void> handleProofUpload(@RequestPart String date, @RequestPart MultipartFile file) {
         LocalDate localDate = getLocalDate(date);
 
