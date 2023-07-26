@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.1.0-feature-add-integration-tests.1](https://github.com/sanderdona/charger-service/compare/v1.0.22...v1.1.0-feature-add-integration-tests.1) (2023-07-26)
+
+
+### Features
+
+* adding security to all endpoints. ([716ceb0](https://github.com/sanderdona/charger-service/commit/716ceb09d0a1efa3e8c48e8cf79aa8339cdb9203))
+
 ## [1.0.22](https://github.com/sanderdona/charger-service/compare/v1.0.21...v1.0.22) (2023-06-24)
 
 
