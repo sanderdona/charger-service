@@ -42,30 +42,25 @@ public class CarMessageHandler implements MessageHandler {
         Car car = carService.getCarById(carId).orElseGet(() -> createCar(carId));
 
         switch (topicName) {
-            case STATE_TOPIC:
-                getCarState(payload).ifPresent(car::setCarState);
-                break;
-            case CHARGER_POWER_TOPIC:
+            case STATE_TOPIC -> getCarState(payload).ifPresent(car::setCarState);
+            case CHARGER_POWER_TOPIC -> {
                 int chargerPower = Integer.parseInt(payload);
                 car.setChargerPower(chargerPower);
-                break;
-            case LATITUDE_TOPIC:
+            }
+            case LATITUDE_TOPIC -> {
                 double latitude = Double.parseDouble(payload);
                 car.setLatitude(latitude);
-                break;
-            case LONGITUDE_TOPIC:
+            }
+            case LONGITUDE_TOPIC -> {
                 double longitude = Double.parseDouble(payload);
                 car.setLongitude(longitude);
-                break;
-            case ODOMETER_TOPIC:
+            }
+            case ODOMETER_TOPIC -> {
                 int odometer = getOdometer(payload);
                 car.setOdometer(odometer);
-                break;
-            case DISPLAY_NAME_TOPIC:
-                car.setName(payload);
-                break;
-            default:
-                log.debug("Not interested in messages from topic '{}'", topicName);
+            }
+            case DISPLAY_NAME_TOPIC -> car.setName(payload);
+            default -> log.debug("Not interested in messages from topic '{}'", topicName);
         }
 
         carService.handleStateChange(car);
