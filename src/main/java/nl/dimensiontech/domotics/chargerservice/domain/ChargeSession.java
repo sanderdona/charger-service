@@ -28,7 +28,7 @@ public class ChargeSession {
     @OneToOne(fetch = FetchType.LAZY)
     private Car car;
 
-    private int odoMeter;
+    private Integer odoMeter;
 
     @Column(nullable = false, columnDefinition = "varchar(25) default 'ANONYMOUS'")
     @Enumerated(value = EnumType.STRING)
@@ -38,11 +38,11 @@ public class ChargeSession {
     private LocalDateTime startedAt;
 
     @Column(nullable = false)
-    private double startkWh;
+    private Double startkWh;
 
     private LocalDateTime endedAt;
 
-    private double endkWh;
+    private Double endkWh;
 
-    private double totalkwH;
+    private Double totalkwH;
 }

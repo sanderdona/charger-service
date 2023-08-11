@@ -2,10 +2,17 @@ package nl.dimensiontech.domotics.chargerservice.cucumber;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
-import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 @Slf4j
 public class CallbackHandler implements MqttCallback {
@@ -29,14 +36,6 @@ public class CallbackHandler implements MqttCallback {
         } catch (MqttException e) {
             log.error("Failed starting the MQTT test client");
         }
-    }
-
-    public MqttMessage getLastMessage(String topic) {
-        if (receivedMessages.containsKey(topic)) {
-            return receivedMessages.get(topic).getLast();
-        }
-
-        return null;
     }
 
     @Override
