@@ -11,6 +11,7 @@
         },
      ],
      "repositoryUrl": "https://github.com/sanderdona/charger-service",
+     "debug": "true",
      "plugins": [
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",

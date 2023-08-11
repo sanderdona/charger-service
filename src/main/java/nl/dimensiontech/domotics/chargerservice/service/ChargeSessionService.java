@@ -64,23 +64,21 @@ public class ChargeSessionService {
         BigDecimal chargedKwh = currentReading.subtract(startKwh);
 
         if (startKwh.equals(currentReading)) {
-            log.warn("Session will be deleted as it started at {} kWh which equals current reading of {} kWh",
-                    startKwh, currentReading);
-            chargeSessionRepository.delete(chargeSession);
-        } else {
-            chargeSession.setEndkWh(currentReading.doubleValue());
-            chargeSession.setTotalkwH(chargedKwh.doubleValue());
-            chargeSession.setEndedAt(LocalDateTime.now());
-            chargeSessionRepository.save(chargeSession);
-
-            log.info("Session with id {} ended - added {} kWh", chargeSession.getId(), chargedKwh);
+            log.info("Session will be saved as a zero usage session");
         }
+
+        chargeSession.setEndkWh(currentReading.doubleValue());
+        chargeSession.setTotalkwH(chargedKwh.doubleValue());
+        chargeSession.setEndedAt(LocalDateTime.now());
+        chargeSessionRepository.save(chargeSession);
+
+        log.info("Session with id {} ended - added {} kWh", chargeSession.getId(), chargedKwh);
     }
 
     public void assignToActiveSession(Car car) {
-        ChargeSession activeSession = getActiveSession().orElseThrow(() -> {
-            throw new CannotAssignException("Cannot find a charge session to assign car to");
-        });
+        ChargeSession activeSession = getActiveSession().orElseThrow(
+                () -> new CannotAssignException("Cannot find a charge session to assign car to")
+        );
 
         if (activeSession.getCar() == null) {
             activeSession.setCar(car);
@@ -116,7 +114,7 @@ public class ChargeSessionService {
 
         if (filterZeroUsage) {
             return sessions.stream()
-                    .filter(chargeSession -> chargeSession.getStartkWh() != chargeSession.getEndkWh())
+                    .filter(chargeSession -> !chargeSession.getStartkWh().equals(chargeSession.getEndkWh()))
                     .collect(Collectors.toList());
         }
         return sessions;

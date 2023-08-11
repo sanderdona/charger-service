@@ -2,6 +2,8 @@ package nl.dimensiontech.domotics.chargerservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nl.dimensiontech.domotics.chargerservice.config.security.annotations.ReadAuthorization;
+import nl.dimensiontech.domotics.chargerservice.config.security.annotations.WriteAuthorization;
 import nl.dimensiontech.domotics.chargerservice.domain.Proof;
 import nl.dimensiontech.domotics.chargerservice.service.ProofService;
 import org.springframework.core.io.ByteArrayResource;
@@ -13,7 +15,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,11 +42,13 @@ public class ProofResource {
     private final ProofService proofService;
 
     @GetMapping
+    @ReadAuthorization
     public Page<Proof> getAllProofs(@PageableDefault Pageable pageable) {
         return proofService.getProofs(pageable);
     }
 
     @GetMapping(path = "/{id}")
+    @ReadAuthorization
     public ResponseEntity<Resource> downloadProof(@PathVariable String id) {
         Optional<Proof> optionalProof = proofService.getProof(Long.valueOf(id));
 
@@ -57,6 +66,7 @@ public class ProofResource {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @WriteAuthorization
     public ResponseEntity<Void> handleProofUpload(@RequestPart String date, @RequestPart MultipartFile file) {
         LocalDate localDate = getLocalDate(date);
 

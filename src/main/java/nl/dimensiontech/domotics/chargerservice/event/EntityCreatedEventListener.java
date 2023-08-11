@@ -22,7 +22,7 @@ public class EntityCreatedEventListener {
     private final MailService mailService;
 
     @EventListener
-    void handleProofCreatedEvent(EntityCreatedEvent<Proof> event) {
+    public void handleProofCreatedEvent(EntityCreatedEvent<Proof> event) {
         Proof proof = event.getEntity();
 
         LocalDate currentDate = LocalDate.now();

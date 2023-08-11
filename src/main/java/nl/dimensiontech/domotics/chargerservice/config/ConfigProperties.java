@@ -13,7 +13,7 @@ public class ConfigProperties {
 
     private BigDecimal tariff;
     private String licensePlate;
-    private SessionAssignment sessionAssignment;
+    private SessionAssignment sessionAssignment = new SessionAssignment();
     private MqttConfig mqttConfig;
     private LocationConfig locationConfig;
     private EmailConfig emailConfig;

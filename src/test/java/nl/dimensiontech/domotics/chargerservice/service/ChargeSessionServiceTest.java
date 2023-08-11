@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
@@ -106,8 +105,12 @@ class ChargeSessionServiceTest {
         chargeSessionService.handleChargePowerUpdate(chargePower);
 
         // then
-        verify(chargeSessionRepository, times(1)).delete(chargeSession);
-        verifyNoMoreInteractions(chargeSessionRepository);
+        verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
+        ChargeSession capturedSession = chargeSessionCaptor.getValue();
+
+        assertThat(capturedSession.getStartkWh()).isEqualTo(startkWh);
+        assertThat(capturedSession.getEndkWh()).isEqualTo(startkWh);
+        assertThat(capturedSession.getTotalkwH()).isEqualTo(0.0);
     }
 
     @Test
