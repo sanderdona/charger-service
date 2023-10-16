@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [1.1.0](https://github.com/sanderdona/charger-service/compare/v1.0.22...v1.1.0) (2023-08-11)
+
+
+### Bug Fixes
+
+* changed workflows; we don't want to tag all commits on a feature branch. ([9a2e87b](https://github.com/sanderdona/charger-service/commit/9a2e87b73d1596fbf1955bdf842316ccdaa78ab5))
+
+
+### Features
+
+* adding security to all endpoints. ([716ceb0](https://github.com/sanderdona/charger-service/commit/716ceb09d0a1efa3e8c48e8cf79aa8339cdb9203))
+* Breaking! Added security to all endpoints ([8af932e](https://github.com/sanderdona/charger-service/commit/8af932e9ae2435523539ce92099a0c20ca8fb955))
+
 # [1.1.0-alpha.1](https://github.com/sanderdona/charger-service/compare/v1.0.22...v1.1.0-alpha.1) (2023-08-11)
 
 
