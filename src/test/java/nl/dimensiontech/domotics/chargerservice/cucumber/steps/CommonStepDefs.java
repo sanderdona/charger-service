@@ -10,15 +10,13 @@ import net.javacrumbs.jsonunit.core.Option;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import nl.dimensiontech.domotics.chargerservice.cucumber.CallbackHandler;
 import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionRepository;
-import org.awaitility.Duration;
 import org.awaitility.core.ConditionTimeoutException;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.util.concurrent.TimeUnit;
-
 import static io.restassured.RestAssured.given;
+import static java.util.concurrent.TimeUnit.*;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,7 +63,7 @@ public class CommonStepDefs extends CallbackHandler {
     @Then("the service publishes a message on topic {string} with payload:")
     public void servicePublishesMqttMessage(String topic, String expected) {
         try {
-            await().atMost(Duration.FIVE_SECONDS).until(
+            await().atMost(5, SECONDS).until(
                     () -> receivedMessages.get(topic) != null &&
                             receivedMessages.get(topic).stream()
                                     .anyMatch(mqttMessage -> jsonStringMatches(
@@ -112,7 +110,7 @@ public class CommonStepDefs extends CallbackHandler {
 
     @Then("I let the charge session run for {long} seconds")
     public void waitFor(long seconds) throws InterruptedException {
-        TimeUnit.SECONDS.sleep(seconds);
+        SECONDS.sleep(seconds);
     }
 
     private static void publishMessage(String topic, String payload) {
