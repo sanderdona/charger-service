@@ -15,33 +15,50 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.*;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 public class CommonStepDefs extends CallbackHandler {
 
     @LocalServerPort
     private int port;
 
-    private final ChargeSessionRepository chargeSessionRepository;
+    protected final ChargeSessionRepository chargeSessionRepository;
+    protected final Clock clock;
 
     private Response response;
 
     private String username = "not-an-user";
 
     @Autowired
-    public CommonStepDefs(ConfigProperties properties, ChargeSessionRepository chargeSessionRepository) {
+    public CommonStepDefs(ConfigProperties properties, ChargeSessionRepository chargeSessionRepository, Clock clock) {
         super(properties);
         this.chargeSessionRepository = chargeSessionRepository;
+        this.clock = clock;
     }
 
     @After
     public void cleanup() {
         receivedMessages.clear();
         chargeSessionRepository.deleteAll();
+    }
+
+    @Given("the following date an time: {}")
+    public void theFollowingDateAndTime(String dateAndTime) {
+        ZonedDateTime zonedDateTime = LocalDateTime.parse(dateAndTime, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")).atZone(ZoneId.systemDefault());
+        Clock fixedClock = Clock.fixed(zonedDateTime.toInstant(), ZoneId.systemDefault());
+        when(clock.instant()).thenReturn(fixedClock.instant());
+        when(clock.getZone()).thenReturn(fixedClock.getZone());
     }
 
     @Given("a user with username {string}")

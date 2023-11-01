@@ -1,4 +1,4 @@
-Feature: charge sessions
+Feature: Charge sessions
 
   Background:
     Given a user with username "read-user"

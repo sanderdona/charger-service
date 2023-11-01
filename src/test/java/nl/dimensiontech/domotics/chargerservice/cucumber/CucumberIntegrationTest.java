@@ -9,7 +9,7 @@ import static io.cucumber.core.options.Constants.PLUGIN_PROPERTY_NAME;
 @Suite
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, html:target/cucumber/report.html")
-public class CucumberRunnerTest {
+public class CucumberIntegrationTest {
 
 
 }

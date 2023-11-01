@@ -17,6 +17,7 @@ public class ConfigProperties {
     private MqttConfig mqttConfig;
     private LocationConfig locationConfig;
     private EmailConfig emailConfig;
+    private ProofConfig proofConfig = new ProofConfig();
 
     @Data
     public static class SessionAssignment {
@@ -62,6 +63,11 @@ public class ConfigProperties {
         private boolean debugEnabled = false;
         private String fromAddress;
         private String toAddress;
+    }
+
+    @Data
+    public static class ProofConfig {
+        private boolean proofsRequired = false;
     }
 
 }

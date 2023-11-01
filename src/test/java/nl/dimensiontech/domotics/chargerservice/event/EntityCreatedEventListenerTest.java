@@ -2,7 +2,7 @@ package nl.dimensiontech.domotics.chargerservice.event;
 
 import nl.dimensiontech.domotics.chargerservice.domain.Proof;
 import nl.dimensiontech.domotics.chargerservice.service.MailService;
-import nl.dimensiontech.domotics.chargerservice.service.ReportService;
+import nl.dimensiontech.domotics.chargerservice.reporting.ReportService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
