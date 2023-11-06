@@ -5,6 +5,7 @@ import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
 import nl.dimensiontech.domotics.chargerservice.domain.Proof;
+import nl.dimensiontech.domotics.chargerservice.reporting.ReportService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,9 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,9 @@ class ReportServiceTest {
 
     @Mock
     private ProofService proofService;
+
+    @Mock
+    private Clock clock;
 
     @InjectMocks
     private ReportService reportService;
@@ -90,13 +92,11 @@ class ReportServiceTest {
         when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class), eq(true)))
                 .thenReturn(chargeSessions);
 
-        Proof startOfMonthProof = createProof("startOfMonth.jpeg");
-        Proof endOfMonthProof = createProof("endOfMonth.jpeg");
-        when(proofService.getProofByDate(startDate)).thenReturn(Optional.of(startOfMonthProof));
-        when(proofService.getProofByDate(endDate)).thenReturn(Optional.of(endOfMonthProof));
-
-        when(configProperties.getTariff()).thenReturn(new BigDecimal("0.22"));
+        ConfigProperties.ProofConfig proofConfig = new ConfigProperties.ProofConfig();
+        proofConfig.setProofsRequired(false);
+        when(configProperties.getProofConfig()).thenReturn(proofConfig);
         when(configProperties.getLicensePlate()).thenReturn("AB-123-C");
+        when(configProperties.getTariff()).thenReturn(new BigDecimal("0.22"));
 
         // when
         reportService.generateReport(startDate, endDate);
@@ -133,37 +133,6 @@ class ReportServiceTest {
 
         when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class), eq(true)))
                 .thenReturn(chargeSessions);
-
-        // when
-        Optional<File> optionalFile = reportService.generateReport(startDate, endDate);
-
-        // then
-        assertThat(optionalFile).isEmpty();
-    }
-
-    @Test
-    public void testSkipGenerationOnMissingProof() {
-        // given
-        LocalDate startDate = LocalDate.of(2021, Month.OCTOBER, 1);
-        LocalDate endDate = startDate.plusMonths(1L);
-
-        List<ChargeSession> chargeSessions = new ArrayList<>();
-
-        createChargeSession(chargeSessions, 1L, ChargeSessionType.REGISTERED,
-                LocalDateTime.of(2021, Month.OCTOBER, 1, 12, 17),
-                LocalDateTime.of(2021, Month.OCTOBER, 1, 17, 7),
-                15954, 1147.427d, 1191.307d);
-
-        createChargeSession(chargeSessions, 2L, ChargeSessionType.REGISTERED,
-                LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 41),
-                LocalDateTime.of(2021, Month.OCTOBER, 2, 8, 52),
-                16248, 1191.307d, 1193.022d);
-
-        when(chargeSessionService.getSessionsInRange(isA(LocalDateTime.class), isA(LocalDateTime.class), eq(true)))
-                .thenReturn(chargeSessions);
-
-        when(proofService.getProofByDate(startDate)).thenReturn(Optional.of(new Proof()));
-        when(proofService.getProofByDate(startDate.plusMonths(1))).thenReturn(Optional.empty());
 
         // when
         Optional<File> optionalFile = reportService.generateReport(startDate, endDate);

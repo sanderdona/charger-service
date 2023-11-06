@@ -18,6 +18,8 @@ import org.testcontainers.hivemq.HiveMQContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Clock;
+
 @Slf4j
 @CucumberContextConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,6 +31,9 @@ public class CucumberSpringConfiguration {
 
     @MockBean
     JavaMailSender mailSender;
+
+    @MockBean
+    Clock clock;
 
     @BeforeAll
     public static void setUp() {

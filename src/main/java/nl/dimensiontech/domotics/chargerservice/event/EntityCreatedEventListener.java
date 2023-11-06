@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.domain.Proof;
 import nl.dimensiontech.domotics.chargerservice.service.MailService;
-import nl.dimensiontech.domotics.chargerservice.service.ReportService;
+import nl.dimensiontech.domotics.chargerservice.reporting.ReportService;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 

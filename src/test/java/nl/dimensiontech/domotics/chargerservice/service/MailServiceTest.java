@@ -1,6 +1,7 @@
 package nl.dimensiontech.domotics.chargerservice.service;
 
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -13,6 +14,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import jakarta.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -26,8 +32,19 @@ class MailServiceTest {
     @Mock
     private JavaMailSender mailSender;
 
+    @Mock
+    private Clock clock;
+
     @InjectMocks
     private MailService mailService;
+
+    @BeforeEach
+    public void before() {
+        Instant instant = LocalDateTime.of(2023, 10, 1, 10, 0).toInstant(ZoneOffset.UTC);
+        Clock fixedClock = Clock.fixed(instant, ZoneId.systemDefault());
+        when(clock.instant()).thenReturn(fixedClock.instant());
+        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
+    }
 
     @Test
     public void testSendGeneratedDeclaration() throws IOException {
@@ -50,7 +67,7 @@ class MailServiceTest {
     }
 
     @Test
-    public void testSendReminder() {
+    public void testReportNotGenerated() {
         // given
         ConfigProperties.EmailConfig emailConfig = new ConfigProperties.EmailConfig();
         emailConfig.setFromAddress("foo@bar.nl");
@@ -58,7 +75,7 @@ class MailServiceTest {
         when(configProperties.getEmailConfig()).thenReturn(emailConfig);
 
         // when
-        mailService.sendReminder();
+        mailService.reportNotGenerated();
 
         // then
         ArgumentCaptor<SimpleMailMessage> argumentCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
@@ -68,8 +85,8 @@ class MailServiceTest {
         assertThat(mailMessage.getFrom()).isEqualTo("foo@bar.nl");
         assertThat(mailMessage.getTo()).isNotNull();
         assertThat(mailMessage.getTo()[0]).isEqualTo("bar@foo.nl");
-        assertThat(mailMessage.getSubject()).isEqualTo("Upload bewijs");
-        assertThat(mailMessage.getText()).contains("Upload een bewijs voor de maand ");
+        assertThat(mailMessage.getSubject()).isEqualTo("Declaratie genereren niet mogelijk");
+        assertThat(mailMessage.getText()).isEqualTo("Genereren van een declaratie voor de maand september is niet gelukt.");
     }
 
 }
