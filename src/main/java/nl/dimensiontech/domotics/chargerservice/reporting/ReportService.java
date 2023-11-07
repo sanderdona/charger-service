@@ -81,6 +81,7 @@ public class ReportService {
                         dateTimeFormatter.format(session.getStartedAt()),
                         dateTimeFormatter.format(session.getEndedAt()),
                         String.valueOf(session.getOdoMeter()),
+                        getOdoMeter(session),
                         format("%.2f", session.getStartkWh()),
                         format("%.2f", session.getEndkWh()),
                         format("%.2f", session.getTotalkwH()),
@@ -100,7 +101,14 @@ public class ReportService {
         String fileName = getFileName(startDate);
         return Optional.of(createFile(fileName, report));
     }
-
+  
+    private static String getOdoMeter(ChargeSession session) {
+        if (session.getOdoMeter() == null) {
+            return "";
+        }
+        return String.valueOf(session.getOdoMeter());
+    }
+  
     private String getFileName(LocalDate startDate) {
         String period = startDate.format(fileNameFormatter);
         return TEXT_DECLARATIE + "-" + period + FILE_EXTENSION;
