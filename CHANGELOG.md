@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.2.0-alpha.1](https://github.com/sanderdona/charger-service/compare/v1.1.0...v1.2.0-alpha.1) (2023-11-07)
+
+
+### Features
+
+* generate monthly pdf with Mustache! :sparkles: ([e60bf0e](https://github.com/sanderdona/charger-service/commit/e60bf0e75e3d3ee71608df2b77be0a1bb1b820bc))
+
 # [1.1.0](https://github.com/sanderdona/charger-service/compare/v1.0.22...v1.1.0) (2023-08-11)
 
 
