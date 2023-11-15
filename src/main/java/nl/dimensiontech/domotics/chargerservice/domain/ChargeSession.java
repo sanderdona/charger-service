@@ -15,6 +15,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -22,8 +24,8 @@ import java.time.LocalDateTime;
 public class ChargeSession {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Car car;
@@ -38,11 +40,11 @@ public class ChargeSession {
     private LocalDateTime startedAt;
 
     @Column(nullable = false)
-    private Double startkWh;
+    private Double startKwh;
 
     private LocalDateTime endedAt;
 
-    private Double endkWh;
+    private Double endKwh;
 
-    private Double totalkwH;
+    private Double totalKwh;
 }

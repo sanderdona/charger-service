@@ -3,7 +3,7 @@ package nl.dimensiontech.domotics.chargerservice.message.service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
-import nl.dimensiontech.domotics.chargerservice.dto.ChargeSessionDto;
+import nl.dimensiontech.domotics.chargerservice.message.model.ChargeSessionMessage;
 import nl.dimensiontech.domotics.chargerservice.message.handler.OutboundMessageHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -42,13 +44,13 @@ class ChargeSessionMessageServiceTest {
     @Test
     public void shouldSendChargeSessionMessage() {
         // given
-        var chargeSessionDto = new ChargeSessionDto();
-        chargeSessionDto.setId(1L);
-        chargeSessionDto.setOdoMeter(0);
-        chargeSessionDto.setStartkWh(0.000);
-        chargeSessionDto.setEndkWh(0.000);
-        chargeSessionDto.setTotalkwH(0.000);
-        chargeSessionDto.setType("anonymous");
+        var chargeSessionMessage = new ChargeSessionMessage();
+        chargeSessionMessage.setId(UUID.randomUUID());
+        chargeSessionMessage.setOdoMeter(0);
+        chargeSessionMessage.setStartKwh(0.000);
+        chargeSessionMessage.setEndKwh(0.000);
+        chargeSessionMessage.setTotalKwh(0.000);
+        chargeSessionMessage.setType("anonymous");
 
         var mqttConfig = new ConfigProperties.MqttConfig();
         mqttConfig.setRootTopic("root");
@@ -56,7 +58,7 @@ class ChargeSessionMessageServiceTest {
         when(configProperties.getMqttConfig()).thenReturn(mqttConfig);
 
         // when
-        chargeSessionMessageService.sendMessage(chargeSessionDto);
+        chargeSessionMessageService.sendMessage(chargeSessionMessage);
 
         // then
         verify(outboundMessageHandler).handleMessage(messageCaptor.capture());
@@ -78,10 +80,10 @@ class ChargeSessionMessageServiceTest {
     @Test
     public void shouldSendChargeSessionMessageToProvidedTopic() {
         // given
-        var chargeSessionDto = new ChargeSessionDto();
+        var chargeSessionMessage = new ChargeSessionMessage();
 
         // when
-        chargeSessionMessageService.sendMessage(chargeSessionDto, "bla");
+        chargeSessionMessageService.sendMessage(chargeSessionMessage, "bla");
 
         // then
         verify(outboundMessageHandler).handleMessage(messageCaptor.capture());

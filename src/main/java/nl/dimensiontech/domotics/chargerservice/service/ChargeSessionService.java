@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.domain.Car;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSession;
 import nl.dimensiontech.domotics.chargerservice.domain.ChargeSessionType;
+import nl.dimensiontech.domotics.chargerservice.exception.RecordNotFoundException;
 import nl.dimensiontech.domotics.chargerservice.repository.ChargeSessionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +42,7 @@ public class ChargeSessionService {
         log.info("starting new session at {} kWh", currentReading);
 
         ChargeSession chargeSession = new ChargeSession();
-        chargeSession.setStartkWh(currentReading);
+        chargeSession.setStartKwh(currentReading);
         chargeSession.setChargeSessionType(ChargeSessionType.ANONYMOUS);
         ChargeSession savedSession = chargeSessionRepository.save(chargeSession);
 
@@ -60,15 +62,15 @@ public class ChargeSessionService {
 
         log.info("Ending session with id {} at {} kWh", chargeSession.getId(), currentReading);
 
-        BigDecimal startKwh = BigDecimal.valueOf(chargeSession.getStartkWh());
+        BigDecimal startKwh = BigDecimal.valueOf(chargeSession.getStartKwh());
         BigDecimal chargedKwh = currentReading.subtract(startKwh);
 
         if (startKwh.equals(currentReading)) {
             log.info("Session will be saved as a zero usage session");
         }
 
-        chargeSession.setEndkWh(currentReading.doubleValue());
-        chargeSession.setTotalkwH(chargedKwh.doubleValue());
+        chargeSession.setEndKwh(currentReading.doubleValue());
+        chargeSession.setTotalKwh(chargedKwh.doubleValue());
         chargeSession.setEndedAt(LocalDateTime.now());
         chargeSessionRepository.save(chargeSession);
 
@@ -93,6 +95,10 @@ public class ChargeSessionService {
         }
     }
 
+    public ChargeSession getSession(UUID uuid) {
+        return chargeSessionRepository.findById(uuid).orElseThrow(() -> new RecordNotFoundException("Charge Session"));
+    }
+
     public Page<ChargeSession> getSessions(Pageable pageable) {
         return chargeSessionRepository.findAll(pageable);
     }
@@ -114,7 +120,7 @@ public class ChargeSessionService {
 
         if (filterZeroUsage) {
             return sessions.stream()
-                    .filter(chargeSession -> !chargeSession.getStartkWh().equals(chargeSession.getEndkWh()))
+                    .filter(chargeSession -> !chargeSession.getStartKwh().equals(chargeSession.getEndKwh()))
                     .collect(Collectors.toList());
         }
         return sessions;

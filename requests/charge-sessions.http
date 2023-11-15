@@ -1,0 +1,5 @@
+###
+GET {{host}}/api/v1/charge-sessions
+
+###
+GET {{host}}/api/v1/charge-sessions/6090625c-86c0-4167-858d-2d44d047f2e1

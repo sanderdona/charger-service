@@ -85,12 +85,8 @@ class ProofServiceTest {
         Proof proof = new Proof();
         when(proofRepository.findById(1L)).thenReturn(Optional.of(proof));
 
-        // when
-        Optional<Proof> optionalProof = proofService.getProof(1L);
-
-        // then
-        assertThat(optionalProof).isPresent();
-        assertThat(optionalProof.get()).isEqualTo(proof);
+        // when and then
+        assertThat(proofService.getProof(1L)).isEqualTo(proof);
     }
 
     @Test

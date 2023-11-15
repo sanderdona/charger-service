@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -51,7 +52,7 @@ class ChargeSessionServiceTest {
         when(energyMeterService.getCurrentReading()).thenReturn(currentReading);
 
         ChargeSession chargeSession = new ChargeSession();
-        chargeSession.setId(1L);
+        chargeSession.setId(UUID.randomUUID());
         when(chargeSessionRepository.save(isA(ChargeSession.class))).thenReturn(chargeSession);
 
         // when
@@ -61,7 +62,7 @@ class ChargeSessionServiceTest {
         verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
         ChargeSession capturedSession = chargeSessionCaptor.getValue();
 
-        assertThat(capturedSession.getStartkWh()).isEqualTo(currentReading);
+        assertThat(capturedSession.getStartKwh()).isEqualTo(currentReading);
         assertThat(capturedSession.getChargeSessionType()).isEqualTo(ChargeSessionType.ANONYMOUS);
     }
 
@@ -72,8 +73,8 @@ class ChargeSessionServiceTest {
         final double startkWh = 120.055d;
         final double currentReading = 161.013d;
         ChargeSession chargeSession = new ChargeSession();
-        chargeSession.setId(1L);
-        chargeSession.setStartkWh(startkWh);
+        chargeSession.setId(UUID.randomUUID());
+        chargeSession.setStartKwh(startkWh);
         when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.of(chargeSession));
         when(energyMeterService.getCurrentReading()).thenReturn(currentReading);
 
@@ -84,9 +85,9 @@ class ChargeSessionServiceTest {
         verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
         ChargeSession capturedSession = chargeSessionCaptor.getValue();
 
-        assertThat(capturedSession.getStartkWh()).isEqualTo(startkWh);
-        assertThat(capturedSession.getEndkWh()).isEqualTo(currentReading);
-        assertThat(capturedSession.getTotalkwH()).isEqualTo(currentReading - startkWh);
+        assertThat(capturedSession.getStartKwh()).isEqualTo(startkWh);
+        assertThat(capturedSession.getEndKwh()).isEqualTo(currentReading);
+        assertThat(capturedSession.getTotalKwh()).isEqualTo(currentReading - startkWh);
     }
 
     @Test
@@ -96,8 +97,8 @@ class ChargeSessionServiceTest {
         final double startkWh = 120.055d;
         final double currentReading = 120.055d;
         ChargeSession chargeSession = new ChargeSession();
-        chargeSession.setId(1L);
-        chargeSession.setStartkWh(startkWh);
+        chargeSession.setId(UUID.randomUUID());
+        chargeSession.setStartKwh(startkWh);
         when(chargeSessionRepository.findByEndedAtIsNull()).thenReturn(Optional.of(chargeSession));
         when(energyMeterService.getCurrentReading()).thenReturn(currentReading);
 
@@ -108,9 +109,9 @@ class ChargeSessionServiceTest {
         verify(chargeSessionRepository, times(1)).save(chargeSessionCaptor.capture());
         ChargeSession capturedSession = chargeSessionCaptor.getValue();
 
-        assertThat(capturedSession.getStartkWh()).isEqualTo(startkWh);
-        assertThat(capturedSession.getEndkWh()).isEqualTo(startkWh);
-        assertThat(capturedSession.getTotalkwH()).isEqualTo(0.0);
+        assertThat(capturedSession.getStartKwh()).isEqualTo(startkWh);
+        assertThat(capturedSession.getEndKwh()).isEqualTo(startkWh);
+        assertThat(capturedSession.getTotalKwh()).isEqualTo(0.0);
     }
 
     @Test
@@ -239,8 +240,8 @@ class ChargeSessionServiceTest {
 
     private ChargeSession createChargeSession(double startkWh, double endkWh) {
         ChargeSession chargeSession = new ChargeSession();
-        chargeSession.setStartkWh(startkWh);
-        chargeSession.setEndkWh(endkWh);
+        chargeSession.setStartKwh(startkWh);
+        chargeSession.setEndKwh(endkWh);
         return chargeSession;
     }
 

@@ -113,6 +113,13 @@
 			<version>${spring-mail.version}</version>
 		</dependency>
 
+		<!-- openapi generated files deps -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -188,6 +195,54 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>7.0.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>
+								https://raw.githubusercontent.com/sanderdona/charger-service-api/main/charger-service-v1.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>nl.dimensiontech.domotics.chargerservice.api</apiPackage>
+							<modelPackage>nl.dimensiontech.domotics.chargerservice.api.model</modelPackage>
+							<modelNameSuffix>Dto</modelNameSuffix>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<useSpringController>true</useSpringController>
+								<requestMappingMode>api_interface</requestMappingMode>
+								<openApiNullable>false</openApiNullable>
+								<useSpringBoot3>true</useSpringBoot3>
+								<dateLibrary>java8-localdatetime</dateLibrary>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.4.0</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated-sources/openapi/src/main/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

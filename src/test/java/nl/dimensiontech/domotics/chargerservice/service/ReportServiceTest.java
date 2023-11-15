@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.FILE_EXTENSION;
 import static nl.dimensiontech.domotics.chargerservice.constants.PdfConstants.TEXT_DECLARATIE;
@@ -159,14 +160,14 @@ class ReportServiceTest {
                                      double endkWh) {
 
         ChargeSession chargeSession = new ChargeSession();
-        chargeSession.setId(id);
+        chargeSession.setId(UUID.randomUUID());
         chargeSession.setChargeSessionType(type);
         chargeSession.setStartedAt(startedAt);
         chargeSession.setEndedAt(endedAt);
         chargeSession.setOdoMeter(odoMeter);
-        chargeSession.setStartkWh(startkWh);
-        chargeSession.setEndkWh(endkWh);
-        chargeSession.setTotalkwH(chargeSession.getEndkWh() - chargeSession.getStartkWh());
+        chargeSession.setStartKwh(startkWh);
+        chargeSession.setEndKwh(endkWh);
+        chargeSession.setTotalKwh(chargeSession.getEndKwh() - chargeSession.getStartKwh());
 
         chargeSessions.add(chargeSession);
     }

@@ -77,7 +77,7 @@ public class MqttConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
 
         final String mqttHost = mqttConfig.getHost();
-        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
+        final String clientId = mqttConfig.getClient() + "-charger-inbound";
         final String powerTopic = mqttConfig.getPowerTopic();
         final String importTopic = mqttConfig.getImportedEnergyTopic();
 
@@ -100,7 +100,7 @@ public class MqttConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
 
         final String mqttHost = mqttConfig.getHost();
-        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
+        final String clientId = mqttConfig.getClient() + "-vehicle-inbound";
         final String stateTopic = mqttConfig.getCarStateTopic();
         final String chargerPowerTopic = mqttConfig.getCarChargerPower();
 
@@ -133,7 +133,7 @@ public class MqttConfiguration {
         ConfigProperties.MqttConfig mqttConfig = configProperties.getMqttConfig();
 
         final String mqttHost = mqttConfig.getHost();
-        final String clientId = mqttConfig.getClient() + "_" + UUID.randomUUID();
+        final String clientId = mqttConfig.getClient() + "-outbound";
         final String rootTopic = mqttConfig.getRootTopic();
 
         MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(mqttHost, clientId, clientFactory());

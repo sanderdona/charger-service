@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.domain.Proof;
 import nl.dimensiontech.domotics.chargerservice.event.EntityCreatedEvent;
+import nl.dimensiontech.domotics.chargerservice.exception.RecordNotFoundException;
 import nl.dimensiontech.domotics.chargerservice.repository.ProofRepository;
 import nl.dimensiontech.domotics.chargerservice.util.ImageUtil;
 import org.springframework.context.ApplicationEventPublisher;
@@ -41,8 +42,8 @@ public class ProofService {
         return proofRepository.findByDate(date);
     }
 
-    public Optional<Proof> getProof(Long id) {
-        return proofRepository.findById(id);
+    public Proof getProof(Long id) {
+        return proofRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Proof"));
     }
 
     public Page<Proof> getProofs(Pageable pageable) {

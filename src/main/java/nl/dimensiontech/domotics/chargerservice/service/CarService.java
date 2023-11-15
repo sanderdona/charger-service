@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.config.ConfigProperties;
 import nl.dimensiontech.domotics.chargerservice.domain.Car;
-import nl.dimensiontech.domotics.chargerservice.domain.CarState;
+import nl.dimensiontech.domotics.chargerservice.exception.RecordNotFoundException;
 import nl.dimensiontech.domotics.chargerservice.repository.CarRepository;
 import nl.dimensiontech.domotics.chargerservice.util.DistanceUtil;
 import org.springframework.data.util.Streamable;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -27,6 +28,10 @@ public class CarService {
 
     public Optional<Car> getCarById(Long id) {
         return carRepository.findById(id);
+    }
+
+    public Car getCarByUuid(UUID uuid) {
+        return carRepository.findByUuid(uuid).orElseThrow(() -> new RecordNotFoundException("Vehicle"));
     }
 
     public Car saveCar(Car car) {

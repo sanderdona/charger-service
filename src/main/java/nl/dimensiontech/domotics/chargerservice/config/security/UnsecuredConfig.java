@@ -1,5 +1,6 @@
 package nl.dimensiontech.domotics.chargerservice.config.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -12,32 +13,23 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Profile("prod")
-public class SecurityConfig {
-
-    @Bean
-    public JwtAuthConverter jwtAuthConverter() {
-        return new JwtAuthConverter();
-    }
+@Profile("unsecured")
+public class UnsecuredConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        log.warn("### RUNNING APPLICATION UNSECURED ###");
+
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests((authorize -> authorize
-                .requestMatchers(HttpMethod.GET, "/actuator/*")
-                .permitAll()
                 .anyRequest()
-                .authenticated()
-        ));
-
-        http.oauth2ResourceServer((resourceServer -> resourceServer
-                .jwt(jwtConfigurer -> jwtConfigurer
-                        .jwtAuthenticationConverter(jwtAuthConverter()))
+                .permitAll()
         ));
 
         http.sessionManagement((sessionManagement -> sessionManagement

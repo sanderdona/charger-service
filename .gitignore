@@ -36,3 +36,4 @@ build/
 
 ### OS X ###
 .DS_Store
+/requests/http-client.private.env.json

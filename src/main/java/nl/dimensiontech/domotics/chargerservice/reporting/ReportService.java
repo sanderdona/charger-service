@@ -81,9 +81,9 @@ public class ReportService {
                         dateTimeFormatter.format(session.getStartedAt()),
                         dateTimeFormatter.format(session.getEndedAt()),
                         getOdoMeter(session),
-                        format("%.2f", session.getStartkWh()),
-                        format("%.2f", session.getEndkWh()),
-                        format("%.2f", session.getTotalkwH()),
+                        format("%.2f", session.getStartKwh()),
+                        format("%.2f", session.getEndKwh()),
+                        format("%.2f", session.getTotalKwh()),
                         session.getChargeSessionType() == ChargeSessionType.ANONYMOUS
                 ))
                 .toList();
@@ -117,7 +117,7 @@ public class ReportService {
         double total = 0d;
 
         for (ChargeSession chargeSession : chargeSessions) {
-            total += chargeSession.getTotalkwH();
+            total += chargeSession.getTotalKwh();
         }
 
         return total;
