@@ -18,7 +18,7 @@
 		<mustache.version>0.9.11</mustache.version>
 		<jsoup.version>1.16.2</jsoup.version>
 		<flying-saucer-pdf.version>9.3.1</flying-saucer-pdf.version>
-		<mqtt.version>6.1.4</mqtt.version>
+		<mqtt.version>6.2.0</mqtt.version>
 		<pdfbox.version>2.0.28</pdfbox.version>
 		<spring-mail.version>3.1.5</spring-mail.version>
 		<projectlombok.version>1.18.30</projectlombok.version>
