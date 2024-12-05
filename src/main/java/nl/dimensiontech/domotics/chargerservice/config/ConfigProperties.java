@@ -34,7 +34,7 @@ public class ConfigProperties {
         private int qos = 0;
         private long completionTimeout = 5000;
         private String rootTopic = "home/charger-service";
-        private String powerTopic = "home/charger/sdm1-1/Power";
+        private String powerTopic = "home/laadpaal";
         private String importedEnergyTopic = "home/charger/sdm1-1/Import";
         private String carStateTopic = "teslamate/cars/1/state";
         private String carChargerPower = "teslamate/cars/1/charger_power";
