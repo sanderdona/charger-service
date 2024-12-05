@@ -1,5 +1,8 @@
 package nl.dimensiontech.domotics.chargerservice.message.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.dimensiontech.domotics.chargerservice.service.ChargeSessionService;
@@ -29,9 +32,17 @@ public class ChargerMessageHandler implements MessageHandler {
         String payload = String.valueOf(message.getPayload());
 
         if (POWER_TOPIC.equals(topicName)) {
-            float chargePower = Float.parseFloat(payload);
-            log.debug("Received power message {} kW", chargePower);
-            chargeSessionService.handleChargePowerUpdate(chargePower);
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(payload);
+
+                float chargePower = rootNode.path("values").path("power_total").floatValue();
+                log.debug("Received power message {} kW", chargePower);
+                chargeSessionService.handleChargePowerUpdate(chargePower);
+
+            } catch (JsonProcessingException e) {
+                log.error("Could not parse laadpaal payload");
+            }
         }
 
         if (IMPORT_TOPIC.equals(topicName)) {
