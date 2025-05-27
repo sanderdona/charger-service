@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+
+charger-service:
+  location-config:
+    home-latitude: 51.100000
+    home-longitude: 5.200000
+    max-distance-from-home: 30
+  mqtt-config:
+    host: tcp://10.10.20.103:1883
+    client: charger-service
+  email-config:
+    host: "blaat"
+    port: 1234
+    username: "blaat"
+    password: "blaat"
+    from-address: "blaat@blaat.nl"
+    to-address: "blaat@blaat.nl"

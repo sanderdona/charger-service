@@ -1,0 +1,105 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1748012092830-1
+      author: sanderdona (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: charge_session_pkey
+                  name: id
+                  startWith: 1035
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValue: ANONYMOUS
+                  name: charge_session_type
+                  type: VARCHAR(25)
+              - column:
+                  name: ended_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: endk_wh
+                  type: FLOAT8
+              - column:
+                  constraints:
+                    nullable: false
+                  name: odo_meter
+                  type: INTEGER
+              - column:
+                  name: started_at
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: startk_wh
+                  type: FLOAT8
+              - column:
+                  constraints:
+                    nullable: false
+                  name: totalkwh
+                  type: FLOAT8
+              - column:
+                  name: car_id
+                  type: BIGINT
+            tableName: charge_session
+  - changeSet:
+      id: 1748012092830-3
+      author: sanderdona (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: car_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: car_state
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: latitude
+                  type: FLOAT8
+              - column:
+                  constraints:
+                    nullable: false
+                  name: longitude
+                  type: FLOAT8
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: odometer
+                  type: INTEGER
+              - column:
+                  name: charger_power
+                  type: INTEGER
+            tableName: car
+  - changeSet:
+      id: 1748012092830-4
+      author: sanderdona (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: car_id
+            baseTableName: charge_session
+            constraintName: fk3mhp7a06xvl1pa03pibm5yr9x
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: car
+            validate: true
