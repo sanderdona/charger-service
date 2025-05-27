@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changelog-1.yaml
+      file: db/changelog/initial.yaml
+  - include:
+      file: db/changelog/v2.0.0-update-schema-for-rewrite.yaml

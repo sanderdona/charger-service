@@ -2,7 +2,6 @@ package nl.lunarcloud.domotics.chargerservice.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import nl.lunarcloud.domotics.chargerservice.listener.ChargeSessionEntityListener;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -10,7 +9,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@EntityListeners(ChargeSessionEntityListener.class)
 public class ChargeSession {
 
     @Id
@@ -19,7 +17,7 @@ public class ChargeSession {
 
     private UUID uuid;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Car car;
 
     private Integer odoMeter;

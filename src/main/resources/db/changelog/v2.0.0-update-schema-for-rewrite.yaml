@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250523-add-uuid-columns
+      author: sanderdona
+      changes:
+        - dropNotNullConstraint:
+            tableName: charge_session
+            columnName: endk_wh
+        - dropNotNullConstraint:
+            tableName: charge_session
+            columnName: totalkwh
+        - dropNotNullConstraint:
+            tableName: charge_session
+            columnName: odo_meter
+        - renameColumn:
+            tableName: charge_session
+            oldColumnName: startk_wh
+            newColumnName: start_kwh
+        - renameColumn:
+            tableName: charge_session
+            oldColumnName: endk_wh
+            newColumnName: end_kwh
+        - renameColumn:
+            tableName: charge_session
+            oldColumnName: totalkwh
+            newColumnName: total_kwh
+        - addColumn:
+            tableName: charge_session
+            columns:
+                - column:
+                    name: uuid
+                    type: UUID
+                    defaultValueComputed: "random_uuid()"
+                    constraints:
+                      nullable: false
+        - addColumn:
+            tableName: car
+            columns:
+              - column:
+                  name: uuid
+                  type: UUID
+                  defaultValueComputed: "random_uuid()"
+                  constraints:
+                    nullable: false
