@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.0.1](https://github.com/sanderdona/charger-service/compare/v2.0.0...v2.0.1) (2025-05-28)
+
+
+### Bug Fixes
+
+* enable pgcrypto so that the database can create UUID's. ([2f4bcba](https://github.com/sanderdona/charger-service/commit/2f4bcba53096696dc443b593178370f5119841d1))
+
 # [2.0.0](https://github.com/sanderdona/charger-service/compare/v1.1.0...v2.0.0) (2025-05-28)
 
 
