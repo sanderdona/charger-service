@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.0.2](https://github.com/sanderdona/charger-service/compare/v2.0.1...v2.0.2) (2025-05-28)
+
+
+### Bug Fixes
+
+* fix uuid columns for both H2 and Postgresql. ([b643c31](https://github.com/sanderdona/charger-service/commit/b643c312940d5be2427cc7a604630d3a75cf41fb))
+
 ## [2.0.1](https://github.com/sanderdona/charger-service/compare/v2.0.0...v2.0.1) (2025-05-28)
 
 
