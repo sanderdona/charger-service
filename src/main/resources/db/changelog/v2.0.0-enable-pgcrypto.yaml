@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250523-enable-pgcrypto
+      author: sanderdona
+      preConditions:
+        - onFail: MARK_RAN
+        - dbms:
+            type: postgresql
+      changes:
+        - sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
