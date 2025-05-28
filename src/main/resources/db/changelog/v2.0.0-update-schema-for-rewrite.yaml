@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20250523-add-uuid-columns
+      id: 20250523-rename-columns
       author: sanderdona
       changes:
         - dropNotNullConstraint:
@@ -24,15 +24,49 @@ databaseChangeLog:
             tableName: charge_session
             oldColumnName: totalkwh
             newColumnName: total_kwh
+  - changeSet:
+      id: 20250523-add-uuid-columns-postgres
+      author: sanderdona
+      preConditions:
+        - onFail: MARK_RAN
+        - dbms:
+            type: postgresql
+      changes:
         - addColumn:
             tableName: charge_session
             columns:
                 - column:
                     name: uuid
                     type: UUID
-                    defaultValueComputed: "random_uuid()"
+                    defaultValueComputed: "gen_random_uuid()"
                     constraints:
                       nullable: false
+        - addColumn:
+            tableName: car
+            columns:
+              - column:
+                  name: uuid
+                  type: UUID
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 20250523-add-uuid-columns-h2
+      author: sanderdona
+      preConditions:
+        - onFail: MARK_RAN
+        - dbms:
+            type: h2
+      changes:
+        - addColumn:
+            tableName: charge_session
+            columns:
+              - column:
+                  name: uuid
+                  type: UUID
+                  defaultValueComputed: "random_uuid()"
+                  constraints:
+                    nullable: false
         - addColumn:
             tableName: car
             columns:
