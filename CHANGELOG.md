@@ -1,5 +1,24 @@
 # Semantic Versioning Changelog
 
+# [2.0.0-alpha.1](https://github.com/sanderdona/charger-service/compare/v1.2.0-alpha.1...v2.0.0-alpha.1) (2025-05-27)
+
+
+### Bug Fixes
+
+* this should now produce a new image with a major release version. ([c651373](https://github.com/sanderdona/charger-service/commit/c65137310f06b4775d8997102c4b925e70788e08))
+
+
+### BREAKING CHANGES
+
+* this token should work with the semantic release github flow.
+
+# [1.2.0-alpha.1](https://github.com/sanderdona/charger-service/compare/v1.1.0...v1.2.0-alpha.1) (2023-11-07)
+
+
+### Features
+
+* generate monthly pdf with Mustache! :sparkles: ([e60bf0e](https://github.com/sanderdona/charger-service/commit/e60bf0e75e3d3ee71608df2b77be0a1bb1b820bc))
+
 # [1.1.0](https://github.com/sanderdona/charger-service/compare/v1.0.22...v1.1.0) (2023-08-11)
 
 

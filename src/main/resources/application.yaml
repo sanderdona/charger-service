@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: charger-service
+  liquibase:
+    change-log: liquibase/changelog.yaml
+  web:
+    locale: nl_NL
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always

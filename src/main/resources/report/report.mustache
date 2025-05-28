@@ -1,0 +1,123 @@
+<html>
+<head>
+    <title>Declaratie laadkosten</title>
+    <style>
+        html {
+            font-family: arial, sans-serif;
+            font-size: 8pt;
+        }
+
+        h1 {
+            font-size: 12pt;
+        }
+
+        h2 {
+            font-size: 10pt;
+        }
+
+        hr {
+            border-top: 1px solid black;
+            border-bottom: 0;
+            margin-bottom: 10pt;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            text-align: left;
+            padding: 4px;
+        }
+
+        .algemeen {
+            width: 300px;
+        }
+
+        .laadsessies td, .laadsessies th {
+            border: 1px solid black;
+        }
+
+        .start-kwh-column, .eind-kwh-column, .verbr-kwh-column {
+            width: 100px;
+        }
+
+        .numeric-column {
+            text-align: right;
+        }
+
+        .anonymous-row {
+            background-color: #bbbbbb;
+        }
+
+        .totalen {
+            width: 218px;
+            float: right;
+        }
+
+        .totalen td {
+            width: 100px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Declaratie laadkosten</h1>
+
+<h2>Algemeen</h2>
+<hr>
+<table class="algemeen">
+    <tr>
+        <td>Kenteken</td>
+        <td>{{kenteken}}</td>
+    </tr>
+    <tr>
+        <td>Periode</td>
+        <td>{{periode}}</td>
+    </tr>
+</table>
+
+<h2>Laadsessies</h2>
+<hr>
+<table class="laadsessies">
+    <tr>
+        <th>Gestart</th>
+        <th>Voltooid</th>
+        <th>Kilometerstand</th>
+        <th class="start-kwh-column">Start <small>kWh</small></th>
+        <th class="eind-kwh-column">Eind <small>kWh</small></th>
+        <th class="verbr-kwh-column">Verbruikt <small>kWh</small></th>
+    </tr>
+    {{#row}}
+        <tr {{#anonymous}} class="anonymous-row" {{/anonymous}}>
+            <td>{{startedAt}}</td>
+            <td>{{endedAt}}</td>
+            <td class="numeric-column">{{odoMeter}}</td>
+            <td class="numeric-column">{{startKwh}}</td>
+            <td class="numeric-column">{{endKwh}}</td>
+            <td class="numeric-column">{{totalKwh}}</td>
+        </tr>
+    {{/row}}
+</table>
+
+<br>
+
+<table class="totalen">
+    <tr>
+        <td>Totaal <small>kWh</small></td>
+        <td class="numeric-column">{{kwhTotaal}}</td>
+    </tr>
+    <tr>
+        <td>Tarief <small>kWh</small></td>
+        <td class="numeric-column">&euro; {{kwhTarief}}</td>
+    </tr>
+    <tr>
+        <td><strong>Totaal</strong></td>
+        <td class="numeric-column"><strong>&euro; {{kostenTotaal}}</strong></td>
+    </tr>
+</table>
+
+</body>
+</html>
