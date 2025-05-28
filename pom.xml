@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>nl.lunarcloud.domotics</groupId>
 	<artifactId>charger-service</artifactId>
-	<version>2.0.0-alpha.1</version>
+	<version>2.0.0-alpha.2</version>
 	<name>charger-service</name>
 	<description>A service that registers charge sessions of vehicles</description>
 	<properties>
