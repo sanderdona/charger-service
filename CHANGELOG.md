@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.1.0](https://github.com/sanderdona/charger-service/compare/v2.0.2...v2.1.0) (2025-05-28)
+
+
+### Features
+
+* add default sorting to the charge session results. ([4261cb6](https://github.com/sanderdona/charger-service/commit/4261cb6a9f60dd7e520be30fe84960b5cca86ef0))
+
 ## [2.0.2](https://github.com/sanderdona/charger-service/compare/v2.0.1...v2.0.2) (2025-05-28)
 
 
