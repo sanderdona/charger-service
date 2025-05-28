@@ -18,7 +18,11 @@ public class PageableMapper {
                 .map(sortApi -> new Sort.Order(map(sortApi.getDirection()), sortApi.getProperty()))
                 .toList();
 
-        return PageRequest.of(pageableApi.getPageNumber(), pageableApi.getPageSize(), Sort.by(sortOrders));
+        Sort sort = sortOrders.isEmpty()
+                ? Sort.by(Sort.Order.desc("startedAt"))
+                : Sort.by(sortOrders);
+
+        return PageRequest.of(pageableApi.getPageNumber(), pageableApi.getPageSize(), sort);
     }
 
     private Sort.Direction map(PageableSortInnerApi.DirectionEnum direction) {
