@@ -48,7 +48,7 @@ public class ConfigProperties {
     public static class LocationConfig {
         private double homeLatitude;
         private double homeLongitude;
-        private int maxDistanceFromHome;
+        private int maxDistanceFromHome = 30;
     }
 
     @Data
