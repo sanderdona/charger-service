@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.1.1](https://github.com/sanderdona/charger-service/compare/v2.1.0...v2.1.1) (2025-05-29)
+
+
+### Bug Fixes
+
+* add default max distance from home before a sessions is assumed to be at home. ([a6de6b4](https://github.com/sanderdona/charger-service/commit/a6de6b45c7f4f59f68c993c2ade0166d4a2f518b))
+
 # [2.1.0](https://github.com/sanderdona/charger-service/compare/v2.0.2...v2.1.0) (2025-05-28)
 
 
