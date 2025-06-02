@@ -17,7 +17,7 @@
 		<java.version>21</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<openapi-generator.version>7.11.0</openapi-generator.version>
-		<jakarta.validation-api.version>3.1.0</jakarta.validation-api.version>
+		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
 		<mustache.version>0.9.11</mustache.version>
 		<jsoup.version>1.16.2</jsoup.version>
 		<flying-saucer-pdf.version>9.3.1</flying-saucer-pdf.version>
