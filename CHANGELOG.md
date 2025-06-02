@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.1.2](https://github.com/sanderdona/charger-service/compare/v2.1.1...v2.1.2) (2025-06-02)
+
+
+### Bug Fixes
+
+* fix pagination on charge sessions. ([75cd2dc](https://github.com/sanderdona/charger-service/commit/75cd2dc69f20992b4badceb66f33d9077c23adbb))
+
 ## [2.1.1](https://github.com/sanderdona/charger-service/compare/v2.1.0...v2.1.1) (2025-05-29)
 
 
