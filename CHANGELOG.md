@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.1.3](https://github.com/sanderdona/charger-service/compare/v2.1.2...v2.1.3) (2025-06-02)
+
+
+### Bug Fixes
+
+* disable open-in-view ([6ee927a](https://github.com/sanderdona/charger-service/commit/6ee927aff6f1664b3ce45c0fe461a6cdd3606738))
+* don't select a database-platform ([7c6df28](https://github.com/sanderdona/charger-service/commit/7c6df2842f1985fd33c267d46e246068b9c09d85))
+
 ## [2.1.2](https://github.com/sanderdona/charger-service/compare/v2.1.1...v2.1.2) (2025-06-02)
 
 
