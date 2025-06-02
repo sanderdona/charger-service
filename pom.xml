@@ -256,6 +256,7 @@
 								<openApiNullable>false</openApiNullable>
 								<useSpringBoot3>true</useSpringBoot3>
 								<skipOperationExample>false</skipOperationExample>
+								<documentationProvider>source</documentationProvider>
 							</configOptions>
 						</configuration>
 					</execution>
