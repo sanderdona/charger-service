@@ -1,0 +1,2 @@
+### GET a report for the given dates
+GET {{host}}/v1/reports?start_date=2025-04-01&end_date=2025-04-30

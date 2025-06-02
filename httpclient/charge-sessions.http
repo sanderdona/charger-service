@@ -1,0 +1,5 @@
+### GET charge sessions
+GET {{host}}/v1/charge-sessions
+
+### GET charge sessions, 5 per page
+GET {{host}}/v1/charge-sessions?size=5
