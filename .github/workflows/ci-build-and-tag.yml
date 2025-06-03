@@ -3,7 +3,7 @@ name: ci-build-and-tag
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
       - 'develop'
 
 jobs:
