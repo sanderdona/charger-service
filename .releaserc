@@ -1,14 +1,6 @@
 {
      "branches": [
-        "main",
-        {
-            "name": "develop",
-            "prerelease": "alpha"
-        },
-        {
-            "name": "feature*",
-            "prerelease": true
-        },
+        "main"
      ],
      "repositoryUrl": "https://github.com/sanderdona/charger-service",
      "debug": "true",
