@@ -1,0 +1,144 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2A7B9B;
+    background: linear-gradient(188deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 100%);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    color: #fff;
+}
+
+.nav .title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.nav .label {
+    font-weight: 500;
+    margin-right: 0.3rem;
+}
+
+.nav .value {
+    font-weight: bold;
+}
+
+.nav .timestamp {
+    font-size: 0.75rem;
+    margin-left: 1.75rem;
+}
+
+.content {
+    margin: 2rem;
+}
+
+.active-session {
+    color: #57C785FF;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #57C785FF;
+    color: white;
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+td {
+    background-color: #fbfcfd;
+}
+
+td.highlight {
+    background-color: #ffe6e6 !important;
+}
+
+.pagination {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.pagination a {
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: white;
+    background-color: #57C785FF;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.pagination a:hover {
+    background-color: #2A7B9BFF;
+}
+
+.pagination span {
+    font-weight: bold;
+}
+
+.report-section {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.report-section h3 {
+    margin-top: 0;
+    color: #2A7B9BFF;
+}
+
+.report-section form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.report-section select {
+    padding: 0.3rem;
+}
+
+.report-section button {
+    padding: 0.4rem;
+}
+
+.report-section button {
+    background-color: #57C785FF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.report-section button:hover {
+    background-color: #2A7B9BFF;
+}

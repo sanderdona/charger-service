@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Charger Service</title>
+    <link rel="stylesheet" th:href="@{/css/overview.css}">
+</head>
+
+<script>
+    function setDates() {
+        const year = document.getElementById('year').value;
+        const month = document.getElementById('month').value;
+
+        const start = new Date(year, month - 1, 1);
+        const end = new Date(year, month, 0);
+
+        document.getElementById('start_date').value = start.toISOString().split('T')[0];
+        document.getElementById('end_date').value = end.toISOString().split('T')[0];
+    }
+</script>
+
+<body>
+
+<nav class="nav">
+    <div class="left">
+        <span class="title">🔋 Charger Service</span>
+    </div>
+    <div class="center">
+        <span class="label">⚡ Meterstand</span>
+        <span class="value" th:text="${energyMeterReading}">0.0</span> kWh
+        <div class="timestamp" th:text="${#temporals.format(energyMeterTimestamp, 'dd-MM-yyyy HH:mm:ss')}">Datum</div>
+    </div>
+    <div class="right">
+        <span class="label">📊 Laadsessies:</span>
+        <span class="value" th:text="${sessionsPage.totalElements}">0</span>
+    </div>
+</nav>
+
+<div class="content">
+    <table>
+        <thead>
+        <tr>
+            <th>Starttijd</th>
+            <th>Eindtijd</th>
+            <th>Startstand (kWh)</th>
+            <th>Eindstand (kWh)</th>
+            <th>Verbruikte energie (kWh)</th>
+            <th>Voertuig UUID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="chargeSession, iterStat : ${sessionsPage.content}">
+            <td th:text="${#temporals.format(chargeSession.startedAt, 'dd-MM-yyyy HH:mm')}">Starttijd</td>
+
+            <td>
+                <span th:if="${chargeSession.endedAt != null}"
+                      th:text="${#temporals.format(chargeSession.endedAt, 'dd-MM-yyyy HH:mm')}">
+                      Eindtijd
+                </span>
+                <span th:if="${chargeSession.endedAt == null}" class="active-session">Bezig...</span>
+            </td>
+
+            <td th:text="${chargeSession.startKwh}">Start kWh</td>
+
+            <td>
+                <span th:if="${chargeSession.endKwh != null}" th:text="${chargeSession.endKwh}">Eind kWh</span>
+                <span th:if="${chargeSession.endKwh == null}" class="active-session">Bezig...</span>
+            </td>
+
+            <td>
+                <span th:if="${chargeSession.totalKwh != null}" th:text="${chargeSession.totalKwh}">kWh</span>
+                <span th:if="${chargeSession.totalKwh == null}" th:text="${energyMeterReading - chargeSession.startKwh}"
+                      class="active-session">kWh</span>
+            </td>
+
+            <td th:text="${chargeSession.car?.uuid}">Voertuig UUID</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <a th:if="${sessionsPage.hasPrevious()}"
+           th:href="@{/overview(page=${sessionsPage.number - 1}, size=${sessionsPage.size})}">⬅️ Vorige</a>
+
+        <span>Pagina <span th:text="${sessionsPage.number + 1}">1</span> van <span th:text="${sessionsPage.totalPages}">X</span></span>
+
+        <a th:if="${sessionsPage.hasNext()}"
+           th:href="@{/overview(page=${sessionsPage.number + 1}, size=${sessionsPage.size})}">Volgende ➡️</a>
+    </div>
+
+    <section class="report-section">
+        <h3>💾 Download declaratie</h3>
+        <form id="reportForm" method="get" action="v1/reports">
+            <label hidden="hidden" for="month">Maand:</label>
+            <select id="month" name="month" required>
+                <option th:each="m : ${#numbers.sequence(1, 12)}"
+                        th:value="${m}" th:text="${#dates.format(#dates.create(0, m - 1, 1), 'MMMM')}">Januari</option>
+            </select>
+
+            <label hidden="hidden" for="year">Jaar:</label>
+            <select id="year" name="year" required>
+                <option th:each="y : ${#numbers.sequence(2022, #dates.year(#dates.createNow()))}"
+                        th:value="${y}" th:text="${y}">2024</option>
+            </select>
+
+            <input type="hidden" name="start_date" id="start_date">
+            <input type="hidden" name="end_date" id="end_date">
+
+            <button type="submit" onclick="setDates()">Download</button>
+        </form>
+    </section>
+</div>
+
+</body>
+</html>
