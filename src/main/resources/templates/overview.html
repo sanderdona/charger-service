@@ -59,16 +59,16 @@
                 <span th:if="${chargeSession.endedAt == null}" class="active-session">Bezig...</span>
             </td>
 
-            <td th:text="${chargeSession.startKwh}">Start kWh</td>
+            <td th:text="${#numbers.formatDecimal(chargeSession.startKwh, 1, 3)}">Start kWh</td>
 
             <td>
-                <span th:if="${chargeSession.endKwh != null}" th:text="${chargeSession.endKwh}">Eind kWh</span>
+                <span th:if="${chargeSession.endKwh != null}" th:text="${#numbers.formatDecimal(chargeSession.endKwh, 1, 3)}">Eind kWh</span>
                 <span th:if="${chargeSession.endKwh == null}" class="active-session">Bezig...</span>
             </td>
 
             <td>
                 <span th:if="${chargeSession.totalKwh != null}" th:text="${chargeSession.totalKwh}">kWh</span>
-                <span th:if="${chargeSession.totalKwh == null}" th:text="${energyMeterReading - chargeSession.startKwh}"
+                <span th:if="${chargeSession.totalKwh == null}" th:text="${#numbers.formatDecimal(energyMeterReading - chargeSession.startKwh, 1, 3)}"
                       class="active-session">kWh</span>
             </td>
 
