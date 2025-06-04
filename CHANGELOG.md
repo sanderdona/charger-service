@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.2.0](https://github.com/sanderdona/charger-service/compare/v2.1.3...v2.2.0) (2025-06-04)
+
+
+### Features
+
+* create an overview page ([8c9e001](https://github.com/sanderdona/charger-service/commit/8c9e0018b3ea99cdf776ac1b09bf79edc64fb9bb))
+
 ## [2.1.3](https://github.com/sanderdona/charger-service/compare/v2.1.2...v2.1.3) (2025-06-02)
 
 
