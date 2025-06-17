@@ -28,7 +28,7 @@
 		<swagger.version>2.2.32</swagger.version>
 		<liquibase.version>4.27.0</liquibase.version>
 		<cucumber.version>7.23.0</cucumber.version>
-		<junit-platform-suite.version>1.12.2</junit-platform-suite.version>
+		<junit-platform-suite.version>1.13.1</junit-platform-suite.version>
 		<testcontainers.version>1.21.1</testcontainers.version>
 		<json-unit-assertj.version>3.2.2</json-unit-assertj.version>
 		<rest-assured.version>5.5.5</rest-assured.version>
