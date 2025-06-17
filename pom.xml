@@ -20,7 +20,7 @@
 		<jakarta.validation-api.version>3.1.0</jakarta.validation-api.version>
 		<mustache.version>0.9.11</mustache.version>
 		<jsoup.version>1.20.1</jsoup.version>
-		<flying-saucer-pdf.version>9.3.1</flying-saucer-pdf.version>
+		<flying-saucer-pdf.version>9.3.2</flying-saucer-pdf.version>
 		<mqtt.version>6.1.4</mqtt.version>
 		<projectlombok.version>1.18.30</projectlombok.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
