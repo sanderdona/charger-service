@@ -29,7 +29,7 @@
 		<liquibase.version>4.27.0</liquibase.version>
 		<cucumber.version>7.23.0</cucumber.version>
 		<junit-platform-suite.version>1.13.1</junit-platform-suite.version>
-		<testcontainers.version>1.21.2</testcontainers.version>
+		<testcontainers.version>1.21.3</testcontainers.version>
 		<json-unit-assertj.version>3.2.2</json-unit-assertj.version>
 		<rest-assured.version>5.5.5</rest-assured.version>
 		<awaitility.version>4.2.0</awaitility.version>
