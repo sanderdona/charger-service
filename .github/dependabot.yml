@@ -5,3 +5,7 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "main"
+    commit-message:
+      prefix: "fix"
+      prefix-development: "build"
+      include: "scope"
