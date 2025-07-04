@@ -41,8 +41,7 @@ jobs:
         @semantic-release/commit-analyzer \
         @semantic-release/exec \
         semantic-release/git \
-        semantic-release/release-notes-generator \
-        conventional-changelog-conventionalcommits
+        semantic-release/release-notes-generator
 
     - name: Tag a new release
       env:
