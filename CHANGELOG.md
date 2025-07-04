@@ -1,5 +1,22 @@
 # Semantic Versioning Changelog
 
+## [2.2.2](https://github.com/sanderdona/charger-service/compare/v2.2.1...v2.2.2) (2025-07-04)
+
+### Dependencies and Other Build Updates
+
+* add conventional-changelog-conventionalcommits as semantic-release dependency ([8867b10](https://github.com/sanderdona/charger-service/commit/8867b105f7e3b18318a42258dc4ea1d6c801a239))
+* dependency updates should trigger a new patch release ([d6f1469](https://github.com/sanderdona/charger-service/commit/d6f1469b15c7f3db1bc59664b3e766f21ee526ef))
+* **deps-dev:** bump cucumber.version from 7.22.2 to 7.23.0 ([4a02761](https://github.com/sanderdona/charger-service/commit/4a0276191d9bd69bc0ec6f805ba3410ff5858a76))
+* **deps-dev:** bump io.rest-assured:rest-assured from 5.3.2 to 5.5.5 ([245a235](https://github.com/sanderdona/charger-service/commit/245a2353ce3991a6111237e6228e3739482028a6))
+* **deps-dev:** bump org.junit.platform:junit-platform-suite ([6f28551](https://github.com/sanderdona/charger-service/commit/6f28551bc0d356efcf2b818f86aeb865ef266354))
+* **deps-dev:** bump testcontainers.version from 1.21.0 to 1.21.1 ([8ffd739](https://github.com/sanderdona/charger-service/commit/8ffd7395cb33c1afdfcef33af2a176ae0c140476))
+* **deps:** bump io.swagger.core.v3:swagger-annotations ([6f95a06](https://github.com/sanderdona/charger-service/commit/6f95a065a4e09a545edea0ff6f64aab22804dbc0))
+* **deps:** bump mapstruct.version from 1.5.5.Final to 1.6.3 ([521d8b1](https://github.com/sanderdona/charger-service/commit/521d8b10f2364c5593479bbadbfbd48dbef70d4f))
+* **deps:** bump org.apache.maven.plugins:maven-compiler-plugin ([31773fc](https://github.com/sanderdona/charger-service/commit/31773fc81bc6e1d16aa1c2365f02b69ffd0642bb))
+* **deps:** bump org.jsoup:jsoup from 1.16.2 to 1.20.1 ([93ee84f](https://github.com/sanderdona/charger-service/commit/93ee84f0a9b3e3d813fff7a99234f1698d82223c))
+* **deps:** bump org.xhtmlrenderer:flying-saucer-pdf-openpdf ([0bfc219](https://github.com/sanderdona/charger-service/commit/0bfc219cf95541fa8451a7923d30f0d8281711b3))
+* trigger daily dependency updates ([9096503](https://github.com/sanderdona/charger-service/commit/90965032fe6b15873ef650b5269c9aae2bf92e2f))
+
 ## [2.2.1](https://github.com/sanderdona/charger-service/compare/v2.2.0...v2.2.1) (2025-06-04)
 
 
