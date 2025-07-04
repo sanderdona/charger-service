@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.2.3](https://github.com/sanderdona/charger-service/compare/v2.2.2...v2.2.3) (2025-07-04)
+
+
+### Reverts
+
+* Revert "build: add conventional-changelog-conventionalcommits as semantic-release dependency" ([5e4d45d](https://github.com/sanderdona/charger-service/commit/5e4d45d528c984a784740faab42ec14034da929f))
+* Revert "build: dependency updates should trigger a new patch release" ([cbc2044](https://github.com/sanderdona/charger-service/commit/cbc2044842de5252090bb3770e82ddad5877bca5))
+
 ## [2.2.2](https://github.com/sanderdona/charger-service/compare/v2.2.1...v2.2.2) (2025-07-04)
 
 ### Dependencies and Other Build Updates
