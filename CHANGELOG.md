@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.4](https://github.com/sanderdona/charger-service/compare/v2.2.3...v2.2.4) (2025-07-09)
+
+
+### Bug Fixes
+
+* **deps:** bump org.projectlombok:lombok from 1.18.30 to 1.18.38 ([98eedb8](https://github.com/sanderdona/charger-service/commit/98eedb8b9a23c2a043471c7cf689d46b890eec00))
+
 ## [2.2.3](https://github.com/sanderdona/charger-service/compare/v2.2.2...v2.2.3) (2025-07-04)
 
 
