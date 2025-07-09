@@ -27,7 +27,7 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<swagger.version>2.2.34</swagger.version>
 		<liquibase.version>4.32.0</liquibase.version>
-		<cucumber.version>7.23.0</cucumber.version>
+		<cucumber.version>7.24.0</cucumber.version>
 		<junit-platform-suite.version>1.13.1</junit-platform-suite.version>
 		<testcontainers.version>1.21.2</testcontainers.version>
 		<json-unit-assertj.version>3.2.2</json-unit-assertj.version>
