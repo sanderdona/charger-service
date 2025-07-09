@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.5](https://github.com/sanderdona/charger-service/compare/v2.2.4...v2.2.5) (2025-07-09)
+
+
+### Bug Fixes
+
+* **deps:** bump org.liquibase:liquibase-core from 4.27.0 to 4.32.0 ([03ee8f9](https://github.com/sanderdona/charger-service/commit/03ee8f9cb086153e62e4e2a46a334323be18b9e2))
+
 ## [2.2.4](https://github.com/sanderdona/charger-service/compare/v2.2.3...v2.2.4) (2025-07-09)
 
 
