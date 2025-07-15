@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -24,7 +23,7 @@ public class ChargeSessionController implements ChargeSessionsApi {
     private final ChargeSessionMapper chargeSessionMapper;
 
     @Override
-    public ResponseEntity<ChargeSessionPageApi> getChargeSessions(Integer page, Integer size, List<String> sort, Pageable pageable) {
+    public ResponseEntity<ChargeSessionPageApi> getChargeSessions(Pageable pageable) {
         Page<ChargeSession> sessions = chargeSessionService.getSessions(pageable);
         return ResponseEntity.ok(chargeSessionMapper.map(sessions));
     }
