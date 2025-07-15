@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.2.6](https://github.com/sanderdona/charger-service/compare/v2.2.5...v2.2.6) (2025-07-15)
+
+### Dependencies and Other Build Updates
+
+* add conventional-changelog-conventionalcommits as semantic-release dependency ([dfc1ee5](https://github.com/sanderdona/charger-service/commit/dfc1ee5ad8bdfc1b7e39ce4decb0648bc0b4965d))
+* dependency updates should trigger a new patch release ([445a8a3](https://github.com/sanderdona/charger-service/commit/445a8a3f0613abb99aadbdf6565491b45ec6dec3))
+* group all dependency updates into one PR ([8a07d2d](https://github.com/sanderdona/charger-service/commit/8a07d2d227ff37240bae8b04cab545c0b56b4977))
+
 ## [2.2.5](https://github.com/sanderdona/charger-service/compare/v2.2.4...v2.2.5) (2025-07-09)
 
 
