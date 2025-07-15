@@ -13,8 +13,14 @@
 	<version>2.2.5</version>
 	<name>charger-service</name>
 	<description>A service that registers charge sessions of vehicles</description>
+
 	<properties>
 		<java.version>21</java.version>
+
+		<junit-bom.version>5.13.3</junit-bom.version>
+		<cucumber-bom.version>7.24.0</cucumber-bom.version>
+		<testcontainers-bom.version>1.21.3</testcontainers-bom.version>
+
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<openapi-generator.version>7.14.0</openapi-generator.version>
 		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
@@ -28,15 +34,39 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<swagger.version>2.2.34</swagger.version>
 		<liquibase.version>4.33.0</liquibase.version>
-		<cucumber.version>7.26.0</cucumber.version>
-		<junit-platform-suite.version>1.13.3</junit-platform-suite.version>
-		<testcontainers.version>1.21.3</testcontainers.version>
 		<json-unit-assertj.version>4.1.1</json-unit-assertj.version>
 		<rest-assured.version>5.5.5</rest-assured.version>
 		<awaitility.version>4.3.0</awaitility.version>
 		<jna-platform.version>5.17.0</jna-platform.version>
 		<jib.version>3.4.6</jib.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.cucumber</groupId>
+				<artifactId>cucumber-bom</artifactId>
+				<version>${cucumber-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -143,43 +173,36 @@
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
-			<version>${cucumber.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-spring</artifactId>
-			<version>${cucumber.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-junit-platform-engine</artifactId>
-			<version>${cucumber.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite</artifactId>
-			<version>${junit-platform-suite.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>testcontainers</artifactId>
-			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>hivemq</artifactId>
-			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -210,6 +233,14 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.3</version>
+				<configuration>
+					<failIfNoTests>true</failIfNoTests>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
