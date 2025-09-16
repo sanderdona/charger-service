@@ -22,7 +22,7 @@ public class ReportController implements ReportsApi {
 
     @Override
     public ResponseEntity<Resource> getReport(LocalDate startDate, LocalDate endDate) {
-        File file = reportService.generateReport(startDate, endDate).orElseThrow(() -> new RecordNotFoundException("Vehicle not found"));
+        File file = reportService.generateReport(startDate, endDate).orElseThrow(() -> new RecordNotFoundException("Report not found"));
         FileSystemResource resource = new FileSystemResource(file);
 
         HttpHeaders headers = new HttpHeaders();
