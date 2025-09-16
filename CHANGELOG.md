@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.7](https://github.com/sanderdona/charger-service/compare/v2.2.6...v2.2.7) (2025-09-16)
+
+### Bug Fixes
+
+* fix the month options on the download button ([6876cd9](https://github.com/sanderdona/charger-service/commit/6876cd983a7ce90f2eeac93ccf15039ae392c250))
+* respond with a 404 Not Found on a non-existing report ([9aa213c](https://github.com/sanderdona/charger-service/commit/9aa213cd00455b4fb943554d2a0136e08f9efe72))
+
 ## [2.2.6](https://github.com/sanderdona/charger-service/compare/v2.2.5...v2.2.6) (2025-07-15)
 
 ### Dependencies and Other Build Updates
