@@ -11,7 +11,7 @@
         const month = document.getElementById('month').value;
 
         const start = new Date(year, month - 1, 1);
-        const end = new Date(year, month, 0);
+        const end = new Date(year, month - 1, 0);
 
         document.getElementById('start_date').value = start.toISOString().split('T')[0];
         document.getElementById('end_date').value = end.toISOString().split('T')[0];
@@ -93,7 +93,7 @@
             <label hidden="hidden" for="month">Maand:</label>
             <select id="month" name="month" required>
                 <option th:each="m : ${#numbers.sequence(1, 12)}"
-                        th:value="${m}" th:text="${#dates.format(#dates.create(0, m - 1, 1), 'MMMM')}">Januari</option>
+                        th:value="${m}" th:text="${#dates.format(#dates.create(0, m, 1), 'MMMM')}">Januari</option>
             </select>
 
             <label hidden="hidden" for="year">Jaar:</label>
