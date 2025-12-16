@@ -9,3 +9,7 @@ updates:
       all-dependencies:
         patterns:
           - "*"
+    ignore:
+      # Cucumber 7.30.0+ requires JUnit Platform 1.14.0, but Spring Boot only provides 1.12.x
+      - dependency-name: "io.cucumber:*"
+        versions: [">=7.30.0"]
