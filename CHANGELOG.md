@@ -1,5 +1,15 @@
 # Semantic Versioning Changelog
 
+## [2.2.8](https://github.com/sanderdona/charger-service/compare/v2.2.7...v2.2.8) (2025-12-16)
+
+### Dependencies and Other Build Updates
+
+* **deps:** add Paho mqttv3 client as dependency ([95cd96e](https://github.com/sanderdona/charger-service/commit/95cd96e16765f54dcb68db8bc24957bdc2da4c7b))
+* **deps:** bump the all-dependencies group across 1 directory with 22 updates ([eded471](https://github.com/sanderdona/charger-service/commit/eded47198bb02e9cff206cc24a41b4f9dd39f4bd))
+* **deps:** fix Cucumber and JUnit Platform compatibility ([7be2473](https://github.com/sanderdona/charger-service/commit/7be247302125318771e7e7b3d081e65cb6aed263))
+* **deps:** fix the number of pageable arguments due to an OpenAPI generator improvement ([a035b36](https://github.com/sanderdona/charger-service/commit/a035b361626b1dfdda03406183a00dcc7a4934b9))
+* **deps:** pin Cucumber version ([65b4009](https://github.com/sanderdona/charger-service/commit/65b40099cfce2625026a4e41339422f849dffc6e))
+
 ## [2.2.7](https://github.com/sanderdona/charger-service/compare/v2.2.6...v2.2.7) (2025-09-16)
 
 ### Bug Fixes
