@@ -72,7 +72,6 @@ jobs:
   publish-image:
     needs: release
     name: Publish Image
-    if: steps.release.outcome.success
     runs-on: ubuntu-latest
     permissions:
       packages: write
